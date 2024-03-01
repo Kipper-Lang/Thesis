@@ -1,0 +1,3 @@
+= Diplomarbeits Repository
+
+The repository intended to host all files regarding the HTL thesis project such as project application and the thesis paper itself.
