@@ -1,22 +1,24 @@
 = Diplomarbeitsantrag Klatzer, Holzbauer & Baitura
 
-Rohfassung/Entwurf für die Eintragung der Diplomarbeit in der Diplomarbeitsdatenbank.
-
-Raw draft for the registration of the thesis in the thesis database.
+Rohfassung/Entwurf für die Eintragung der Diplomarbeit in der Diplomarbeitsdatenbank. / Raw draft for the registration of the thesis in the thesis database.
 
 == Diplomarbeitstitel
 
-Kipper - Ausarbeitung und Entwicklung einer Programmiersprache für verbesserte Laufzeitsicherheit
+Kipper - Ausarbeitung und Entwicklung einer Programmiersprache für verbesserte Laufzeitsicherheit / Kipper - Implementation of a programming language for improved runtime security
 
-Kipper - Implementation of a programming language for improved runtime security
+== Ausgangslage - "Current Situation"
 
-== Ausgangslage (max. 400 Zeichen) - "Current Situation"
+_(max. 400 Zeichen)_
 
 Currently, the web/web-like space is dominated by TypeScript, a language intended to improve runtime security by providing compile-time types, which JavaScript lacks. That is perfect for early development, but as projects grow, the insufficiency of such a system becomes clear. Frequently errors occur due to edge cases not being covered and the developer forcing the compiler to ignore errors.
 
-== Untersuchungsanliegen (max. 800 Zeichen) - "Research Questions"
+== Untersuchungsanliegen - "Research Questions"
+
+_(max. 800 Zeichen)_
 
 === Luna Klatzer
+
+
 
 === Lorenz Holzbauer
 
@@ -26,9 +28,12 @@ Currently, the web/web-like space is dominated by TypeScript, a language intende
 
 
 
-== Zielsetzung (max. 400 Zeichen) - "Objectives"
+== Zielsetzung - "Objectives"
+
+_(max. 400 Zeichen)_
 
 This project aims to implement a programming language, which provides an easy-to-use syntax and type logic. It should be compatible with existing environments and provide additional runtime checks using compiler-injected types and metadata. With these the language should cover all potential type edge cases and ensure that type errors can be expected and easily debugged by the developer.
 
-== Geplantes Ergebnis der PrüfungskandidatInnen (max. 400 Zeichen) - "Expected Results"
+== Geplantes Ergebnis der PrüfungskandidatInnen - "Expected Results"
 
+_(max. 400 Zeichen)_
