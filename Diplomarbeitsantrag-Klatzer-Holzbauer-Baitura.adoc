@@ -21,8 +21,11 @@ _(max. 800 Zeichen)_
 
 
 === Lorenz Holzbauer
-
-
+* Implementation of binary data types
+* Implementation of Syntax Expressions such as bitwise and pipeline operators
+* Implementation of a try-catch statement
+* Creation of a binary data type
+* Implementation of core built-in types
 
 === Fabian Baitura
 
