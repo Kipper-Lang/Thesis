@@ -4,7 +4,7 @@ Rohfassung/Entwurf für die Eintragung der Diplomarbeit in der Diplomarbeitsdate
 
 == Diplomarbeitstitel
 
-Kipper - Ausarbeitung und Entwicklung einer Programmiersprache für verbesserte Laufzeitsicherheit / Kipper - Implementation of a programming language for improved runtime security
+Kipper - Programmiersprache für verbesserte Typ-Laufzeitsicherheit / Kipper - Programming language for improved runtime type-safety
 
 == Ausgangslage - "Current Situation"
 
