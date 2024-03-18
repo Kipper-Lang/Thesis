@@ -18,18 +18,19 @@ _(max. 800 Zeichen)_
 
 === Luna Klatzer
 
-
+- Evaluating the possibilities of implementing a compiler structure suitable for a type-safe compiler.
+- Designing a type-safe internal library for handling complex types.
+- Evaluating a suitable implementation of type-safe casting.
 
 === Lorenz Holzbauer
-* Implementation of binary data types
-* Implementation of Syntax Expressions such as bitwise and pipeline operators
-* Implementation of a try-catch statement
-* Creation of a binary data type
-* Implementation of core built-in types
+
+- Researching and designing suitable built-in types and high-level type functionality.
+- 
 
 === Fabian Baitura
 
-
+- Evaluating type-safe implementations for object-oriented structures such as classes and interfaces.
+- Developing a  
 
 == Zielsetzung - "Objectives"
 
