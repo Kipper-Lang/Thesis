@@ -18,19 +18,21 @@ _(max. 800 Zeichen)_
 
 === Luna Klatzer
 
-- Evaluating the possibilities of implementing a compiler structure suitable for a type-safe compiler.
-- Designing a type-safe internal library for handling complex types.
+- Evaluating how to implement a suitable compiler structure.
+- Researching ways to implement a type-safe library for handling internal types.
 - Evaluating a suitable implementation of type-safe casting.
 
 === Lorenz Holzbauer
 
-- Researching and designing suitable built-in types and high-level type functionality.
-- 
+- Researching suitable patterns for built-in types and high-level type functionality.
+- Evaluating methods to incorporate runtime types into the target language environment.
+- Researching ways to translate language structures into the desired language.
 
 === Fabian Baitura
 
 - Evaluating type-safe implementations for object-oriented structures such as classes and interfaces.
-- Developing a  
+- Researching methods to integrate object-oriented structures into the underlying prototype system.
+- Evaluating ways to implement a low-level library for language functionality.
 
 == Zielsetzung - "Objectives"
 
