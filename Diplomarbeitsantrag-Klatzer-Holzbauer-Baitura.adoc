@@ -16,19 +16,19 @@ Currently, the web/web-like space is dominated by TypeScript, a language intende
 
 _(max. 800 Zeichen)_
 
-=== Luna Klatzer
+=== Klatzer
 
 - Evaluating how to implement a suitable compiler structure.
 - Researching ways to implement a type-safe library for handling internal types.
 - Evaluating a suitable implementation of type-safe casting.
 
-=== Lorenz Holzbauer
+=== Holzbauer
 
 - Researching suitable patterns for built-in types and high-level type functionality.
 - Evaluating methods to incorporate runtime types into the target language environment.
 - Researching ways to translate language structures into the desired language.
 
-=== Fabian Baitura
+=== Baitura
 
 - Evaluating type-safe implementations for object-oriented structures such as classes and interfaces.
 - Researching methods to integrate object-oriented structures into the underlying prototype system.
@@ -38,8 +38,25 @@ _(max. 800 Zeichen)_
 
 _(max. 400 Zeichen)_
 
-This project aims to implement a programming language, which provides an easy-to-use syntax and type logic. It should be compatible with existing environments and provide additional runtime checks using compiler-injected types and metadata. With these the language should cover all potential type edge cases and ensure that type errors can be expected and easily debugged by the developer.
+This project aims to implement a programming language, which provides an easy-to-use syntax and type logic. It should be compatible with existing environments and provide additional runtime checks using compiler-injected types and metadata. With these, the language should cover all potential type edge cases and ensure that type errors can be expected and easily debugged by the developer.
 
 == Geplantes Ergebnis der PrüfungskandidatInnen - "Expected Results"
 
 _(max. 400 Zeichen)_
+
+No expected costs.
+
+=== Klatzer
+
+- Compiler with API and internal type-library.
+- Typecast system able to deal with dangerous edge cases.
+
+=== Holzbauer
+
+- Simple to use high-level types with improved safety.
+- Runtime types with metadata represented in the target language.
+
+=== Baitura
+
+- Class & Interface system with extended type-safety.
+- Runtime library able to handle the required logic.
