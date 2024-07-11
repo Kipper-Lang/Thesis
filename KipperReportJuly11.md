@@ -6,6 +6,7 @@ Mithilfe des erstklassigen fachlichen Wissens von Prof. Dr. Mössenböck machen 
 ## Unsere neuen Features bis jetzt
 
 ### Luna Klatzer
+Bis jetzt war der Hauptfokus auf die internen Compiler Strukturen, welche aus den Symbol Table für Variablen, Funktionen und Types besteht. Diese neuen Strukturen erlauben es auch OOP Syntax & Code Generation zu implementieren. Zusätzlich bedeutet das, dass Type-Checks jetzt auch über richtige Referenzen laufen und man auch komplexe Typen miteinandere vergleichen kann, welche dann recursively auf einzelne Properties sich auch abgleichen können.
 
 ### Lorenz Holzbauer
 Es wurde zuerst String Multiplication implementiert. Dies diente zum Einarbeiten in den Compiler. Nun kann mithilfe des * Operators ein String n-mal wiederholt werden. 
@@ -14,11 +15,14 @@ Des Weiteren wurden die Bitwise Operationen implementiert. Bei diesen musste die
 
 Außerdem wurde Lambda-Milestone fertiggestellt. Kipper kann nun einer Variable eine Lambda Expression assignen. Diese hat eine seperate Scope und wird Typüberprüft. Aktuell kann man Lambdas leider noch nicht ausführen, da Generics, die Luna implementiert hat, gerade noch nicht gemerged sind. Dennoch können die generierten Lambda Expressions in der Target Language bereits aufgerufen werden.
 
-### Fabian Baitura
+### Fabian Baituraa
+Zur Einarbeitung in den Compiler wurde die Do-While-Schleife implementiert. Danach wurden File-Scoped Pragmas hinzugefügt, um die Optimierung ein- oder auszuschalten. Außerdem wurden Interfaces sowie ihre Member (Properties und Methoden) implementiert.
+
 
 ## Next Steps
 
 ### Luna Klatzer
+Nach der Fertigstellung der Symbol Table und Custom Type Logik werden mal alle AST Nodes mit der Library verbunden und die Logik miteinander vereint, sodass auch dann Objekte und Interfaces, die geparsed wurden auch jetzt korrekt repräsentiert werden und dann auch für komplexe Typchecks verwendet werden können. Zusätzlich wird dann auch die Logik für Typ-Inference implementiert, welche dann für Objekte den Typen automatisch auslesen und diesen dann als Return-Typ für die Expression zurückgeben sollen. Damit kann man dann auch überprüfen ob der Variablentyp mit dem Objektliteral, welcher als Wert angegeben wird, zusammenpasst. 
 
 
 ### Lorenz Holzbauer
@@ -27,6 +31,8 @@ Sobald das neue Typsystem gemerged ist, wird die Typrepresentation im Kompiliert
 Des weiteren wird das Try-Catch Statement implementiert werden, sobald der Exception Type fertiggestellt ist. Die nötige Vorarbeit zur Implementation im Parser und Lexer wurde schon erledigt, es fehlt also noch die korrekte interne Handhabung der Fehler.
 
 ### Fabian Baitura
+Zunächst werden Objekte in die Sprache hinzugefügt. Danach werden die semantischen Daten der Objekte genutzt, um interne Typrepräsentationen zu erstellen, die dann in die Zielsprache übersetzt werden können und mit denen Runtime-Typechecks durchgeführt werden können.
+
 
 ## Deep Dive in unser Typsystem
 Der Kern unsere Typsystems ist die Symbolliste. Diese wird mithilfe einer Map implementiert, und enthält Objekte mit folgenden Properties:
@@ -74,39 +80,70 @@ Wir haben uns für Vererbung entschieden, um die gemeinsamen Properties von Decl
 
 ```plantuml
 @startuml
-
-class Universe {
+object Universe {
     
 }
 
-Universe <-- void
+object GlobalScope {
+
+}
+
+object void {
+
+}
+
+object undefined {
+
+}
+
+object null {
+
+}
+
+object num {
+
+}
+
+object str {
+
+}
+
+object y {
+    num
+}
+
+object z {
+    str
+}
+
+object x {
+    num
+}
+
+object LocalScope {
+
+}
+
+Universe --> void
+Universe <- GlobalScope
+
+
 void <-- undefined
 undefined <-- null
 null <-- num
 num <-- str
 
-class GlobalScope {
-    
-}
-
-Universe -[hidden] GlobalScope
 
 GlobalScope <-- x
+num <- x
 
-class LocalScope {
-    x
-}
-
-GlobalScope -[hidden] LocalScope
-
-x <-right- LocalScope
-
+GlobalScope <-- LocalScope
 
 LocalScope <-- y
 y <-- z
 
-num <-right- y
-str <-right- z
+num <- y
+str <- z
 
 @enduml
 ```
