@@ -16,8 +16,8 @@
 \displaywidowpenalty=10000
 \interfootnotelinepenalty=10000
 
-\title{Unser tolles Thema -- wir sind suppa}
-\author{Stefan Schwammal, Susi Schwammal}
+\title{Kipper - Programming Language for Improved Runtime Type-Safety}
+\author{Luna Klatzer, Lorenz Holzbauer, Fabian Baitura}
 
 \makeindex
 \makeglossaries
@@ -35,11 +35,11 @@
 \pagenumbering{Roman}
 \newpage
 \input{oath}
-\input{./sections/abstract}
+\input{./chapters/abstract}
 
 \pagestyle{plain}
 
-\renewcommand{\lstlistlistingname}{Quellcodeverzeichnis}
+\renewcommand{\lstlistlistingname}{Source Code References}
 
 \tableofcontents
 \newpage
@@ -49,29 +49,39 @@
 \pagestyle{scrheadings}
 
 \begin{spacing}{1}
-\chapter{Einleitung}\label{chapter:introduction}
+\chapter{Introduction}\label{chapter:introduction}
 \end{spacing}
-\input{./sections/introduction}
+\input{./chapters/introduction}
 
 \begin{spacing}{1}
-\chapter{Umfeldanalyse}
+\chapter{Background}
 \end{spacing}
-\input{./sections/related_work}
+\input{./chapters/background}
 
 \begin{spacing}{1}
-\chapter{Technologien}\label{chapter:tech}
+\chapter{Technology}\label{chapter:tech}
 \end{spacing}
-\input{./sections/technologies}
+\input{./chapters/technologies}
 
 \begin{spacing}{1}
-\chapter{Umsetzung}\label{chapter:implementation}
+\chapter{Implementation}\label{chapter:implementation}
 \end{spacing}
-\input{./sections/implementation}
+\input{./chapters/implementation}
 
 \begin{spacing}{1}
-\chapter{Zusammenfassung}
+\chapter{Compiler Reference}\label{chapter:compiler_ref}
 \end{spacing}
-\input{./sections/summary}
+\input{./chapters/compiler_ref}
+
+\begin{spacing}{1}
+\chapter{Demo \& Showcase}\label{chapter:demo}
+\end{spacing}
+\input{./chapters/demo}
+
+\begin{spacing}{1}\lipsum[2-3]
+\chapter{Conclusion \& Future}
+\end{spacing}
+\input{./chapters/summary}
 
 \newpage
 \pagenumbering{Roman}
@@ -89,7 +99,6 @@
 \listoftables
 \lstlistoflistings
 \appendix
-\addchap{Anhang}
-\input{./sections/appendix}
+\addchap{Appendix}
+\input{./chapters/appendix}
 \end{document}
-

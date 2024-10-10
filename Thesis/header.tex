@@ -1,7 +1,7 @@
 \begin{filecontents*}{\jobname.xmpdata}
-	\Keywords{CHANGEME, VR, IOT, TODO}
-	\Title{CHANGEME: Unser tolles Thema -- wir sind suppa}
-	\Author{CHANGEME, Stefan Schwammal, Susi Schwammal}
+	\Keywords{Compiler, Transpiler, Programming Language, Type-Safety, Node, JKU}
+	\Title{Kipper - Programming Language for Improved Runtime Type-Safety}
+	\Author{Luna Klatzer, Lorenz Holzbauer, Fabian Baitura}
 \end{filecontents*}
 
 \setcounter{tocdepth}{1}
@@ -18,7 +18,7 @@
 \usepackage{lmodern, textcomp}
 \usepackage{lmodern}
 \usepackage{pdfpages}
-\usepackage[ngerman]{babel}
+\usepackage[british,UKenglish,USenglish,english,american]{babel}
 \usepackage{multicol}
 \usepackage{float}
 \usepackage{array,tabularx,booktabs}
@@ -61,27 +61,6 @@
 \makeatother
 
 \renewcommand{\lstlistlistingname}{List of Listings}
-% TODO: define other languages as needed
-\lstset{language=Python,
-numbers=left,               
-numberstyle=\tiny,          
-showspaces=false,
-showtabs=false,
-breaklines=true,
-lineskip=-1pt,
-tabsize=2,
-showstringspaces=false,
-breakatwhitespace=true,
-escapeinside={(*@}{@*)},
-commentstyle=\color{greencomments},
-keywordstyle=\color{bluekeywords}\bfseries,
-stringstyle=\color{redstrings},
-style=lststyle,
-xleftmargin=17pt,
-         framexleftmargin=17pt,
-         framexrightmargin=5pt,
-         framexbottommargin=4pt
-}
 \lstset{
 morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,group,by,into,yield,async,await,@,None,self,as,elif,with}
 }
@@ -98,6 +77,27 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	stringstyle=\color{red}\ttfamily,
 	morestring=[b]',
 	morestring=[b]"
+}
+% TODO: define other languages as needed
+\lstset{language=TypeScript,
+	numbers=left,               
+	numberstyle=\tiny,          
+	showspaces=false,
+	showtabs=false,
+	breaklines=true,
+	lineskip=-1pt,
+	tabsize=2,
+	showstringspaces=false,
+	breakatwhitespace=true,
+	escapeinside={(*@}{@*)},
+	commentstyle=\color{greencomments},
+	keywordstyle=\color{bluekeywords}\bfseries,
+	stringstyle=\color{redstrings},
+	style=lststyle,
+	xleftmargin=17pt,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=4pt
 }
 \usepackage{caption}
 \DeclareCaptionFont{white}{\color{white}}
