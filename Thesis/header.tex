@@ -18,7 +18,7 @@
 \usepackage{lmodern, textcomp}
 \usepackage{lmodern}
 \usepackage{pdfpages}
-\usepackage[british,UKenglish,USenglish,english,american]{babel}
+\usepackage[english]{babel}
 \usepackage{multicol}
 \usepackage{float}
 \usepackage{array,tabularx,booktabs}
@@ -27,7 +27,7 @@
 \usepackage{wrapfig}
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
-
+\scriptsize
 \usepackage{enumitem}
 \newlist{compactitem}{itemize}{3}
 \setlist[compactitem,1]{label=\textbullet, nosep,leftmargin=1.5em,labelwidth=*,align=left}
@@ -65,7 +65,7 @@
 morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,group,by,into,yield,async,await,@,None,self,as,elif,with}
 }
 \lstdefinelanguage{TypeScript}{
-	keywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, number, string, boolean, module, \$, export, for, this},
+	keywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, number, string, boolean, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, let, const, super},
 	keywordstyle=\color{blue}\bfseries,
 	ndkeywords={class, export, boolean, throw, implements, import, this},
 	ndkeywordstyle=\color{darkgray}\bfseries,
@@ -79,9 +79,10 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	morestring=[b]"
 }
 % TODO: define other languages as needed
-\lstset{language=TypeScript,
-	numbers=left,               
-	numberstyle=\tiny,          
+\lstset{
+	language=TypeScript,
+	numbers=left,
+	numberstyle=\scriptsize,
 	showspaces=false,
 	showtabs=false,
 	breaklines=true,
@@ -97,12 +98,13 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	xleftmargin=17pt,
 	framexleftmargin=17pt,
 	framexrightmargin=5pt,
-	framexbottommargin=4pt
+	framexbottommargin=4pt,
+	basicstyle=\ttfamily\normalsize,
 }
 \usepackage{caption}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{10pt}#1#2#3}}}
-\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} 
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 \captionsetup[table]{justification=centering, singlelinecheck=false}
 
 \usepackage{subcaption}

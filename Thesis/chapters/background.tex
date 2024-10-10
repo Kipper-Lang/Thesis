@@ -1,8 +1,45 @@
-\section{Existing problems in the JavaScript and TypeScript world}
+\section{Existing problems in the JavaScript \& TypeScript world}
 
 \subsection{The JavaScript problem}
 
-Currently, the web space is dominated by JavaScript, a language developed solely for the purpose of creating interactive websites which has become the standard for any modern browser. Originally, when Netscape started development in 1995, it wasn't even intended to get as big as it did, so it comes as no surprise that the programming language, which would become the future of the web, wasn't exactly properly future-proofed or secured for complex operations and architectures. In the modern age of web development, JavaScript is no longer exclusively a front-end language. Wherever you go you will find JavaScript used in an application. Its usage has grown so much that there is now an incredibly large pool of available frameworks, technologies, and applications that you can use with the language. This though comes with a major problem, since the language powering so many systems today is a fairly harsh environment to work in, as it is filled with many problems ranging from minor inconveniencies to major design issues that are impossible to ignore. The most egregious example of this is the type system of JavaScript. It provides neither type checks nor warnings, doesn't allow for objects to be matched against types and requires the user to always know what the value of a variable will be at runtime, making it a constant game of remembering and guessing. Naturally, as a result, this has caused a lot of solutions to pop up, which all aim to resolve this issue. One of the most well-known and accepted solutions in this regard is TypeScript.
+Currently, the web space is dominated by JavaScript, a language developed solely for the purpose of creating interactive websites which has become the standard for any modern browser. Originally, when Netscape started development in 1995, it wasn't even intended to get as big as it did, so it comes as no surprise that the programming language, which would become the future of the web, wasn't exactly properly future-proofed or secured for complex operations and architectures.
 
-\subsection{TypeScript - One of the many solutions}
+In the modern age of web development, JavaScript is no longer exclusively a front-end language. Wherever you go you will find JavaScript used in an application. Its usage has grown so much that there is now an incredibly large pool of available frameworks, technologies, and applications that you can use with the language. This though comes with a major problem, since the language powering so many systems today is a fairly harsh environment to work in, as it is filled with many problems ranging from minor inconveniences to major design issues that are impossible to ignore. The most egregious example of this is the type system of JavaScript. It provides neither type checks nor warnings, doesn't allow for objects to be matched against types and requires the user to always know what the value of a variable will be at runtime, making it a constant game of remembering and guessing.
 
+Naturally, as a result, this has caused a lot of solutions to pop up, which all aim to resolve this issue. One of the most well-known and accepted solutions in this regard is TypeScript.
+
+\subsection{TypeScript - One of many solutions}
+
+TypeScript is as of now the most widely used alternative to JavaScript, or more accurately a super-set of it, allowing standard object-oriented functionality and compile-time type-checking similar to that present in Java or C\#. In its core principle, TypeScript provides everything that a developer needs for developing type-safe applications, as you can simply use the type annotations and let the TypeScript compiler check for your errors while working on your project. This though has certain limitations, as TypeScript is bound to the restrictions of a simple linter that aims to be fully compatible with JavaScript, no matter the circumstances. While that allows the developer to directly import any code from an old codebase, it also heavily impacts and limits the functionality, which the TypeScript compiler can implement. As a result, the compiler is bound to the constraints of a language not even designed for type checking and type annotations. More specifically this means that all type checks are compile-time only and are not checked against at runtime, which means TypeScript works on a trust-based system, where the developer is often used as the root of trust.
+
+To overcome this developers can themselves implement runtime type checks, which additionally check for specific types in ambiguous contexts. This is fairly impractical and adds a heavy burden on the developer as it requires constant maintenance and recurring rewrites to ensure the type checks are up-to-date and valid.
+
+\begin{lstlisting}[language=TypeScript]
+class SuperClass {
+	name: string = "Super class";
+}
+
+class MiddleClass extends SuperClass {
+	superField: SuperClass = new SuperClass();
+	
+	constructor() {
+		super();
+	}
+}
+
+class LowerClass extends MiddleClass {
+	classField: MiddleClass = new MiddleClass();
+	
+	constructor() {
+		super();
+	}
+}
+
+const c1 = <MiddleClass>new SuperClass(); // Unchecked cast
+console.log(c1.superField.name); // Runtime Error! Doesn't actually exist
+
+const c2 = <LowerClass>new MiddleClass(); // Unchecked cast
+console.log(c2.classField.superField.name); // Runtime Error! Doesn't actually exist
+\end{lstlisting}
+
+Here we have a simple example of an inheritance structure, where we access the properties of a child that is itself also another object. Due to the nature of TypeScript operations such as casts are mostly unchecked and usually work on the base of trusting the developer to know what they're doing. That means that in the example given above, the compiler does not realise that the operation the developer is performing is actually invalid and will result in a failure at runtime (can't access property "name", c1.superField is undefined). Furthermore, given that JavaScript only reports on such errors when a property on an undefined value is accessed, the undefined variable may go unused for a while before it is actually the cause of any problem. This leads to volatile code that can in many cases not be guaranteed to work unless the developer actively pays attention to such errors and makes sure that their code does not unintentionally force unchecked casts or other similar untyped operations.
