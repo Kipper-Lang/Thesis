@@ -14,32 +14,32 @@
 % -------- only change entries beginning here ----------------------------
 %
 % enter the title of the thesis
-\def\title{Unser tolles Thema -- wir sind genial}
+\def\title{Kipper - Programming Language for Improved Runtime Type-Safety}
 %
-\def\type{DIPLOMARBEIT}
-\def\degree{Reife- und Diplomprüfung}
+\def\type{Diploma thesis}
+\def\degree{Matriculation and diploma examination}
 %
 % enter the department
 %
-\def\dep{Höheren Abteilung für Informatik} % or IT-Medientechnik
+\def\dep{Higher Department of Informatics} % or IT-Medientechnik
 %
 % enter the student names
 %
-\def\nameone{Stefan Schwammal}
-\def\nametwo{Susi Schwammal}
-%\def\namethree{Sebastian Schwammal}
+\def\nameone{Luna Klatzer}
+\def\nametwo{Lorenz Holzbauer}
+\def\namethree{Fabian Baitura}
 %\def\namefour{Sabine Schwammal}
 %
 % enter the name of the supervisor 
 %
-\def\firstreferee{Lukas Lehrer}
+\def\firstreferee{DI Peter Bauer}
 %
 % enter information about external partners or comment the line
 %
-\def\assist{Petra Programmierer, Initech Inc.}
+\def\assist{Prof. Dr. Dr. h.c. Hanspeter Mössenböck, Johannes Kepler Universität}
 %
 % enter month and year
-\def\date{April 2023}
+\def\date{April 2025}
 %
 % the vertical alignment heavily depends on the length of the title and number of students 
 % below you might add additional space via (several) \medskip or \bigskip.
@@ -53,11 +53,12 @@
 \sffamily
 \begin{picture}(0,0)
 \put(-2.6,5){\color{mygray}\rule{25cm}{2.6cm}}
-\put(12.8,5.15){\small LEONDING}
-\put(12.8,5.5){\small BUNDESLEHRANSTALT}
-\put(12.8,5.85){\small HÖHERE}
-\put(14.58,5.85){\small TECHNISCHE}
-\put(0.35,5.25){\includegraphics[width=6cm]{htlleondinglogo.png}}
+\put(12.8,5.25){\small LEONDING}
+\put(12.8,5.6){\small FEDERAL COLLEGE}
+\put(12.8,5.95){\small HIGHER}
+\put(14.3,5.95){\small TECHNICAL}
+\put(-0.15,5.25){\includegraphics[width=6cm]{htlleondinglogo.png}}
+\put(6.45,5.3){\includegraphics[width=2.6cm]{jku-logo.png}}
 \end{picture}
 %
 \begin{center}
@@ -66,17 +67,17 @@
 \bigskip\bigskip\bigskip\par
 {\Large\type}
 \bigskip\par
-verfasst im Rahmen der
+written as part of the
 \bigskip\smallskip\par
 {\Large\degree}
 \bigskip\par
-an der
+at the
 \bigskip\smallskip\par
 {\Large\dep}
 \end{center}
 
 \vspace*{4cm}
-Eingereicht von:
+Handed in by:
 \smallskip\par
 {\large\nameone}\par
 {\large\nametwo}
@@ -87,12 +88,12 @@ Eingereicht von:
 \par{\large\namefour}
 \fi
 \medskip\bigskip\par
-Betreuer:
+Assisting Professor:
 \smallskip\par
 {\large\firstreferee}
 \ifundefined{assist}\else
 \medskip\bigskip\par
-Projektpartner:
+Project Partner:
 \smallskip\par
 {\large{\assist}}
 \fi

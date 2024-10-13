@@ -1,6 +1,6 @@
 % !TEX root = thesis.tex
 \documentclass[12pt,a4paper,titlepage,listof=totoc,bibliography=totoc,chapteratlists=0pt]{scrreprt}
-\input{header}
+\input{./header}
 
 \makeatletter
 \def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
@@ -78,10 +78,10 @@
 \end{spacing}
 \input{./chapters/demo}
 
-\begin{spacing}{1}\lipsum[2-3]
+\begin{spacing}{1}
 \chapter{Conclusion \& Future}
 \end{spacing}
-\input{./chapters/summary}
+\input{./chapters/conclusion_future}
 
 \newpage
 \pagenumbering{Roman}
