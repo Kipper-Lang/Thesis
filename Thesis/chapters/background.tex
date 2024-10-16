@@ -5,7 +5,7 @@
 
 Currently, the web space is dominated by JavaScript, a language developed solely for the purpose of creating interactive websites which has become the standard for any modern browser. Originally, when Netscape started development in 1995, it wasn't even intended to get as big as it did, so it comes as no surprise that the programming language, which would become the future of the web, wasn't exactly properly future-proofed or secured for complex operations and architectures.
 
-In the modern age of web development, JavaScript is no longer exclusively a front-end language. Wherever you go you will find JavaScript used in an application. Its usage has grown so much that there is now an incredibly large pool of available frameworks, technologies, and applications that you can use with the language. This though comes with a major problem, since the language powering so many systems today is a fairly harsh environment to work in, as it is filled with many problems ranging from minor inconveniences to major design issues that are impossible to ignore. The most egregious example of this is the type system of JavaScript. It provides neither type checks nor warnings, doesn't allow for objects to be matched against types and requires the user to always know what the value of a variable will be at runtime, making it a constant game of remembering and guessing.
+In the modern age of web development, JavaScript is no longer exclusively a front-end language. JavaScript can be found in a number of various applications that are no longer simply restricted to a browser. Its usage has grown so much that there is now an incredibly large pool of available frameworks, technologies, and applications that you can use with the language. This though comes with a major problem, since the language powering so many systems today is a fairly harsh environment to work in, as it is filled with many problems ranging from minor inconveniences to major design issues that are impossible to ignore. The most challenging example of this is the type system of JavaScript. It provides neither type checks nor warnings, doesn't allow for objects to be matched against types and requires the user to always know what the value of a variable will be at runtime, making it a constant game of remembering and guessing.
 
 Naturally, as a result, this has caused a lot of solutions to pop up, which all aim to resolve this issue. One of the most well-known and accepted solutions in this regard is TypeScript.
 
@@ -19,9 +19,9 @@ As already mentioned TypeScript works on a compile-time-only basis, which does n
 
 While in principle this maintains the status quo and provides the developer with more freedom, it also opens up another challenge that must be looked out for when writing code. If one of those casts goes wrong and isn't valid, the developer will only know that at runtime and will have no assistance to fix it. To overcome this developers can themselves implement runtime type checks, which prevent type mismatches in ambiguous contexts. While it is a common approach, it is fairly impractical and adds a heavy burden on the developer as it requires constant maintenance and recurring rewrites to ensure the type checks are up-to-date and valid.
 
-Let's look at an example:
+Let's look at an example~\ref{lst:background:uncheckedcompilecasts}.
 
-\begin{lstlisting}[language=TypeScript]
+\begin{lstlisting}[language=TypeScript,caption=Unchecked compile-time casts in TypeScript,label=lst:background:uncheckedcompilecasts]
 class SuperClass {
 	name: string = "Super class";
 }
@@ -55,9 +55,9 @@ Here we have a simple example of an inheritance structure, where we access the p
 
 Another similar issue occurs when dealing with dynamic or untyped data, which does not report on its structure and as such is handled as if it were a JavaScript value, where all type checks and security measures are disabled. This for one makes sense given the goal of ensuring compatibility with the underlying language, but it also creates another major problem where errors regarding any-typed values can completely go undetected. Consequently, if we were to receive data from a client or server we can not ensure that the data we received is fully valid or corresponds to the expected pattern. This is a problem which neither has a proper workaround nor a solution in TypeScript. 
 
-For example:
+For example~\ref{lst:background:ambigdata}:
 
-\begin{lstlisting}[language=TypeScript]
+\begin{lstlisting}[language=TypeScript,caption=Ambiguous dynamic data in TypeScript,label=lst:background:ambigdata]
 interface Data {
 	x: number;
 	y: string;
