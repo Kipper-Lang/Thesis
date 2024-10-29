@@ -19,7 +19,7 @@ As already mentioned TypeScript works on a compile-time-only basis, which does n
 
 While in principle this maintains the status quo and provides the developer with more freedom, it also opens up another challenge that must be looked out for when writing code. If one of those casts goes wrong and isn't valid, the developer will only know that at runtime and will have no assistance to fix it. To overcome this developers can themselves implement runtime type checks, which prevent type mismatches in ambiguous contexts. While it is a common approach, it is fairly impractical and adds a heavy burden on the developer as it requires constant maintenance and recurring rewrites to ensure the type checks are up-to-date and valid.
 
-Let's look at an example~\ref{lst:background:uncheckedcompilecasts}.
+Let's look at an example ~\ref{lst:background:uncheckedcompilecasts}.
 
 \begin{lstlisting}[language=TypeScript,caption=Unchecked compile-time casts in TypeScript,label=lst:background:uncheckedcompilecasts]
 class SuperClass {
