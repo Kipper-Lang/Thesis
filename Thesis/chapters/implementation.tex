@@ -68,6 +68,63 @@ To check for type compatibility, every type brings its own comparer function. In
 
 \subsection{Runtime Type Implementations in other Languages}
 \label{chap:runtime-other-languages}
+Nominal type systems are used in most modern object-orientated programming languages like Java and C\#.  In these systems, types are compared by their name. Furthermore they are treated as equal, if one type is a subtype of the other one, as can bee seen in example \ref{lst:implementation:javanominaltyping}. Here a Programmer is an Employee, but not the other way around. This means, that Programmers have all the properties and methods an Employee has, but can additionally bring their own. The relationships are inherited, so a SeniorDeveloper is still an Employee, and a Programmer at the same time. Even though the Senior Developer adds no new functionality to the Programmer, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar, but not related structures.
+
+
+\begin{lstlisting}[language=Java,caption=Example of nominal typing in java,label=lst:implementation:javanominaltyping]
+class Employee {
+	public float salary;
+}
+
+class Programmer extends Employee {
+	public float bonus;
+}
+
+class SeniorDeveloper extends Programmer { }
+\end{lstlisting}
+
+
+Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with it's object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In example \ref{lst:implementation:ocamlstructuraltyping} there is a function that required a function "speak" returning the type "string". Both the "dog" object as well as the "cat" object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
+
+\begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
+	let make_speak (obj : < speak : string >) =
+	obj#speak
+	
+	let dog = object
+	method speak = "Woof!"
+	end
+	
+	let cat = object
+	method speak = "Meow!"
+	end
+	
+	let () =
+	print_endline (make_speak dog);
+	print_endline (make_speak cat);
+\end{lstlisting}
+
+Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the Duck Test, therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is that type. The most prominent language utilizing Duck Typing is JavaScript. As can be seen in example \ref{lst:implementation:javascriptducktyping}, the duck and the person have the same methods and properties, henceforth they are of the same type. The dog object on the other hand does not implement the "quack" function, which equates to not  being a duck. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance. Due to the type checking happening at runtime, errors only surface at this time, potentially causing failures. For developers, the lack of type information makes understanding the code harder and more tedious to maintain.
+
+\begin{lstlisting}[language=Typescript,caption=Example of duck typing in JavaScript,label=lst:implementation:javascriptducktyping]
+const duck = {
+	quack: function () {
+		console.log("Quack!");
+	}
+};
+
+const person = {
+	quack: function () {
+		console.log("I'm a person but I can quack!");
+	}
+};
+
+const dog = {
+	bark: function () {
+		console.log("Woof!");
+	}
+};
+\end{lstlisting}
+
 
 
 
