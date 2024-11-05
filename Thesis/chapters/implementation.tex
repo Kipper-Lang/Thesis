@@ -125,13 +125,59 @@ const dog = {
 };
 \end{lstlisting}
 
-
-
-
-
 \subsection{Runtime Generation for Builtin Types}
 
 \subsection{Runtime Generation for Interfaces}
+The generation of runtime interface types allows for dynamic type checking against interfaces in the target languages. This process is managed by the !!!RuntimeTypesGenerator!!! class, which is called by the code-generator and adds a JavaScript object to the compiled code that represents the structure of the interface. It therefore includes the interface's methods and properties with their respective types.
+
+\begin{lstlisting}[language=Typescript,caption=Example interfaces in the Kipper language,label=lst:implementation:inputinterface]
+interface Car {
+	brand: str;
+	honk(volume: num): void;
+	year: num;
+}
+
+interface Person {
+	name: str;
+	age: num;
+	car: Car;
+}
+\end{lstlisting}
+
+ At compile time, the generator function iterates over the interface's members and differentiates between properties and methods. The function keeps separate lists of already generated runtime representations for properties and methods.
+ 
+ If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built in type, the respective runtime type of the previous section is used. If not, we can assume the property's type is another interface, which has it's own runtime type already. This data is stored in "\_\_kipper.Property", which is finally added to the list of generated runtime type representation
+ 
+ In case a method is detected, the generator function fetches the return type and the method's name. If the method has arguments, the name and type of each argument gets evaluated and stored in the same internal Kipper type as above, because the type representation of properties and arguments is equivalent. After that, it gets added to the list of type representations as well.
+
+\begin{lstlisting}[language=Typescript,caption=The runtime representation of the previous interfaces,label=lst:implementation:runtimeinterface]
+const __intf_Car = new __kipper.Type(
+	"Car",
+	[
+		new __kipper.Property("brand", __kipper.builtIn.str),
+		new __kipper.Property("year", __kipper.builtIn.num),
+	],
+	[
+		new __kipper.Method("honk", __kipper.builtIn.void, 
+			[
+				new __kipper.Property("volume", __kipper.builtIn.num),
+			]
+		),
+	]
+);
+
+const __intf_Person = new __kipper.Type(
+	"Person",
+	[
+		new __kipper.Property("name", __kipper.builtIn.str),
+		new __kipper.Property("age", __kipper.builtIn.num),
+		new __kipper.Property("car", __intf_Car),
+	],
+	[]
+);
+\end{lstlisting}
+
+
 
 \subsection{Matches operator}
 
