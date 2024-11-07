@@ -177,8 +177,27 @@ const __intf_Person = new __kipper.Type(
 );
 \end{lstlisting}
 
+The generated output code in the target language is a string array, which later gets concatenated into a single output string as can bee seen in \ref{lst:implementation:codegenerationstatement}. The properties and methods are wrapped into a Kipper type object that represents the final interface runtime type. It is saved into a constant with a \_\_intf\_ prefix. This runtime type-checking object code is then placed under the compiled interface's code. Notable usages for runtime typechecking include the "matches" operator \ref{subsec:matches} and the typeof operator \ref{subsec:typeof}.
+
+\begin{lstlisting}[language=Typescript,caption=Code generation statement ,label=lst:implementation:codegenerationstatement]
+return [
+	[
+		"const ",
+		identifier,
+		` = new ${TargetJS.internalObjectIdentifier}.Type("` + interfaceName + '"',
+		", [",
+		...propertiesWithTypes,
+		"], [",
+		...functionsWithTypes,
+		"])",
+	],
+];
+\end{lstlisting}
+
 
 
 \subsection{Matches operator}
+\label{subsec:matches}
 
 \subsection{Typeof operator}
+\label{subsec:typeof}
