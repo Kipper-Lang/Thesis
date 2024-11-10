@@ -125,10 +125,8 @@ const dog = {
 };
 \end{lstlisting}
 
-\subsection{Runtime Generation for Builtin Types}
-
 \subsection{Runtime Generation for Interfaces}
-The generation of runtime interface types allows for dynamic type checking against interfaces in the target languages. This process is managed by the !!!RuntimeTypesGenerator!!! class, which is called by the code-generator and adds a JavaScript object to the compiled code that represents the structure of the interface. It therefore includes the interface's methods and properties with their respective types.
+The generation of runtime interface types allows for dynamic type checking against interfaces in the target languages. This process is managed by the RuntimeTypesGenerator class, which is called by the code-generator and adds a JavaScript object to the compiled code that represents the structure of the interface. It therefore includes the interface's methods and properties with their respective types.
 
 \begin{lstlisting}[language=Typescript,caption=Example interfaces in the Kipper language,label=lst:implementation:inputinterface]
 interface Car {
@@ -194,7 +192,53 @@ return [
 ];
 \end{lstlisting}
 
+\subsection{Runtime Generation for Builtin Types}
+Builtin runtime types are the used as parts of more complex constructs like interfaces. Comparing builtin runtime types at runtime happens by comparing their references, as they are uniquely defined at the start of the target language output in a global scope. They are implemented like the examples in  \ref{lst:implementation:builtinruntimetypes}. In addition to these types there are also builtin implementations for generic types. These include arrays and functions.
 
+\begin{lstlisting}[language=Typescript,caption=Generic builtin types,label=lst:implementation:genericbuiltintypes]
+const __type_Array = new KipperGenericType('Array', undefined, undefined, {T: __type_any});
+const __type_Func = new KipperGenericType('Func', undefined, undefined, {T: [], R: __type_any});	
+\end{lstlisting}
+
+As can be seen in example \ref{lst:implementation:genericbuiltintypes}, they are implemented using a special KipperGenericType class. This class extends the KipperType and includes an additional field for generic arguments. Most importantly, it includes the method changeGenericTypeArguments, which allows for modifying a types generic arguments at runtime. It is used for example in lambdas and arrays, where the builtin generic runtime type is used and the modified to include the required types. When, for example an array is initialized, it first gets assigned the "\_\_type\_Array" runtime type, which is then modified by the changeGenericTypeArguments method. Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of arguments, which have types as well. The "\_\_type\_Func" type is used by lambdas, which are user defined functions without a name.
+
+\begin{lstlisting}[language=Typescript,caption=Generic Kipper Type,label=lst:implementation:generickippertype]
+class KipperGenericType extends KipperType {
+	constructor(name, fields, methods, genericArgs, baseType = null) {
+		super(name, fields, methods, baseType);
+		this.genericArgs = genericArgs;
+	}
+	isCompatibleWith(obj) {
+		return this.name === obj.name;
+	}
+	changeGenericTypeArguments(genericArgs) {
+		return new KipperGenericType(
+		this.name,
+		this.fields,
+		this.methods,
+		genericArgs,
+		this.baseType
+		);
+	}
+}
+\end{lstlisting}
+
+Other builtin types are error type.They are used in the error handling system to represent errors. The base "KipperError" type has a name property and extends the target language's error type as can be seen in code snippet \ref{lst:implementation:kippererrortypes}. Additional error types inherit of this base type. The "KipperNotImplementedError" for example just changes the name of the error. As of now it is not possible for the user to create custom error types, due to inheritance not being implemented yet . The user will have to use the builtin error type and change it's name. 
+
+\begin{lstlisting}[language=Typescript,caption=Kipper error types,label=lst:implementation:kippererrortypes]
+class KipperError extends Error {
+	constructor(msg) {
+		super(msg);
+		this.name = "KipError";
+	}
+}
+class KipperNotImplementedError extends KipperError {
+	constructor(msg) {
+		super(msg);
+		this.name = "KipNotImplementedError";
+	}
+}
+\end{lstlisting}
 
 \subsection{Matches operator}
 \label{subsec:matches}
