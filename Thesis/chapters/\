@@ -243,9 +243,9 @@ class KipperNotImplementedError extends KipperError {
 \subsection{Matches operator}
 \label{subsec:matches}
 
-The main feature of the Kipper programming language is it's runtime type comparison. There are multiple ways to compare objects at runtime. The instanceof operator compares by reference. This means, that an object is an instance of a class, when there is a reference to that class. This works by utilizing JavaScripts prototype system. Another way to compare objects would be comparison by structure. This aproach treats two objects as equal, when they share the same structure, as in the same properties and methods. Kipper allows for comparison with both options. Comparison by reference is implemented using the 'instanceof' operator and only utilized for comparing classes. Comparison by structure is what we call 'matching' and is used for primitives and interfaces. Matching array and function types is not yet supported in Kipper. The 'matches' operator in Kipper implements this type of comparison.
+The main feature of the Kipper programming language is it's runtime type comparison. There are multiple ways to compare objects at runtime. The instanceof operator compares by reference. This means, that an object is an instance of a class, when there is a reference to that class. This works by utilizing JavaScripts prototype system. Another way to compare objects would be comparison by structure. This aproach treats two objects as equal, when they share the same structure, as in the same properties and methods. Kipper allows for comparison with both options. Comparison by reference is implemented using the 'instanceof' operator and only utilized for comparing classes. Comparison by structure is what we call 'matching' and is used for primitives and interfaces. The 'matches' operator in Kipper implements this type of comparison.
 
-\begin{lstlisting}[language=Typescript,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
+\begin{lstlisting}[language=Typescript,caption=The Kipper matches operator, label=lst:implementation:matchesOperator]
 interface Y {
 	v: bool;
 	t(gr: str): num;
@@ -269,75 +269,30 @@ var x: X = {
 var res: bool = x matches X; // true
 \end{lstlisting}
 
-As can be seen in example \ref{lst:implementation:matchesoperator}, the matches operator can compare interfaces by properties and methods. It takes two arguments, an object and a type which it should match. Properties are compared recursivly and methods are compared by name, arguments and return type.
+As can be seen in example \ref{lst:implementation}, the matches operator can compare interfaces by properties and methods. Properties are compared recursivly and methods are compared by name, arguments and return type.
 
-Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being in the type it should check against \ref{lst:implementation:matchesproperty}. The order of properties does not matter. When the name was found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitive.
 
-\begin{lstlisting}[language=Typescript,caption=Matches operator property comparison,label=lst:implementation:matchesproperty]
-for (const field of pattern.fields) {
-  const fieldName = field.name;
-  const fieldType = field.type;
 
-  if (!(fieldName in value)) {
-    return false;
-  }
 
-  const fieldValue = value[fieldName];
-  const isSameType = __kipper.typeOf(fieldValue) === field.type;
 
-  if (primTypes.includes(field.type.name) && !isSameType) {
-    return false;
-  }
 
-  if (!primTypes.includes(fieldType.name)) {
-    if (!__kipper.matches(fieldValue, fieldType)) {
-      return false;
-    }
-  }
-}
+
+
+
+\begin{lstlisting}[language=Typescript,caption=Comparison with Instanceof,label=lst:implementation:comparisonWithInstanceof]
+
+
 \end{lstlisting}
 
-After checking the properties, the matches expression iterates over the methods. It first searches for the method name in the target type. If found, it compares the return type. Then each argument is compared by name. As the methods signatures need to be exactly the same, the amount of parameters is compared as well. This ensures, that one method can not be a subset of the other one.
+\subsection{Matches operator}
+\label{subsec:matches}
 
-\begin{lstlisting}[language=Typescript,caption=Matches operator method comparison,label=lst:implementation:matchesmethod]
-for (const field of pattern.methods) {
-  const fieldName = field.name;
-  const fieldReturnType = field.returnType;
-  const parameters = field.parameters;
 
-  if (!(fieldName in value)) {
-    return false;
-  }
 
-  const fieldValue = value[fieldName];
-  const isSameType = fieldReturnType === fieldValue.__kipType.genericArgs.R;
 
-  if (!isSameType) {
-    return false;
-  }
-
-  const methodParameters = fieldValue.__kipType.genericArgs.T;
-
-  if (parameters.length !== methodParameters.length) {
-    return false;
-  }
-
-  let count = 0;
-  for (let param of parameters) {
-    if (param.type.name !== methodParameters[count].name) {
-      return false;
-    }
-    count++;
-  }
-}
-\end{lstlisting}
-
-When none of these condition is false, the input object matches the input type and they can be seen as the equal.
 
 \subsection{Typeof operator}
 \label{subsec:typeof}
-
-
 %%% Local Variables:
 %%% mode: LaTeX
 %%% TeX-master: "../thesis"
