@@ -42,7 +42,10 @@ To ensure future compatibility with inheritance, Kipper also includes a "baseTyp
 
 \subsection{Runtime Type Implementations in other Languages}
 \label{chap:runtime-other-languages}
-Nominal type systems are used in most modern object-orientated programming languages like Java and C\#.  In these systems, types are compared by their name. Furthermore they are treated as equal, if one type is a subtype of the other one, as can bee seen in example \ref{lst:implementation:javanominaltyping}. Here a Programmer is an Employee, but not the other way around. This means, that Programmers have all the properties and methods an Employee has, but can additionally bring their own. The relationships are inherited, so a SeniorDeveloper is still an Employee, and a Programmer at the same time. Even though the Senior Developer adds no new functionality to the Programmer, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar, but not related structures.
+
+\subsubsection{Nominal Type Systems}
+
+Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in listing \ref{lst:implementation:javanominaltyping}. Here a "Programmer" is an "Employee", but not the other way around. This means that "Programmer" instances have all the properties and methods an "Employee" has while also having additional ones specific to "Programmer". The relationships are as such inherited, so a "SeniorDeveloper" is still an "Employee" and a "Programmer" at the same time. Even though the Senior Developer adds no new functionality to the "Programmer", it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar or even identical but not related structures.
 
 \begin{lstlisting}[language=Java,caption=Example of nominal typing in java,label=lst:implementation:javanominaltyping]
 class Employee {
@@ -56,7 +59,9 @@ class Programmer extends Employee {
 class SeniorDeveloper extends Programmer { }
 \end{lstlisting}
 
-Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with it's object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In example \ref{lst:implementation:ocamlstructuraltyping} there is a function that required a function "speak" returning the type "string". Both the "dog" object as well as the "cat" object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
+\subsubsection{Structural Type Systems}
+
+Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with its object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In example \ref{lst:implementation:ocamlstructuraltyping} there is a function that required a function "speak" returning the type "string". Both the "dog" object as well as the "cat" object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
 
 \begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
 	let make_speak (obj : < speak : string >) =
@@ -75,31 +80,39 @@ Structural type systems compare types by their structure. This means, if two dif
 	print_endline (make_speak cat);
 \end{lstlisting}
 
-Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the Duck Test, therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is that type. The most prominent language utilizing Duck Typing is JavaScript. As can be seen in example \ref{lst:implementation:javascriptducktyping}, the duck and the person have the same methods and properties, henceforth they are of the same type. The dog object on the other hand does not implement the "quack" function, which equates to not  being a duck. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance. Due to the type checking happening at runtime, errors only surface at this time, potentially causing failures. For developers, the lack of type information makes understanding the code harder and more tedious to maintain.
+\subsubsection{Duck Typed Systems - Duck Typing}
 
-\begin{lstlisting}[language=Typescript,caption=Example of duck typing in JavaScript,label=lst:implementation:javascriptducktyping]
-const duck = {
+Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing \ref{lst:implementation:javascriptducktyping}, the duck and the person have the same methods and properties, henceforth they are of the same type. The dog object on the other hand does not implement the "quack" function, which equates to not being a duck. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
+
+\begin{lstlisting}[language=Typescript,caption=Example of duck typing in TypeScript,label=lst:implementation:javascriptducktyping]
+interface Duck {
+	quack(): void;	
+}
+
+const duck: Duck = {
 	quack: function () {
 		console.log("Quack!");
 	}
 };
 
-const person = {
+const person: Duck = {
 	quack: function () {
 		console.log("I'm a person but I can quack!");
 	}
 };
 
-const dog = {
+const dog: Duck = {
 	bark: function () {
 		console.log("Woof!");
 	}
-};
+}; // <- causes an error in the static type checker
 \end{lstlisting}
+
+Given that duck typing allows dynamic data to be easily checked and assigned to any interface, Kipper adopts a similar system to that of TypeScript but introduces notable differences in how interfaces behave and how dynamic data is handled. For instance, casting an "any" object to an interface in Kipper will result in a runtime error if the object does not possess all the required members. In contrast, TypeScript permits such an operation without performing any type checks at runtime.
 
 \subsection{Runtime Base Type}
 
-In practice, all user-defined and built-in types inherit from a basic "KipperType" class in the runtime environment. A primitive version of such a class can be seen in listing ~\ref{lst:implementation:runtimetypestructure}.
+In practice, all user-defined and built-in types inherit from a basic "KipperType" class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing ~\ref{lst:implementation:runtimetypestructure}.
 
 \begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
 	class KipperType {
@@ -118,11 +131,13 @@ In practice, all user-defined and built-in types inherit from a basic "KipperTyp
 	}
 \end{lstlisting}
 
-As already mentioned types primarily rely on identifier checks to differentiate themselves from other types. Given though that there are slight differences in how types operate, they generally define themselves with what they are compatible using a comparator function. This comparator is already predefined for all built-ins in the runtime library and is also the same for all interfaces, as they all share the same equality behaviour.
+As already mentioned types primarily rely on identifier checks to differentiate themselves from other types. Given though that there are slight differences in how types operate, they generally define themselves with what they are compatible using a comparator function. This comparator is already predefined for all built-ins in the runtime library and any user structures build on top of the existing rules established in the library.
 
-Type "any" is an exception to the rule and accepts any value you provide. However, assigning "any" to anything other than "any" is forbidden and it is necessary to cast it to a different type in order to use the stored value. By design "any" is as useless as possible, in order to force the developer into typechecking it.
+Type "any" is an exception and is the only type that accepts any value you provide. However, assigning "any" to anything other than "any" is forbidden and it is necessary to cast it to a different type in order to use the stored value. By design "any" is as useless as possible, in order to force the developer into typechecking it.
 
 Furthermore, classes are also exempt from this comparator behaviour, as classes behave like a value during runtime and provide a prototype which can simply be used to check if an object is an instance of that class.
+
+The definition of the built-in types as such looks like this~\ref{lst:implementation:builtinruntimetypes}:
 
 \begin{lstlisting}[language=TypeScript,caption=Examples for the builtin runtime types,label=lst:implementation:builtinruntimetypes]
 	const __type_any = 
@@ -137,7 +152,9 @@ Furthermore, classes are also exempt from this comparator behaviour, as classes 
 
 \subsection{Runtime Generation for Interfaces}
 
-The generation of runtime interface types allows for dynamic type checking against interfaces in the target languages. This process is managed by the RuntimeTypesGenerator class, which is called by the code-generator and adds a JavaScript object to the compiled code that represents the structure of the interface. It therefore includes the interface's methods and properties with their respective types.
+Unlike TypeScript, in Kipper all interfaces possess a runtime counterpart, which stores all the required information to verify type compatibility during runtime. This process is managed by the Kipper code generator, which adds custom type instances to the compiled code that represent the structures of the user-defined interfaces with all its methods and properties including their respective types.
+
+Now take for example the given interfaces seen in listing~\ref{lst:implementation:inputinterface}.
 
 \begin{lstlisting}[language=Typescript,caption=Example interfaces in the Kipper language,label=lst:implementation:inputinterface]
 interface Car {
@@ -155,9 +172,11 @@ interface Person {
 
  At compile time, the generator function iterates over the interface's members and differentiates between properties and methods. The function keeps separate lists of already generated runtime representations for properties and methods.
  
- If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built in type, the respective runtime type of the previous section is used. If not, we can assume the property's type is another interface, which has it's own runtime type already. This data is stored in "\_\_kipper.Property", which is finally added to the list of generated runtime type representation
+ If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built-in type, the respective runtime type already provided by the Kipper runtime library is used. If not, we can assume the property's type is a reference to another type structure, which will be simply referenced in our new type structure. This data is stored in an instance of "\_\_kipper.Property", which is finally added to the list of properties in the interface.
  
- In case a method is detected, the generator function fetches the return type and the method's name. If the method has arguments, the name and type of each argument gets evaluated and stored in the same internal Kipper type as above, because the type representation of properties and arguments is equivalent. After that, it gets added to the list of type representations as well.
+ In case a method is detected, the generator function fetches the return type and the method's name. If the method has any arguments, the name and type of each argument also gets evaluated and then included in the definition of the "\_\_kipper.Method". After that, it gets added to the interface as well and is stored in its own separate method list.
+ 
+ If we translate the interfaces shown above in figure~\ref{lst:implementation:inputinterface} it would look similar to that in figure~\ref{lst:implementation:runtimeinterface}.
 
 \begin{lstlisting}[language=Typescript,caption=The runtime representation of the previous interfaces,label=lst:implementation:runtimeinterface]
 const __intf_Car = new __kipper.Type(
@@ -186,25 +205,13 @@ const __intf_Person = new __kipper.Type(
 );
 \end{lstlisting}
 
-The generated output code in the target language is a string array, which later gets concatenated into a single output string as can bee seen in \ref{lst:implementation:codegenerationstatement}. The properties and methods are wrapped into a Kipper type object that represents the final interface runtime type. It is saved into a constant with a \_\_intf\_ prefix. This runtime type-checking object code is then placed under the compiled interface's code. Notable usages for runtime typechecking include the "matches" operator \ref{subsec:matches} and the typeof operator \ref{subsec:typeof}.
+As shown in Listing \ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a "KipperType" instance, identified by the "\_\_intf\_" prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-\begin{lstlisting}[language=Typescript,caption=Code generation statement ,label=lst:implementation:codegenerationstatement]
-return [
-	[
-		"const ",
-		identifier,
-		` = new ${TargetJS.internalObjectIdentifier}.Type("` + interfaceName + '"',
-		", [",
-		...propertiesWithTypes,
-		"], [",
-		...functionsWithTypes,
-		"])",
-	],
-];
-\end{lstlisting}
+Notable usages for runtime typechecking include the "matches" operator \ref{subsec:matches} and the "typeof" operator \ref{subsec:typeof}.
 
 \subsection{Runtime Generation for Builtin Types}
-Builtin runtime types are the used as parts of more complex constructs like interfaces. Comparing builtin runtime types at runtime happens by comparing their references, as they are uniquely defined at the start of the target language output in a global scope. They are implemented like the examples in  \ref{lst:implementation:builtinruntimetypes}. In addition to these types there are also builtin implementations for generic types. These include arrays and functions.
+
+Builtin runtime types are the used as parts of more complex constructs like interfaces. Comparing builtin runtime types at runtime happens by comparing their references, as they are uniquely defined at the start of the target language output in a global scope. They are implemented like the examples in \ref{lst:implementation:builtinruntimetypes}. In addition to these types there are also builtin implementations for generic types. These include arrays and functions.
 
 \begin{lstlisting}[language=Typescript,caption=Generic builtin types,label=lst:implementation:genericbuiltintypes]
 const __type_Array = new KipperGenericType('Array', undefined, undefined, {T: __type_any});
