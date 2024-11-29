@@ -28,48 +28,21 @@
 
 \subsection{Runtime Type Concept}
 
-The primary goal of the Kipper runtime type system is to allow the comparison of untyped objects with clearly defined types, such as primitives, classes and interfaces which allows to remove any ambiguity that could potentially lead to errors. When the user code is generated, all user-defined interfaces are translated into runtime types, which store the information necessary to do a type check against a given object. This allows the compiler to generate required checks against these runtime types in places where the user is performing a cast or match operation using an interface. In the case of user-defined classes, the compiler has no need to translate any structural information, as classes rely on a prototype system which means they can use simple "instanceof" (prototype equality) checks. Alongside the code generation for user-defined structures, the compiler also inserts the built-in primitive structures and generics such as the "Array" and "Func" type into the output code. The implementation for a simple runtime type can be seen in 3. 
+The primary goal of the Kipper runtime type system is to allow untyped values to be compared with defined types, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors. During code generation, all user-defined interfaces are converted into runtime types that store the information needed to perform type checks. These are then utilised alongside the built-in runtime types, such as "num", "str" or "obj", to enable the compiler to add necessary checks and runtime references for any cast, match or typeof operation.
 
-With the exception of interfaces and classes, types primarily differentiate themselves using their name, which means baseline checks are simply performed using equality checks. In more advanced use cases, such as interfaces, the required fields and methods are also taken into account; these represent the minimum blueprint an object must implement to match the given type. In this way, Kipper implements the same duck-typing system also present in TypeScript. To be future-proof in regards to inheritance, the "baseType" property is also available, although it remains unused as of today.
+With the exception of interfaces, classes, and generics, types are primarily distinguished by their names. In these cases, type equality checks are performed using nominal comparisons, where the name acts as a unique identifier within the given scope e.g. type "num" is only assignable to "num". For more complex structures, additional information—such as members or generic parameters—is also considered.
 
-\begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
-class KipperType {
-	constructor(name, fields, methods, baseType = null, customComparer = null) {
-		this.name = name; 
-		this.fields = fields;
-		this.methods = methods;
-		this.baseType = baseType;
-		this.customComparer = customComparer;
-	}
+In the case of interfaces, the names and types of fields and methods are used as discriminators. These fields and methods represent the minimum blueprint that an object must implement to be considered compatible with the interface and thus "assignable." In this regard, Kipper adopts the same duck-typing approach found in TypeScript.
 
-	accepts(obj) {
-		if (this === obj) return true;
-		return obj instanceof KipperType && this.customComparer ? this.customComparer(this, obj) : false;
-	}
-}
-\end{lstlisting}
+For generics, which include "Array<T>" and "Func<T..., R>", the identifier is used alongside the provided generic parameters to determine assignability. This ensures that when one generic is assigned to another, all parameters must match. For instance, "Array<num>" cannot be assigned to "Array<str>" and vice versa, even if their overall structure is identical.
 
- Kipper uses a nominal type system for primitives. This means, that two types are compared by their name. Classes, on the other hand, are compared using JavaScripts prototype chain. Therefore they are equal, only if they are the same instance.   To match interfaces and types against objects of an unknown type, it was necessary to implement duck typing. Duck typing compares the properties and methods of two objects for equality and ignores the type name. Both approaches and a third one will be further explained in chapter ~\ref{chap:runtime-other-languages}. 
+For user-defined classes, the compiler relies on the prototype to serve as the discriminator. In practice, this behaviour is similar to that of primitives, as different classes cannot be assigned to each other.
 
-To check for type compatibility, every type brings its own comparer function. In case no comparer is supplied, it returns false.
-
- A snippet of the implementation of the builtin runtime types can be seen in \ref{lst:implementation:builtinruntimetypes}. Nominal comparison is implemented in the "\_\_type\_undefined" and the "\_\_type\_str" constants. "Any" is an exception, as it is necessary to cast it to a different type in order to return a useful value. By design "any" is as useless as possible, in order to force the developer into typechecking it.
-
-\begin{lstlisting}[language=TypeScript,caption=The builtin runtime types,label=lst:implementation:builtinruntimetypes]
-	const __type_any = 
-		new KipperType('any', undefined, undefined);
-		
-	const __type_undefined = 
-		new KipperType('undefined', undefined, undefined, undefined, (a, b) => a.name === b.name);
-		
-	const __type_str = 
-		new KipperType('str', undefined, undefined, undefined, (a, b) => a.name === b.name);
-\end{lstlisting}
+To ensure future compatibility with inheritance, Kipper also includes a "baseType" property, which allows types to be linked in an inheritance chain. However, this feature is currently unused.
 
 \subsection{Runtime Type Implementations in other Languages}
 \label{chap:runtime-other-languages}
 Nominal type systems are used in most modern object-orientated programming languages like Java and C\#.  In these systems, types are compared by their name. Furthermore they are treated as equal, if one type is a subtype of the other one, as can bee seen in example \ref{lst:implementation:javanominaltyping}. Here a Programmer is an Employee, but not the other way around. This means, that Programmers have all the properties and methods an Employee has, but can additionally bring their own. The relationships are inherited, so a SeniorDeveloper is still an Employee, and a Programmer at the same time. Even though the Senior Developer adds no new functionality to the Programmer, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar, but not related structures.
-
 
 \begin{lstlisting}[language=Java,caption=Example of nominal typing in java,label=lst:implementation:javanominaltyping]
 class Employee {
@@ -82,7 +55,6 @@ class Programmer extends Employee {
 
 class SeniorDeveloper extends Programmer { }
 \end{lstlisting}
-
 
 Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with it's object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In example \ref{lst:implementation:ocamlstructuraltyping} there is a function that required a function "speak" returning the type "string". Both the "dog" object as well as the "cat" object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
 
@@ -125,7 +97,46 @@ const dog = {
 };
 \end{lstlisting}
 
+\subsection{Runtime Base Type}
+
+In practice, all user-defined and built-in types inherit from a basic "KipperType" class in the runtime environment. A primitive version of such a class can be seen in listing ~\ref{lst:implementation:runtimetypestructure}.
+
+\begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
+	class KipperType {
+		constructor(name, fields, methods, baseType = undefined, customComparer = undefined) {
+			this.name = name; 
+			this.fields = fields;
+			this.methods = methods;
+			this.baseType = baseType;
+			this.customComparer = customComparer;
+		}
+		
+		accepts(obj) {
+			if (this === obj) return true;
+			return obj instanceof KipperType && this.customComparer ? this.customComparer(this, obj) : false;
+		}
+	}
+\end{lstlisting}
+
+As already mentioned types primarily rely on identifier checks to differentiate themselves from other types. Given though that there are slight differences in how types operate, they generally define themselves with what they are compatible using a comparator function. This comparator is already predefined for all built-ins in the runtime library and is also the same for all interfaces, as they all share the same equality behaviour.
+
+Type "any" is an exception to the rule and accepts any value you provide. However, assigning "any" to anything other than "any" is forbidden and it is necessary to cast it to a different type in order to use the stored value. By design "any" is as useless as possible, in order to force the developer into typechecking it.
+
+Furthermore, classes are also exempt from this comparator behaviour, as classes behave like a value during runtime and provide a prototype which can simply be used to check if an object is an instance of that class.
+
+\begin{lstlisting}[language=TypeScript,caption=Examples for the builtin runtime types,label=lst:implementation:builtinruntimetypes]
+	const __type_any = 
+	new KipperType('any', undefined, undefined);
+	
+	const __type_undefined = 
+	new KipperType('undefined', undefined, undefined, undefined, (a, b) => a.name === b.name);
+	
+	const __type_str = 
+	new KipperType('str', undefined, undefined, undefined, (a, b) => a.name === b.name);
+\end{lstlisting}
+
 \subsection{Runtime Generation for Interfaces}
+
 The generation of runtime interface types allows for dynamic type checking against interfaces in the target languages. This process is managed by the RuntimeTypesGenerator class, which is called by the code-generator and adds a JavaScript object to the compiled code that represents the structure of the interface. It therefore includes the interface's methods and properties with their respective types.
 
 \begin{lstlisting}[language=Typescript,caption=Example interfaces in the Kipper language,label=lst:implementation:inputinterface]
