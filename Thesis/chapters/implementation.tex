@@ -111,6 +111,7 @@ const dog: Duck = {
 Given that duck typing allows dynamic data to be easily checked and assigned to any interface, Kipper adopts a similar system to that of TypeScript but introduces notable differences in how interfaces behave and how dynamic data is handled. For instance, casting an "any" object to an interface in Kipper will result in a runtime error if the object does not possess all the required members. In contrast, TypeScript permits such an operation without performing any type checks at runtime.
 
 \subsection{Runtime Base Type}
+\label{subsec:basetype}
 
 In practice, all user-defined and built-in types inherit from a basic "KipperType" class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing ~\ref{lst:implementation:runtimetypestructure}.
 
@@ -137,9 +138,11 @@ Type "any" is an exception and is the only type that accepts any value you provi
 
 Furthermore, classes are also exempt from this comparator behaviour, as classes behave like a value during runtime and provide a prototype which can simply be used to check if an object is an instance of that class.
 
-The definition of the built-in types as such looks like this~\ref{lst:implementation:builtinruntimetypes}:
+\subsection{Runtime Built-in Types}
 
-\begin{lstlisting}[language=TypeScript,caption=Examples for the builtin runtime types,label=lst:implementation:builtinruntimetypes]
+Built-in runtime types serve as the foundation of the type system and make up the parts of more complex constructs like interfaces. Built-in runtime types are compared at runtime by comparing their references, as they are uniquely defined at the start of the output code and available in the global scope. The implementations of such structures can be seen in the listing~\ref{lst:implementation:builtinruntimetypes} down below.
+
+\begin{lstlisting}[language=TypeScript,caption=Examples for the built-in runtime types,label=lst:implementation:builtinruntimetypes]
 	const __type_any = 
 	new KipperType('any', undefined, undefined);
 	
@@ -150,75 +153,14 @@ The definition of the built-in types as such looks like this~\ref{lst:implementa
 	new KipperType('str', undefined, undefined, undefined, (a, b) => a.name === b.name);
 \end{lstlisting}
 
-\subsection{Runtime Generation for Interfaces}
+In addition to the core primitive types—such as "bool", "str", "num", and others—there are built-in implementations for generic types, including "Array<T>" and "Func<T..., R>". These additionally define their generic parameters which generally default to a standard "any" type as can be seen in listing~\ref{lst:implementation:genericbuiltintypes}.
 
-Unlike TypeScript, in Kipper all interfaces possess a runtime counterpart, which stores all the required information to verify type compatibility during runtime. This process is managed by the Kipper code generator, which adds custom type instances to the compiled code that represent the structures of the user-defined interfaces with all its methods and properties including their respective types.
-
-Now take for example the given interfaces seen in listing~\ref{lst:implementation:inputinterface}.
-
-\begin{lstlisting}[language=Typescript,caption=Example interfaces in the Kipper language,label=lst:implementation:inputinterface]
-interface Car {
-	brand: str;
-	honk(volume: num): void;
-	year: num;
-}
-
-interface Person {
-	name: str;
-	age: num;
-	car: Car;
-}
-\end{lstlisting}
-
- At compile time, the generator function iterates over the interface's members and differentiates between properties and methods. The function keeps separate lists of already generated runtime representations for properties and methods.
- 
- If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built-in type, the respective runtime type already provided by the Kipper runtime library is used. If not, we can assume the property's type is a reference to another type structure, which will be simply referenced in our new type structure. This data is stored in an instance of "\_\_kipper.Property", which is finally added to the list of properties in the interface.
- 
- In case a method is detected, the generator function fetches the return type and the method's name. If the method has any arguments, the name and type of each argument also gets evaluated and then included in the definition of the "\_\_kipper.Method". After that, it gets added to the interface as well and is stored in its own separate method list.
- 
- If we translate the interfaces shown above in figure~\ref{lst:implementation:inputinterface} it would look similar to that in figure~\ref{lst:implementation:runtimeinterface}.
-
-\begin{lstlisting}[language=Typescript,caption=The runtime representation of the previous interfaces,label=lst:implementation:runtimeinterface]
-const __intf_Car = new __kipper.Type(
-	"Car",
-	[
-		new __kipper.Property("brand", __kipper.builtIn.str),
-		new __kipper.Property("year", __kipper.builtIn.num),
-	],
-	[
-		new __kipper.Method("honk", __kipper.builtIn.void, 
-			[
-				new __kipper.Property("volume", __kipper.builtIn.num),
-			]
-		),
-	]
-);
-
-const __intf_Person = new __kipper.Type(
-	"Person",
-	[
-		new __kipper.Property("name", __kipper.builtIn.str),
-		new __kipper.Property("age", __kipper.builtIn.num),
-		new __kipper.Property("car", __intf_Car),
-	],
-	[]
-);
-\end{lstlisting}
-
-As shown in Listing \ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a "KipperType" instance, identified by the "\_\_intf\_" prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
-
-Notable usages for runtime typechecking include the "matches" operator \ref{subsec:matches} and the "typeof" operator \ref{subsec:typeof}.
-
-\subsection{Runtime Generation for Builtin Types}
-
-Builtin runtime types are the used as parts of more complex constructs like interfaces. Comparing builtin runtime types at runtime happens by comparing their references, as they are uniquely defined at the start of the target language output in a global scope. They are implemented like the examples in \ref{lst:implementation:builtinruntimetypes}. In addition to these types there are also builtin implementations for generic types. These include arrays and functions.
-
-\begin{lstlisting}[language=Typescript,caption=Generic builtin types,label=lst:implementation:genericbuiltintypes]
+\begin{lstlisting}[language=Typescript,caption=Generic built-in types,label=lst:implementation:genericbuiltintypes]
 const __type_Array = new KipperGenericType('Array', undefined, undefined, {T: __type_any});
 const __type_Func = new KipperGenericType('Func', undefined, undefined, {T: [], R: __type_any});	
 \end{lstlisting}
 
-As can be seen in example \ref{lst:implementation:genericbuiltintypes}, they are implemented using a special KipperGenericType class. This class extends the KipperType and includes an additional field for generic arguments. Most importantly, it includes the method changeGenericTypeArguments, which allows for modifying a types generic arguments at runtime. It is used for example in lambdas and arrays, where the builtin generic runtime type is used and the modified to include the required types. When, for example an array is initialized, it first gets assigned the "\_\_type\_Array" runtime type, which is then modified by the changeGenericTypeArguments method. Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of arguments, which have types as well. The "\_\_type\_Func" type is used by lambdas, which are user defined functions without a name.
+As can be seen in listing~\ref{lst:implementation:genericbuiltintypes}, generic types are implemented using a special "KipperGenericType" class. This class, shown in listing~\ref{lst:implementation:generickippertype}, extends the "KipperType" and includes an additional field for generic arguments. Most importantly, it includes the method "changeGenericTypeArguments", which allows for modifying a type's generic arguments at runtime. It is used in lambda and array definitions, where the built-in generic runtime type is used and then modified to represent the specified generic parameters. When for example an array is initialized, it first gets assigned the default "Array<any>" runtime type, which is then modified by the "changeGenericTypeArguments" method to create the required type, such as "Array<num>". Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of argument types. The "Func<T..., R>" type on the other hand is used by lambda definitions, which are user-defined functions with a specific return type and arguments without a name.
 
 \begin{lstlisting}[language=Typescript,caption=Generic Kipper Type,label=lst:implementation:generickippertype]
 class KipperGenericType extends KipperType {
@@ -241,7 +183,9 @@ class KipperGenericType extends KipperType {
 }
 \end{lstlisting}
 
-Other builtin types are error type. They are used in the error handling system to represent errors. The base "KipperError" type has a name property and extends the target language's error type as can be seen in code snippet \ref{lst:implementation:kippererrortypes}. Additional error types inherit of this base type. The "KipperNotImplementedError" for example just changes the name of the error. As of now it is not possible for the user to create custom error types, due to inheritance not being implemented yet . The user will have to use the builtin error type and change it's name.
+\subsection{Runtime Errors}
+
+Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base "KipperError" type has a name property and extends the target language's error type as can be seen in listing~\ref{lst:implementation:kippererrortypes}. Additional error types inherit this base type and extend it with additional error information. For instance, the "KipperNotImplementedError" is used whenever a feature that is not yet implemented is used by the developer.
 
 \begin{lstlisting}[language=Typescript,caption=Kipper error types,label=lst:implementation:kippererrortypes]
 class KipperError extends Error {
@@ -258,10 +202,71 @@ class KipperNotImplementedError extends KipperError {
 }
 \end{lstlisting}
 
-\subsection{Matches operator}
+\subsection{Runtime Generation for Interfaces}
+
+Unlike TypeScript, in Kipper all interfaces possess a runtime counterpart, which stores all the required information to verify type compatibility during runtime. This process is managed by the Kipper code generator, which adds custom type instances to the compiled code that represent the structures of the user-defined interfaces with all its methods and properties including their respective types.
+
+Now take for example the given interfaces seen in listing~\ref{lst:implementation:inputinterface}.
+
+\begin{lstlisting}[language=Typescript,caption=Example interfaces in the Kipper language,label=lst:implementation:inputinterface]
+	interface Car {
+		brand: str;
+		honk(volume: num): void;
+		year: num;
+	}
+	
+	interface Person {
+		name: str;
+		age: num;
+		car: Car;
+	}
+\end{lstlisting}
+
+At compile time, the generator function iterates over the interface's members and differentiates between properties and methods. The function keeps separate lists of already generated runtime representations for properties and methods.
+
+If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built-in type, the respective runtime type already provided by the Kipper runtime library is used. If not, we can assume the property's type is a reference to another type structure, which will be simply referenced in our new type structure. This data is stored in an instance of "\_\_kipper.Property", which is finally added to the list of properties in the interface.
+
+In case a method is detected, the generator function fetches the return type and the method's name. If the method has any arguments, the name and type of each argument also gets evaluated and then included in the definition of the "\_\_kipper.Method". After that, it gets added to the interface as well and is stored in its own separate method list.
+
+If we translate the interfaces shown above in listing~\ref{lst:implementation:inputinterface} it would look similar to that in listing~\ref{lst:implementation:runtimeinterface}.
+
+\begin{lstlisting}[language=Typescript,caption=The runtime representation of the previous interfaces,label=lst:implementation:runtimeinterface]
+	const __intf_Car = new __kipper.Type(
+		"Car",
+		[
+			new __kipper.Property("brand", __kipper.builtIn.str),
+			new __kipper.Property("year", __kipper.builtIn.num),
+		],
+		[
+			new __kipper.Method("honk", __kipper.builtIn.void, 
+				[
+					new __kipper.Property("volume", __kipper.builtIn.num),
+				]
+			),
+		]
+	);
+	
+	const __intf_Person = new __kipper.Type(
+		"Person",
+		[
+			new __kipper.Property("name", __kipper.builtIn.str),
+			new __kipper.Property("age", __kipper.builtIn.num),
+			new __kipper.Property("car", __intf_Car),
+		],
+		[]
+	);
+\end{lstlisting}
+
+As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a "KipperType" instance, identified by the "\_\_intf\_" prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
+
+Notable usages for runtime typechecking include the "matches" operator \ref{subsec:matches} and the "typeof" operator \ref{subsec:typeof}.
+
+\subsection{Matches operator for Interfaces}
 \label{subsec:matches}
 
-The main feature of the Kipper programming language is it's runtime type comparison. There are multiple ways to compare objects at runtime. The instanceof operator compares by reference. This means, that an object is an instance of a class, when there is a reference to that class. This works by utilizing JavaScripts prototype system. Another way to compare objects would be comparison by structure. This aproach treats two objects as equal, when they share the same structure, as in the same properties and methods. Kipper allows for comparison with both options. Comparison by reference is implemented using the 'instanceof' operator and only utilized for comparing classes. Comparison by structure is what we call 'matching' and is used for primitives and interfaces. Matching array and function types is not yet supported in Kipper. The 'matches' operator in Kipper implements this type of comparison.
+The primary feature of the Kipper programming language is its runtime type comparison. There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the "instanceof" operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
+
+Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the "instanceof" operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching," is applied to primitives and interfaces. Structural comparisons are implemented using the matches operator as can been seen in listing~\ref{lst:implementation:runtimeinterface}.
 
 \begin{lstlisting}[language=Typescript,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
 interface Y {
@@ -284,12 +289,14 @@ var x: X = {
 	z: 5
 };
 
-var res: bool = x matches X; // true
+var res: bool = x matches X; // -> true
 \end{lstlisting}
 
-As can be seen in example \ref{lst:implementation:matchesoperator}, the matches operator can compare interfaces by properties and methods. It takes two arguments, an object and a type which it should match. Properties are compared recursivly and methods are compared by name, arguments and return type.
+As can be seen in example \ref{lst:implementation:matchesoperator}, the matches operator can compare interfaces by properties and methods. It takes two arguments, an object and a type which it should match. Properties are compared recursively and methods are compared by name, arguments and return type.
 
-Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being in the type it should check against \ref{lst:implementation:matchesproperty}. The order of properties does not matter. When the name was found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitive.
+Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being present in the type it should check against. The order of properties does not matter. When the name is found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitives.
+
+This property match algorithm is implemented as can seen in listing~\ref{lst:implementation:matchesproperty}.
 
 \begin{lstlisting}[language=Typescript,caption=Matches operator property comparison,label=lst:implementation:matchesproperty]
 for (const field of pattern.fields) {
@@ -315,7 +322,7 @@ for (const field of pattern.fields) {
 }
 \end{lstlisting}
 
-After checking the properties, the matches expression iterates over the methods. It first searches for the method name in the target type. If found, it compares the return type. Then each argument is compared by name. As the methods signatures need to be exactly the same, the amount of parameters is compared as well. This ensures, that one method can not be a subset of the other one.
+After checking the properties, the matches expression iterates over the methods. It first searches for the method name in the target type. If found, it compares the return type. Then each argument is compared by name. As the methods signatures need to be exactly the same, the amount of parameters is compared as well.
 
 \begin{lstlisting}[language=Typescript,caption=Matches operator method comparison,label=lst:implementation:matchesmethod]
 for (const field of pattern.methods) {
@@ -350,7 +357,7 @@ for (const field of pattern.methods) {
 }
 \end{lstlisting}
 
-When none of these condition is false, the input object matches the input type and they can be seen as the equal.
+When none of these condition is false, the input object matches the input type and they can be seen as compatible.
 
 \subsection{Typeof operator}
 \label{subsec:typeof}
