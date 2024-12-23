@@ -3,11 +3,91 @@
 
 \subsection{The JavaScript problem}
 
-JavaScript, originally developed by Netscape in 1995 to enable interactive web pages, has become the foundational programming language for modern web browsers with 60\% of developers using the language in their profession as of 2023~\cite{jetbrains2023}. While its initial scope was limited to enhancing the functionality of websites, JavaScript has since evolved into a versatile language that serves as the foundation for diverse applications, including those outside traditional browser environments.
+JavaScript, originally developed by Netscape in 1995 to enable interactive web pages, has become the foundational programming language for modern web browsers with 60\% of developers using the language in their profession as of 2023~\cite{jetbrains2023}. While its initial scope was limited to enhancing the functionality of websites, JavaScript has since evolved into a versatile language that serves as the foundation for diverse applications, including those outside traditional browser environments. This success has been largely made possible by its versatile and modifiable nature allowing the language to take many shapes with a relatively consistent and easy-to-use syntax.
 
-However, this rapid expansion was not accompanied by fundamental changes to the language's initial design, leading to inherent limitations and challenges when addressing complex, large-scale systems. In modern web development, JavaScript's role extends far beyond front-end scripting. Its omnipresence is reflected in its adoption across back-end platforms (e.g. Node.js), desktop applications (e.g. Electron), and mobile development frameworks (e.g. React Native). Accompanying this growth is a vast ecosystem of libraries, frameworks, and tools that offer developers flexibility in solving specific challenges. Despite these advantages, the language presents significant difficulties for developers. One of the most prominent challenges is JavaScript’s type system, which lacks static typing, runtime type checks, and robust safeguards against type mismatches. For example, developers must carefully manage the dynamic nature of variables, often encountering runtime errors caused by implicit type coercion or unexpected values. These issues complicate debugging and increase the risk of introducing bugs into production systems.
+However, this rapid expansion was not accompanied by fundamental changes to the language's initial design, leading to inherent limitations and challenges when addressing complex, large-scale systems. In modern web development, JavaScript's role extends far beyond front-end scripting. Its omnipresence is reflected in its adoption across back-end platforms (e.g. Node.js), desktop applications (e.g. Electron), and mobile development frameworks (e.g. React Native). Accompanying this growth is a vast ecosystem of libraries, frameworks, and tools that offer developers flexibility in solving specific challenges. Despite these advantages, the language presents significant difficulties for developers.
 
-As a result, various solutions have emerged, aiming to enhance JavaScript's reliability and developer experience. One of the most well-known and accepted solutions in this regard is TypeScript.
+\subsubsection{Type Ambiguity and Uncontrolled Flexibility}
+
+JavaScript’s dynamic typing provides developers with flexibility and expressiveness in their code. However, this flexibility can also lead to ambiguity and unintended behavior. Unlike statically typed languages, JavaScript does not enforce type constraints, meaning variable types are determined at runtime. It permits almost any value to be assigned to any variable without restrictions, relying solely on the developer to manage type consistency. This lack of enforcement makes the language prone to errors caused by implicit type coercion or unexpected values. Additionally, JavaScript does not inherently handle type errors and assumes that most operations are valid, even providing special cases for operations that would typically be considered invalid.
+
+For instance:
+
+\begin{itemize}
+	\item{
+		A variable intended to store a number can unexpectedly hold a string due to developer oversight or API misuse, as can be seen in listing~\ref{lst:background:uncheckedvariabletypes}.
+		
+		\begin{lstlisting}[language=JavaScript,caption=Unchecked variable assignments due to missing type definitions,label=lst:background:uncheckedvariabletypes]
+let id; // Variable allowing any value
+
+...
+
+let resp = resp.json(); // Object: { id: "1234", ... }
+id = resp.id; // Assigns a string even though that was not intended
+		\end{lstlisting}
+	}
+	\item{
+		Implicit conversions, such as treating `null` or `undefined` as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
+
+		\begin{lstlisting}[language=JavaScript,caption=Broad ability to perform "invalid" operations despite clear error case,label=lst:background:problematicflexibility]
+let discountRate = cart.appliedDiscount; // Let's assume it's actually "applied_discount" not "appliedDiscount" so it returns 'undefined'
+
+return price * (1 - discountRate); // -> yields NaN (Not A Number)
+		\end{lstlisting}
+	}
+\end{itemize}
+
+Such flexibility complicates debugging, as issues may only surface during runtime. This increases the risk of critical bugs making it into production and requires developers to rely heavily on additional tooling or rigorous testing to mitigate the risks inherent in dynamic typing.
+
+\subsubsection{Runtime-Bound Error Handling \& Catching}
+
+Error handling in JavaScript is largely runtime-bound, except for syntax errors, and relies on tools like try-catch blocks and asynchronous error handling with Promise chains. This is because JavaScript is an interpreted language, meaning the program does not perform checks before executing each line. As a result, developers lack pre-execution validation.
+
+While try-catch blocks can handle most errors, typically those defined by the developer, JavaScript allows certain operations that would be illegal in other languages, like accessing non-existent properties by simply returning undefined instead of an error. This can make the underlying cause of an issue difficult to identify, with the code potentially failing at a different location, sometimes long after the original problem has occurred.
+
+Examples include:
+
+\begin{itemize}
+    \item{
+		Accessing a missing property, which returns `undefined`, and later receiving an error due to `undefined` not being an object, as demonstrated in listing~\ref{lst:background:missingpropertyerror}.
+		
+		\begin{lstlisting}[language=JavaScript,caption=Accessing a missing property returns undefined which later causes an error,label=lst:background:missingpropertyerror]
+// Let's assume this is some kind of API response that incorrectly returned some data
+let user = {
+	name: "Alice"
+};
+
+...
+
+const userAddress =  user.address; // Undefined property ('address' does not exist), returns simply 'undefined'
+
+...
+
+let shippingCost = getShippingCost(address.city); // -> TypeError: Cannot read property 'city' of undefined
+		\end{lstlisting}
+	}
+	\item{
+		Misaligned function arguments, such as passing an object where a string was expected, going unnoticed until execution, as illustrated in listing~\ref{lst:background:misalignedargs}.
+		
+		\begin{lstlisting}[language=JavaScript,caption=Misaligned function arguments going unnoticed,label=lst:background:misalignedargs]
+function greet(name) {
+	console.log("Hello, " + name + "!");
+}
+
+...
+
+let user = { firstName: "Alice" };
+
+greet(user); // Unintended behavior: "Hello, [object Object]!"
+		\end{lstlisting}
+	}
+\end{itemize}
+
+\subsubsection{Modern approaches}
+
+These limitations force a defensive programming approach, requiring the developer to anticipate and safeguard against potential failures. While third-party tools such as linters or test frameworks can help identify issues, they are generally not equivalent to built-in, language-level type and error guarantees.
+
+Given though that JavaScript is so prominent and can hardly be replaced in the modern web and server-side space, alternative solutions have been developed in response to these and other challenges to improve JavaScript's reliability and ease of use. One of the most prominent and widely adopted of these is TypeScript, which like the topic of this thesis, implements a \gls{transpilation}-based language with independent libraries and functionality building on top of the existing JavaScript environment.
 
 \subsection{TypeScript - One of many solutions}
 
@@ -23,7 +103,7 @@ As already mentioned TypeScript works on a compile-time-only basis, which does n
 
 While in principle this maintains the status quo and provides the developer with more freedom, it also opens up another challenge that must be looked out for when writing code. If one of those casts goes wrong and isn't valid, the developer will only know that at runtime and will have no assistance to fix it. To overcome this developers can themselves implement runtime type checks, which prevent type mismatches in ambiguous contexts. While it is a common approach, it is fairly impractical and adds a heavy burden on the developer as it requires constant maintenance and recurring rewrites to ensure the type checks are up-to-date and valid.
 
-Let's look at an example ~\ref{lst:background:uncheckedcompilecasts}.
+Let's look at an example~\ref{lst:background:uncheckedcompilecasts}.
 
 \begin{lstlisting}[language=TypeScript,caption=Unchecked compile-time casts in TypeScript,label=lst:background:uncheckedcompilecasts]
 class SuperClass {

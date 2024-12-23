@@ -22,7 +22,8 @@
 \author{Luna Klatzer, Lorenz Holzbauer, Fabian Baitura}
 
 \makeindex
-\makeglossaries
+\makenoidxglossaries
+\input{glossary}
 \begin{document}
 \bstctlcite{IEEEexample:BSTcontrol}
 \newcommand{\reminder}[1]
@@ -88,10 +89,9 @@
 \newpage
 \pagenumbering{Roman}
 \setcounter{page}{\value{RPages}}
-\input{glossary}
 %\setlength{\glsdescwidth}{0.8\linewidth}
 \glsnogroupskiptrue
-\printglossary[title=Glossar,toctitle=Glossar] %,style=long]
+\printnoidxglossary[title=Glossary,toctitle=Glossary,style=long,sort=word]
 \spacing{1}{
 \bibliographystyle{IEEEtran}
 \bibliography{bib}
