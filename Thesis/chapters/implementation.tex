@@ -7,6 +7,9 @@
 \section{Type Analysis}
 \setauthor{Luna Klatzer}
 
+\section{Type System}
+\setauthor{Fabian Baitura}
+
 \section{Output Generation}
 \setauthor{Lorenz Holzbauer}
 
@@ -19,9 +22,6 @@
 \subsection{Differences between the Target Languages}
 
 \subsection{Stylistic Choices}
-
-\section{Type System}
-\setauthor{Fabian Baitura}
 
 \section{Integrated Runtime}
 \setauthor{Lorenz Holzbauer}
@@ -261,7 +261,7 @@ As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties an
 
 Notable usages for runtime typechecking include the "matches" operator \ref{subsec:matches} and the "typeof" operator \ref{subsec:typeof}.
 
-\subsection{Matches operator for Interfaces}
+\subsection{Matches Operator for Interfaces}
 \label{subsec:matches}
 
 The primary feature of the Kipper programming language is its runtime type comparison. There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the "instanceof" operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
@@ -359,7 +359,7 @@ for (const field of pattern.methods) {
 
 When none of these condition is false, the input object matches the input type and they can be seen as compatible.
 
-\subsection{Typeof operator}
+\subsection{Typeof Operator}
 \label{subsec:typeof}
 
 
