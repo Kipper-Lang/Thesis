@@ -66,6 +66,43 @@ However, implicit type coercion can sometimes lead to unintended results if not 
 
 \subsubsection{Primitives \& Core Types}
 
+In JavaScript, a primitive (or primitive value, primitive data type) is a data type that is not an object and does not have methods or properties. There are seven primitive data types:
+
+\begin{itemize}
+	\item string
+	\item number
+	\item bigint
+	\item boolean
+	\item undefined
+	\item symbol
+	\item null
+	
+\end{itemize}
+
+Unique among the primitive types in JavaScript are undefined and null. 
+
+In JavaScript, null is considered a primitive value due to its seemingly simple nature. However, when using the typeof operator, it unexpectedly returns "object". This is a known quirk in JavaScript and is considered a historical bug in the language that has been maintained for compatibility reasons.
+
+\begin{lstlisting}[caption=typeof null return "object" in JavaScript ]
+	console.log(typeof null); // "object"
+\end{lstlisting}
+
+undefined is a primitive value automatically assigned to variables that have been declared but not yet assigned a value, or to formal function parameters for which no actual arguments are provided.
+
+\begin{lstlisting}[caption=typeof null return "object" in JavaScript ]
+	let item; // declare a variable without assigning a value
+	
+	console.log(`The value of item is ${item}`); // logs "The value of item is undefined"
+	
+\end{lstlisting}
+
+All primitives in JavaScript are immutable, meaning they cannot be altered directly. It is important to distinguish between a primitive value and a variable that holds a primitive value. While a variable can be reassigned to a new value, the primitive value itself cannot be modified in the same way that objects, arrays, and functions can be altered. JavaScript does not provide utilities to mutate primitive values.
+
+Primitives, such as numbers and strings, do not inherently have methods. However, they appear to behave as though they do, due to JavaScript's automatic wrapping, or "auto-boxing," of primitive values into their corresponding wrapper objects. For example, when a method like toString() is called on a primitive number, JavaScript internally creates a temporary Number object. The method is then executed on this object, not directly on the primitive value.
+
+Consider the primitive value value = 10;. When a method such as value.toString() is invoked, JavaScript automatically wraps the primitive 10 in a Number object and calls Number.prototype.toString() on it. This behavior occurs invisibly to the programmer and serves as a helpful mental model for understanding various behaviors in JavaScript. For example, when attempting to "mutate" a primitive, such as assigning a property to a string (str.foo = 1), the original string is not modified. Instead, the value is assigned to a temporary wrapper object.
+
+
 \subsubsection{Custom Dynamic Structures}
 
 \subsubsection{Prototype Inheritance System}
