@@ -27,7 +27,42 @@
 
 \subsection{Existing Foundation \& Environment}
 
+We have choosen to use JavaScript as our foundation for Kipper. What we have to work with will be described under
+
 \subsubsection{Weak Dynamic Type System}
+
+JavaScript is a dynamically typed language, meaning variables can hold values of different types during runtime. Unlike statically typed languages such as TypeScript or Java, JavaScript does not require explicit declaration of a variable's data type.
+
+\begin{lstlisting}[caption=Holding Values of different Types during Runtime]
+	let foo = 10; // foo is a number
+	foo = "Hello"; // foo is now a string
+	foo = [1, 2, 3, 4, 5]; // foo is now an array
+\end{lstlisting}
+
+In contrast, TypeScript enforces static typing, ensuring that a variable's type remains consistent throughout its lifecycle. This prevents unintentional type changes and improves code reliability.
+
+\begin{lstlisting}[caption=Statically Typed Language TypeScript]
+let foo: number = 1; // x is explicitly declared as a number
+foo = "Hello"; // Error: Type 'string' is not assignable to type 'number'
+\end{lstlisting}
+
+JavaScript is also a weakly typed language, meaning that it allows operations between different data types without the need for explicit type conversion. This flexibility can sometimes lead to unexpected results, as JavaScript automatically coerces values to the appropriate type when performing operations.
+
+\begin{lstlisting}[caption=Automatic type conversion in JavaScript]
+	let quantity = 7; // quantity is an integer
+	let value = "20"; // value is a string
+	
+	let total = quantity + value; // JavaScript automatically converts quantity to string
+	console.log(total); // Output: "720"
+\end{lstlisting}
+
+In the example above, the number 7 is stored in the variable quantity, and the string "20" is stored in the variable value. Typically, when attempting to add a number and a string, one might expect an error due to the mismatch in data types. However, JavaScript performs implicit type coercion, automatically converting the number into a string before performing the operation.
+
+In this case, JavaScript converts the number 7 to the string "7" and concatenates it with the string "20", resulting in the string "720". This type conversion occurs implicitly, without the need for explicit instructions to JavaScript.
+
+However, implicit type coercion can sometimes lead to unintended results if not handled carefully. It is important to understand how JavaScript performs these conversions to prevent unexpected behavior in your code. Awareness of these implicit conversions helps ensure that operations between different data types do not produce erroneous or undesirable outcomes.
+
+
 
 \subsubsection{Primitives \& Core Types}
 
