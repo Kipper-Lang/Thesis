@@ -16,7 +16,7 @@ For instance:
 \begin{itemize}
 	\item{
 		A variable intended to store a number can unexpectedly hold a string due to developer oversight or API misuse, as can be seen in listing~\ref{lst:background:uncheckedvariabletypes}.
-		
+
 		\begin{lstlisting}[language=JavaScript,caption=Unchecked variable assignments due to missing type definitions,label=lst:background:uncheckedvariabletypes]
 let id; // Variable allowing any value
 
@@ -27,10 +27,10 @@ id = resp.id; // Assigns a string even though that was not intended
 		\end{lstlisting}
 	}
 	\item{
-		Implicit conversions, such as treating `null` or `undefined` as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
+		Implicit conversions, such as treating "null" or "undefined" as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
 
 		\begin{lstlisting}[language=JavaScript,caption=Broad ability to perform "invalid" operations despite clear error case,label=lst:background:problematicflexibility]
-let discountRate = cart.appliedDiscount; // Let's assume it's actually "applied_discount" not "appliedDiscount" so it returns 'undefined'
+let discountRate = cart.appliedDiscount; // Let's assume it's actually "applied_discount" not "appliedDiscount" so it returns "undefined"
 
 return price * (1 - discountRate); // -> yields NaN (Not A Number)
 		\end{lstlisting}
@@ -49,8 +49,8 @@ Examples include:
 
 \begin{itemize}
     \item{
-		Accessing a missing property, which returns `undefined`, and later receiving an error due to `undefined` not being an object, as demonstrated in listing~\ref{lst:background:missingpropertyerror}.
-		
+		Accessing a missing property, which returns "undefined", and later receiving an error due to "undefined" not being an object, as demonstrated in listing~\ref{lst:background:missingpropertyerror}.
+
 		\begin{lstlisting}[language=JavaScript,caption=Accessing a missing property returns undefined which later causes an error,label=lst:background:missingpropertyerror]
 // Let's assume this is some kind of API response that incorrectly returned some data
 let user = {
@@ -59,16 +59,16 @@ let user = {
 
 ...
 
-const userAddress =  user.address; // Undefined property ('address' does not exist), returns simply 'undefined'
+const userAddress =  user.address; // Undefined property ("address" does not exist), returns simply "undefined"
 
 ...
 
-let shippingCost = getShippingCost(address.city); // -> TypeError: Cannot read property 'city' of undefined
+let shippingCost = getShippingCost(address.city); // -> TypeError: Cannot read property "city" of undefined
 		\end{lstlisting}
 	}
 	\item{
 		Misaligned function arguments, such as passing an object where a string was expected, going unnoticed until execution, as illustrated in listing~\ref{lst:background:misalignedargs}.
-		
+
 		\begin{lstlisting}[language=JavaScript,caption=Misaligned function arguments going unnoticed,label=lst:background:misalignedargs]
 function greet(name) {
 	console.log("Hello, " + name + "!");
@@ -112,7 +112,7 @@ class SuperClass {
 
 class MiddleClass extends SuperClass {
 	superField: SuperClass = new SuperClass();
-	
+
 	constructor() {
 		super();
 	}
@@ -120,7 +120,7 @@ class MiddleClass extends SuperClass {
 
 class LowerClass extends MiddleClass {
 	classField: MiddleClass = new MiddleClass();
-	
+
 	constructor() {
 		super();
 	}
@@ -163,7 +163,7 @@ var data = <Data>receiveUserReq(); // Unsafe casting with unknown data
 console.log(data.z.z1); // No Runtime Error! But returns "undefined"
 \end{lstlisting}
 
-For the most part, developers are expected to simply watch out for such cases and implement their own security measures. There are potential libraries which can be utilised to add runtime checks which check the data received, but such solutions require an entirely new layer of abstraction which must be managed manually by a developer. This additional boilerplate code also increases the complexity of a program and has to be actively maintained to keep working. 
+For the most part, developers are expected to simply watch out for such cases and implement their own security measures. There are potential libraries which can be utilised to add runtime checks which check the data received, but such solutions require an entirely new layer of abstraction which must be managed manually by a developer. This additional boilerplate code also increases the complexity of a program and has to be actively maintained to keep working.
 
 Good examples of technologies that provide runtime object schema matching are "Zod"~\cite{zod} and "joi"~\cite{joi}. Both are fairly popular and actively used by API developers who need to develop secure endpoints and ensure accurate request data. While they are a good approach to fixing the problem after the fact, they still create their own difficulties. We will examine these later in the implementation section, where we will more thoroughly compare Kipper's approach to other tools.
 
