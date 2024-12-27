@@ -10,6 +10,104 @@
 \section{Type System}
 \setauthor{Fabian Baitura}
 
+\subsection{Intended Purpose \& Concept}
+
+\subsection{Existing Foundation \& Environment}
+
+We have choosen to use JavaScript as our foundation for Kipper. What we have to work with will be described under
+
+\subsubsection{Weak Dynamic Type System}
+
+JavaScript is a dynamically typed language, meaning variables can hold values of different types during runtime. Unlike statically typed languages such as TypeScript or Java, JavaScript does not require explicit declaration of a variable's data type.
+
+\begin{lstlisting}[caption=Holding Values of different Types during Runtime]
+	let foo = 10; // foo is a number
+	foo = "Hello"; // foo is now a string
+	foo = [1, 2, 3, 4, 5]; // foo is now an array
+\end{lstlisting}
+
+In contrast, TypeScript enforces static typing, ensuring that a variable's type remains consistent throughout its lifecycle. This prevents unintentional type changes and improves code reliability.
+
+\begin{lstlisting}[caption=Statically Typed Language TypeScript]
+let foo: number = 1; // x is explicitly declared as a number
+foo = "Hello"; // Error: Type 'string' is not assignable to type 'number'
+\end{lstlisting}
+
+JavaScript is also a weakly typed language, meaning that it allows operations between different data types without the need for explicit type conversion. This flexibility can sometimes lead to unexpected results, as JavaScript automatically coerces values to the appropriate type when performing operations.
+
+\begin{lstlisting}[caption=Automatic type conversion in JavaScript]
+	let quantity = 7; // quantity is an integer
+	let value = "20"; // value is a string
+
+	let total = quantity + value; // JavaScript automatically converts quantity to string
+	console.log(total); // Output: "720"
+\end{lstlisting}
+
+In the example above, the number 7 is stored in the variable quantity, and the string "20" is stored in the variable value. Typically, when attempting to add a number and a string, one might expect an error due to the mismatch in data types. However, JavaScript performs implicit type coercion, automatically converting the number into a string before performing the operation.
+
+In this case, JavaScript converts the number 7 to the string "7" and concatenates it with the string "20", resulting in the string "720". This type conversion occurs implicitly, without the need for explicit instructions to JavaScript.
+
+However, implicit type coercion can sometimes lead to unintended results if not handled carefully. It is important to understand how JavaScript performs these conversions to prevent unexpected behavior in your code. Awareness of these implicit conversions helps ensure that operations between different data types do not produce erroneous or undesirable outcomes.
+
+
+
+\subsubsection{Primitives \& Core Types}
+
+In JavaScript, a primitive (or primitive value, primitive data type) is a data type that is not an object and does not have methods or properties. There are seven primitive data types:
+
+\begin{itemize}
+	\item string
+	\item number
+	\item bigint
+	\item boolean
+	\item undefined
+	\item symbol
+	\item null
+
+\end{itemize}
+
+Unique among the primitive types in JavaScript are undefined and null.
+
+In JavaScript, null is considered a primitive value due to its seemingly simple nature. However, when using the typeof operator, it unexpectedly returns "object". This is a known quirk in JavaScript and is considered a historical bug in the language that has been maintained for compatibility reasons.
+
+\begin{lstlisting}[caption=typeof null return "object" in JavaScript ]
+	console.log(typeof null); // "object"
+\end{lstlisting}
+
+undefined is a primitive value automatically assigned to variables that have been declared but not yet assigned a value, or to formal function parameters for which no actual arguments are provided.
+
+\begin{lstlisting}[caption=typeof null return "object" in JavaScript ]
+	let item; // declare a variable without assigning a value
+
+	console.log(`The value of item is ${item}`); // logs "The value of item is undefined"
+
+\end{lstlisting}
+
+All primitives in JavaScript are immutable, meaning they cannot be altered directly. It is important to distinguish between a primitive value and a variable that holds a primitive value. While a variable can be reassigned to a new value, the primitive value itself cannot be modified in the same way that objects, arrays, and functions can be altered. JavaScript does not provide utilities to mutate primitive values.
+
+Primitives, such as numbers and strings, do not inherently have methods. However, they appear to behave as though they do, due to JavaScript's automatic wrapping, or "auto-boxing," of primitive values into their corresponding wrapper objects. For example, when a method like toString() is called on a primitive number, JavaScript internally creates a temporary Number object. The method is then executed on this object, not directly on the primitive value.
+
+Consider the primitive value value = 10;. When a method such as value.toString() is invoked, JavaScript automatically wraps the primitive 10 in a Number object and calls Number.prototype.toString() on it. This behavior occurs invisibly to the programmer and serves as a helpful mental model for understanding various behaviors in JavaScript. For example, when attempting to "mutate" a primitive, such as assigning a property to a string (str.foo = 1), the original string is not modified. Instead, the value is assigned to a temporary wrapper object.
+
+
+\subsubsection{Custom Dynamic Structures}
+
+\subsubsection{Prototype Inheritance System}
+
+\subsection{Translating the foundation to Kipper}
+
+\subsection{Drawing comparisons to TypeScript}
+
+\subsection{Kipper Primitives}
+
+\subsection{Kipper Generics}
+
+\newpage
+
+\subsection{Kipper Interfaces \& Duck-Typing}
+
+\subsection{Kipper Classes \& Prototyping}
+
 \section{Output Generation}
 \setauthor{Lorenz Holzbauer}
 
@@ -66,15 +164,15 @@ Structural type systems compare types by their structure. This means, if two dif
 \begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
 	let make_speak (obj : < speak : string >) =
 	obj#speak
-	
+
 	let dog = object
 	method speak = "Woof!"
 	end
-	
+
 	let cat = object
 	method speak = "Meow!"
 	end
-	
+
 	let () =
 	print_endline (make_speak dog);
 	print_endline (make_speak cat);
@@ -86,7 +184,7 @@ Duck Typing is the usage of a structural type system in dynamic languages. It is
 
 \begin{lstlisting}[language=Typescript,caption=Example of duck typing in TypeScript,label=lst:implementation:javascriptducktyping]
 interface Duck {
-	quack(): void;	
+	quack(): void;
 }
 
 const duck: Duck = {
@@ -118,13 +216,13 @@ In practice, all user-defined and built-in types inherit from a basic "KipperTyp
 \begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
 	class KipperType {
 		constructor(name, fields, methods, baseType = undefined, customComparer = undefined) {
-			this.name = name; 
+			this.name = name;
 			this.fields = fields;
 			this.methods = methods;
 			this.baseType = baseType;
 			this.customComparer = customComparer;
 		}
-		
+
 		accepts(obj) {
 			if (this === obj) return true;
 			return obj instanceof KipperType && this.customComparer ? this.customComparer(this, obj) : false;
@@ -143,13 +241,13 @@ Furthermore, classes are also exempt from this comparator behaviour, as classes 
 Built-in runtime types serve as the foundation of the type system and make up the parts of more complex constructs like interfaces. Built-in runtime types are compared at runtime by comparing their references, as they are uniquely defined at the start of the output code and available in the global scope. The implementations of such structures can be seen in the listing~\ref{lst:implementation:builtinruntimetypes} down below.
 
 \begin{lstlisting}[language=TypeScript,caption=Examples for the built-in runtime types,label=lst:implementation:builtinruntimetypes]
-	const __type_any = 
+	const __type_any =
 	new KipperType('any', undefined, undefined);
-	
-	const __type_undefined = 
+
+	const __type_undefined =
 	new KipperType('undefined', undefined, undefined, undefined, (a, b) => a.name === b.name);
-	
-	const __type_str = 
+
+	const __type_str =
 	new KipperType('str', undefined, undefined, undefined, (a, b) => a.name === b.name);
 \end{lstlisting}
 
@@ -157,7 +255,7 @@ In addition to the core primitive types—such as "bool", "str", "num", and othe
 
 \begin{lstlisting}[language=Typescript,caption=Generic built-in types,label=lst:implementation:genericbuiltintypes]
 const __type_Array = new KipperGenericType('Array', undefined, undefined, {T: __type_any});
-const __type_Func = new KipperGenericType('Func', undefined, undefined, {T: [], R: __type_any});	
+const __type_Func = new KipperGenericType('Func', undefined, undefined, {T: [], R: __type_any});
 \end{lstlisting}
 
 As can be seen in listing~\ref{lst:implementation:genericbuiltintypes}, generic types are implemented using a special "KipperGenericType" class. This class, shown in listing~\ref{lst:implementation:generickippertype}, extends the "KipperType" and includes an additional field for generic arguments. Most importantly, it includes the method "changeGenericTypeArguments", which allows for modifying a type's generic arguments at runtime. It is used in lambda and array definitions, where the built-in generic runtime type is used and then modified to represent the specified generic parameters. When for example an array is initialized, it first gets assigned the default "Array<any>" runtime type, which is then modified by the "changeGenericTypeArguments" method to create the required type, such as "Array<num>". Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of argument types. The "Func<T..., R>" type on the other hand is used by lambda definitions, which are user-defined functions with a specific return type and arguments without a name.
@@ -214,7 +312,7 @@ Now take for example the given interfaces seen in listing~\ref{lst:implementatio
 		honk(volume: num): void;
 		year: num;
 	}
-	
+
 	interface Person {
 		name: str;
 		age: num;
@@ -238,14 +336,14 @@ If we translate the interfaces shown above in listing~\ref{lst:implementation:in
 			new __kipper.Property("year", __kipper.builtIn.num),
 		],
 		[
-			new __kipper.Method("honk", __kipper.builtIn.void, 
+			new __kipper.Method("honk", __kipper.builtIn.void,
 				[
 					new __kipper.Property("volume", __kipper.builtIn.num),
 				]
 			),
 		]
 	);
-	
+
 	const __intf_Person = new __kipper.Type(
 		"Person",
 		[
