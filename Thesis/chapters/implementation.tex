@@ -113,10 +113,21 @@ Consider the primitive value value = 10;. When a method such as value.toString()
 \setauthor{Lorenz Holzbauer}
 
 \subsection{Introduction}
+The Kipper compiler adopts a modular architecture that enables the definition of custom targets, providing flexibility in adapting to different use cases. This modularity extends beyond configuration, allowing developers to specify target-specific features or behaviors. This is implemented by seperating the compiler in two parts, a frontend and a backend. In case of the GCC compiler, the modularity is achieved by seperating the compiler in three parts ~\ref{fig:implementation:gcccompiler}. The frontend verifies the syntax and semantics, scans the input and performs type checking. It then generates an intermediate representation of the code. The middleend then optimizes this intermediate representationm which is independent of the cpu target. Examples for middle-end code optimizations include dead code removal and and detecting unreachable code. The backend takes the optimized intermediate code and generates the target-dependant code. In the case of GCC, it generates assembly ~\cite{wiki:compiler}.
+
+\begin{figure}[h!]
+  \includegraphics[scale=0.36]{./pics/Compiler_design}
+  \caption{The design of the GCC compiler ~\cite{wiki:compiler}}
+  \label{fig:implementation:gcccompiler}
+\end{figure}
+
+Currently Kipper does not have a middleend, due to the additional complexity of a full middleend and the only marginal improvements in code performance. Instead, the frontend passes the AST directly to the backend. We do perform post-analysis optimization, although this is currently limited to treeshaking.
+
+\subsection{Algorithm}
 
 \subsection{Algorithms used for Output Generation}
 
-\subsection{Types of Generated Statements}
+\subsection{Requirements}
 
 \subsection{Differences between the Target Languages}
 
