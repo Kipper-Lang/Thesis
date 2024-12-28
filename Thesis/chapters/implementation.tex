@@ -121,6 +121,8 @@ The Kipper compiler adopts a modular architecture that enables the definition of
   \label{fig:implementation:gcccompiler}
 \end{figure}
 
+As of now Kipper produces either TypeScript or JavaScript code. In the Kipper CLI utility, the flag ''--target={js|ts}'' sets the target language. When not specified, the default target is JavaScript.
+
 Currently Kipper does not have a middleend, due to the additional complexity of a full middleend and the only marginal improvements in code performance. Instead, the frontend passes the AST directly to the backend. We do perform post-analysis optimization, although this is currently limited to treeshaking.
 
 \subsection{Algorithm}
