@@ -19,8 +19,9 @@ The Kipper Compiler is the core component of the Kipper project, serving as the 
 
 \subsection{Existing Foundation \& Environment}
 
-As Kipper is a language that transpiles either to JavaScript or TypeScript (a super-set of JavaScript) Kipper needs to take the existing foundation and environment into account when developing and designing the type system. While constraints aren't as present as in TypeScript, it is important to still consider the interoperability and ease of translation when working with the underlying environment, as Kipper is supposed to run in the web and locally using Node or other related JavaScript runtimes.
+As Kipper is a language that transpiles to either JavaScript or TypeScript (a superset of JavaScript), it is essential to consider the existing foundation and environment when designing and developing its type system. While Kipper is not as constrained as TypeScript, ensuring seamless interoperability and ease of translation with the underlying environment remains critical. This is particularly important since Kipper is designed to run both on the web and locally using Node.js or other JavaScript runtimes.
 
+To achieve this, it is crucial to understand the foundation upon which JavaScript itself was built. JavaScript, created in 1995 by Brendan Eich, was initially envisioned as a lightweight scripting language to add interactivity to web pages. Its dynamic and loosely-typed nature provided flexibility and adaptability but also introduced susceptibility to errors in larger applications. Over time, JavaScript has been refined to improve its reliability and scalability for handling complex applications. However, its core type system has largely remained the same and hasn't been altered as a safe guard to ensure that backwards compatibility is preserved.
 
 \subsubsection{Weak Dynamic Type System}
 
@@ -162,7 +163,23 @@ class SeniorDeveloper extends Programmer { }
 
 Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with its object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In example \ref{lst:implementation:ocamlstructuraltyping} there is a function that requires a function "speak" returning the type "string". Both the "dog" object as well as the "cat" object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
 
-\begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
+\begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]<<<<<<< HEAD
+	\section{Output Generation}
+	\label{sec:output-generation}
+	\setauthor{Lorenz Holzbauer}
+	
+	\subsection{Introduction}
+	
+	\subsection{Algorithms used for Output Generation}
+	
+	\subsection{Types of Generated Statements}
+	
+	\subsection{Differences between the Target Languages}
+	
+	\subsection{Stylistic Choices}
+	
+	=======
+	>>>>>>> 07cab7db54ba076d836c5ffa7e7b217fe122b1b0
 	let make_speak (obj : < speak : string >) =
 	obj#speak
 
