@@ -155,6 +155,21 @@ public async translate(): Promise<Array<TranslatedCodeLine>> {
 }
 \end{lstlisting}
 
+The code generation function of a node takes the node as an argument and gets it's semantic and typesemantic data. This is then used to translate the children, which are properties of the semantic data, into source code. The result is then concatenated into a single string array and returned. This process can be seen in example ~\ref{lst:implementation:instanceofgeneration}. In this example, the instanceOf expression gets built.
+
+Clearly visible is the same ''translateCtxAndChildren'' function as in example \ref{lst:implementation:translationalgorithm}. This is the treewalker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
+
+\begin{lstlisting}[language=TypeScript,caption=The code generation function of a instnaceOf expression,label=lst:implementation:instanceofgeneration]
+instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExpression> => {
+	const semanticData = node.getSemanticData();
+	const typeData = node.getTypeSemanticData();
+	const operand = await semanticData.operand.translateCtxAndChildren();
+	const classType = TargetJS.getRuntimeType(typeData.classType);
+
+    return [...operand, " ", "instanceof", " ", classType];
+  };
+\end{lstlisting}
+
 \subsection{Algorithms used for Output Generation}
 
 \subsection{Requirements}
