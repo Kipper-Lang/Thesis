@@ -477,6 +477,47 @@ When none of these condition is false, the input object matches the input type a
 
 \subsection{Typeof Operator}
 \label{subsec:typeof}
+In the Kipper Programming Language, the ''typeof'' operator is used to get the type of an object at runtime. This operator can be used to check if a variable or expression is of a particular type, such as a string, number, boolean, etc. Most commonly, it is used to check for null and undefined objects, to avoid type errors when an object is of unknown type. The returned type object can be compared by reference to check for type equality. As can bee seen in example ~\ref{lst:implementation:typeofoperator}, the parantheses are optional. We decided to allow both syntax styles, due to our goal of being similar to TypeScript and JavaScript, which both implement it the same way.
+
+\begin{lstlisting}[language=Typescript,caption=Typeof operator,label=lst:implementation:typeofoperator]
+typeof 49; // "__kipper.builtIn.num"
+typeof("Hello, World!"); // "__kipper.builtIn.str"
+\end{lstlisting}
+
+The ''typeof'' operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the ''typeof null'' returns ''object'' due to historical reasons, Kipper correctly identifies ''null'' as ''\_\_kipper.builtIn.null''.
+
+At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in example ~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective ''KipperRuntimeType''. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
+
+\begin{lstlisting}[language=Typescript,caption=Typeof implementation, label=lst:implementation:typeofimplementation]
+typeOf: (value) => {
+    const prim = typeof value;
+    switch (prim) {
+        case 'undefined':
+            return __kipper.builtIn.undefined;
+        case 'string':
+        return __kipper.builtIn.str;
+        ...
+        case 'object': {
+            if (value === null) return __kipper.builtIn.null;
+            if (Array.isArray(value)) {
+                return '__kipType' in value ? value.__kipType : __kipper.builtIn.Array;
+            }
+            const prot = Object.getPrototypeOf(value);
+            if (prot && prot.constructor !== Object) {
+                return prot.constructor;
+            }
+            return __kipper.builtIn.obj;
+        }
+    }
+}
+\end{lstlisting}
+
+Although linguistically quite similar, the ''typeof'' operator in the type declaration of a variable works fundamentally different ~\ref{lst:implementation:typeoftypespecifier}. It is called ''TypeOfTypeSpecifier'' and it evaluates the type of a variable at compile time.
+
+\begin{lstlisting}[language=Typescript,caption=TypeOfTypeSpecifier, label=lst:implementation:typeoftypespecifier]
+var t: num = 3;
+var count: typeof(t) = 4;
+\end{lstlisting}
 
 
 %%% Local Variables:
