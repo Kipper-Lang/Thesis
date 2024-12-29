@@ -159,7 +159,7 @@ The code generation function of a node takes the node as an argument and gets it
 
 Clearly visible is the same ''translateCtxAndChildren'' function as in example \ref{lst:implementation:translationalgorithm}. This is the treewalker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
 
-\begin{lstlisting}[language=TypeScript,caption=The code generation function of a instnaceOf expression,label=lst:implementation:instanceofgeneration]
+\begin{lstlisting}[language=TypeScript,caption=The code generation function of a instanceOf expression,label=lst:implementation:instanceofgeneration]
 instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExpression> => {
 	const semanticData = node.getSemanticData();
 	const typeData = node.getTypeSemanticData();
@@ -171,6 +171,46 @@ instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExp
 \end{lstlisting}
 
 \subsection{Algorithms used for Output Generation}
+There is a plethora of algoritms available to generate code in the target language. They can be classified by their input data structure. Some algoritms need a tree-like \acrshort{ir}, others need a linear \acrshort{ir} structure.
+
+\subsubsection{Linear Algorithms}
+Linear algoritms are most often used when compiling a high-level language to machine code or bytecode. They treat the input as a flat, ordered sequence and sequentially process it. Intermediate representations often are either three-address-code or static-single-assignment code. Linear algorithms process the code one instruction at a time in a sequence. When an instruction is complete, it gets pushed to a list, which in the end is concatenated and written to the output file. When using linear algorithms, there are two major ways of representing the \acrshort{ir}.
+
+Three-address code consists of three operands and is typically an assignment and a binary operator ~\cite{wiki:threeaddress}. An instruction can have up to three operands, although it may have less. In the example ~\ref{lst:implementation:threeaddresscode}, the problem gets split up into multiple instructions. This allows the compiler to easily transform the instructions into assembly language or bytecode, which are similar in their structure. Furthermore, the compiler can identify unused code by checking if a variable gets used later on in the code.
+\begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
+// Problem
+x = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
+
+// Solution
+t1 := b * b
+t2 := 4 * a
+t3 := t2 * c
+t4 := t1 - t3
+t5 := sqrt(t4)
+t6 := 0 - b
+t7 := t5 + t6
+t8 := 2 * a
+t9 := t7 / t8
+x := t9
+\end{lstlisting}
+
+The Static single-assignment form is a different intermediate representation, where each variable gets assigned exactly once \cite{wiki:singlestatic}. It is used in the most widely in compilers like \acrshort{gcc}. The main benefit is that it simplifies the code and improves the results of compiler optimizations. In example ~\ref{lst:implementation:staticsingleassignmentform}, the problem shows a variable ''y'' that gets assigned twice. The first assignment is therefore unnecessary. With the static single-assignment form, the compiler can determine that the assignment of ''y1'' was unnecessary, because it is never used in the code that comes after. Examples of optimizations that were enhanced by this form include dead-code elimination, constant propagation and register allocation.
+\begin{lstlisting}[language=TypeScript,caption=Static single-assignment form,label=lst:implementation:staticsingleassignmentform]
+// Problem
+y := 1
+y := 2
+x := y
+
+// Solution
+y1 := 1
+y2 := 2
+x1 := y2
+\end{lstlisting}
+
+\subsubsection{Tree-based Algorithms}
+Tree-based algorithms are often used in transpilers, as the code needs to stay human readable most of the time, and the general structure of the code should be preserved. This means, that the strucure of scopes and statements should roughly stay the same. Therefore the components are stored in a node in a tree-like structure. Kipper uses a bottom-up code generation algorithm. This means, that a treewalker recurses through the tree and generates the output starting from the most deeply nested node. We chose to use this method, because it was easier to visualize and implement and we wanted the source to stay human readable and extendable without aggressive optimizations and changes on the source. This is not possible with linear algorithms, as they transform the code either into the three-address code form or the static single-assignment form. While this happend, important information about the context and structure of the code gets lost.
+
+Tree-based code generation can be used to generate bytecode. This bytecode gets optimized and further compiled by a linear algorithm. Tree-based algorithms have the disadvantage of allowing only local optimizations in the respective nodes. In addition, they can be computationally expensive, in case the input gets too complex, as the treewalker is a recursive function. Therefore, in professional compilers the tree-based design is not often used. \acrshort{gcc} uses a tree-based design in two of it's language independent \acrshort{ir}s, GIMPLE and GENERIC ~\cite{gcc:gimpletuples}.
 
 \subsection{Requirements}
 \label{sec:requirements}
