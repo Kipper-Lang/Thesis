@@ -170,6 +170,8 @@ instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExp
   };
 \end{lstlisting}
 
+The code generator functions of Kipper are implemented in a class called ''JavaScriptTargetCodeGenerator''. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that differ. This eliminates duplicate code fragments.
+
 \subsection{Algorithms used for Output Generation}
 There is a plethora of algoritms available to generate code in the target language. They can be classified by their input data structure. Some algoritms need a tree-like \acrshort{ir}, others need a linear \acrshort{ir} structure.
 
@@ -214,6 +216,68 @@ Tree-based code generation can be used to generate bytecode. This bytecode gets 
 
 \subsection{Requirements}
 \label{sec:requirements}
+Kipper is designed to have a runtime that is as small as possible while still having all the needed functionality bundled in it. This means, that the compiler should only include functions and objects into the runtime, that are needed by the user. This alligns with our goal of keeping the compiler modular and minimal. Due to the removal of unused components in a process called ''treeshaking'', the output code is kept small and efficient.
+
+Kipper includes a range of built-in functions and features to support its runtime environment. These built-ins are organized and managed using a scoped approach. The global scope contains core runtime features that are always required, such as basic type handling and error reporting. Beyond the global scope, additional features are selectively included based on the specific requirements of the program being compiled.
+
+\subsubsection{Conditional features}
+Conditional features are runtime components that are included only when explicitly required by the program being compiled. These features can range from commonly used operations like match and slice to more specialized or program-specific utilities. Unlike essential runtime components housed in the global scope, conditional features are added selectively based on an analysis of the program's structure and functionality. The decision to include conditional features occurs during the requirements generation phase. As the compiler traverses the Abstract Syntax Tree (AST), it examines each node to determine whether a specific built-in function or runtime operation is invoked. If a feature like slice is used in the source code, it is flagged as necessary and included in the consolidated requirements list. This ensures that only the relevant components are integrated into the final runtime environment.
+
+An example of a conditional feature would be the ''slice'' function ~\ref{lst:implementation:slicefunction}. This function takes an array as input and extracts a section starting from the index the first argument provides and ending at the index the second argument provides.
+
+\begin{lstlisting}[language=TypeScript,caption=The Slice Operation,label=lst:implementation:slicefunction]
+var valid: str = "321";
+print(valid[1:2]); // 2
+\end{lstlisting}
+
+When the compiler encounters the slice operator, it registers the function as needed and therefore includes it into the runtime. This process can be seen in example \ref{lst:implementation:sliceinternal}. The compiler calls slice function in the ''BuiltInGenerator''. The ''BuiltInGenerator'' is a collection of functions that generate the code for the built in functions in the target languages. This means that each target language has to have a full set of ''BuiltInGenerators''. The generator in the example generates the required JavaScript code for the function by utilizing the built in ''slice'' function of JavaScript.
+
+\begin{lstlisting}[language=TypeScript,caption=Slice in the JavaScript BuiltInGenerator,label=lst:implementation:sliceinternal]
+async slice(funcSpec: InternalFunction): Promise<Array<TranslatedCodeLine>> {
+	const signature = getJSFunctionSignature(funcSpec);
+	const objLikeIdentifier = signature.params[0];
+	const startIdentifier = signature.params[1];
+	const endIdentifier = signature.params[2];
+
+	return genJSFunction(
+		signature,
+		`{ return ${objLikeIdentifier} ? ${objLikeIdentifier}.slice(${startIdentifier}, ${endIdentifier}) : ${objLikeIdentifier}; }`,
+	);
+  }
+\end{lstlisting}
+
+The generated "slice" function can be found in example ~\ref{lst:implementation:slicegenerated}.
+
+\begin{lstlisting}[language=TypeScript,caption=Slice in the target language,label=lst:implementation:slicegenerated]
+slice: function slice<T>(objLike: T, start: number | undefined, end: number | undefined): T {
+	return objLike ? objLike.slice(start, end) : objLike;
+  },
+\end{lstlisting}
+
+\subsubsection{The global scope}
+The global scope in programming represents the top-level execution context where variables, functions, and objects are accessible throughout the entire runtime environment unless explicitly restricted. In JavaScript, the global scope is particularly significant as it varies across runtime environments like browsers, Node.js, and Web Workers. This variability necessitates robust mechanisms for identifying and managing the global context to ensure compatibility across environments.
+
+For example, JavaScript defines several global objects, such as window in browsers, global in Node.js, and self in Web Workers. Modern JavaScript unifies these under globalThis, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support globalThis, which is why fallback mechanisms are often used.
+
+The Kipper global scope contains all the runtime features that are required. It is important, that the global scope exists only once, therefore the programm needs to check at runtime, if the scope already exists. This can be seen in example ~\ref{lst:implementation:globalscopelogic}. It first checks if ''\_\_globalScope'' is already defined and uses it if available. If not, it attempts to use globalThis, the modern standard JavaScript global object. If ''globalThis'' is not defined, it checks for window in browser environments, global in Node.js, or self in Web Workers. If none of these are defined, it falls back to an empty object. This ensures that the ''\_\_globalScope'' variable is always initialized, regardless of the environment, allowing consistent and safe access to the global scope.
+
+\begin{lstlisting}[language=TypeScript,caption=Global Scope Logic,label=lst:implementation:globalscopelogic]
+var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
+    typeof globalThis !== "undefined" ? globalThis :
+    typeof window !== "undefined" ? window :
+    typeof global !== "undefined" ? global :
+    typeof self !== "undefined" ? self : {};
+\end{lstlisting}
+
+\subsubsection{Internal functions}
+Internal functions in Kipper serve as an essential part of the runtime, yet they are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes but are not directly accessible or callable in the user’s program. This ensures that the runtime environment remains clean and minimal while still delivering the required functionality.
+
+An example of an internal function would be the ''assignTypeMeta'' function, which adds metadata to a runtime type. This is useful for runtime type comparison and described in detail in chapter ~\ref{subsec:builtintypes}. This function never gets exposed to the user but is called internally when an interface gets declared.
+
+A key characteristic of internal functions is their dynamic inclusion in the runtime environment. During the requirements generation phase, the compiler identifies whether a program’s functionality depends on any internal mechanisms. If so, the corresponding internal functions are included in the runtime.
+
+\subsubsection{Requirements Generation}
+The requirements generation process in Kipper begins during the compilation phase. As the compiler traverses the Abstract Syntax Tree (AST), it analyzes the nodes to determine the features needed by the program. This analysis produces a set of requirements, which are then used to configure the runtime environment. This works by using feature registration. If an AST node needs a certain feature, the reference is added to the program context by using the ''this.programCtx.addInternalReference'' function. When a feature is added more once, all further additions get ignored, as the function is already available. When the reference is added the feature is registered and the compiler adds the depending internal functions and conditional features to the global scope.
 
 \subsection{Differences between the Target Languages}
 
@@ -336,6 +400,7 @@ Type "any" is an exception and is the only type that accepts any value you provi
 Furthermore, classes are also exempt from this comparator behaviour, as classes behave like a value during runtime and provide a prototype which can simply be used to check if an object is an instance of that class.
 
 \subsection{Runtime Built-in Types}
+\label{subsec:builtintypes}
 
 Built-in runtime types serve as the foundation of the type system and make up the parts of more complex constructs like interfaces. Built-in runtime types are compared at runtime by comparing their references, as they are uniquely defined at the start of the output code and available in the global scope. The implementations of such structures can be seen in the listing~\ref{lst:implementation:builtinruntimetypes} down below.
 
