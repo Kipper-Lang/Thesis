@@ -280,6 +280,48 @@ A key characteristic of internal functions is their dynamic inclusion in the run
 The requirements generation process in Kipper begins during the compilation phase. As the compiler traverses the Abstract Syntax Tree (AST), it analyzes the nodes to determine the features needed by the program. This analysis produces a set of requirements, which are then used to configure the runtime environment. This works by using feature registration. If an AST node needs a certain feature, the reference is added to the program context by using the ''this.programCtx.addInternalReference'' function. When a feature is added more once, all further additions get ignored, as the function is already available. After all the features are registeres, the target generates the source code in the required language and inserts it into the output code.
 
 \subsection{Differences between the Target Languages}
+The implementation of a compiler or transpiler targeting multiple programming languages often requires handling the specific quirks and requirements of each target. As Kipper is a webdevelopment language, we target both TypeScript and JavaScript. Both languages share a common foundation but diverge significantly in their syntax rules, semantics, and type systems.
+
+One of the primary challenges in supporting both JavaScript and TypeScript as target languages is their differing treatment of identifiers, reserved keywords, and type declarations. While JavaScript is dynamically typed and relatively permissive in terms of variable naming and usage, TypeScript enforces a stricter set of rules due to its static type-checking capabilities.
+
+\subsubsection{Reserved Keywords}
+Both JavaScript and TypeScript have a set of reserved keywords that cannot be used as identifiers. However, TypeScript introduces additional constraints by reserving type-related keywords, which are not present in JavaScript. For instance, class is a reserved keyword in both languages and cannot be used as a variable name. In contrast, TypeScript also reserves names like let, number, and other type names, making them invalid as variable or function names.
+
+Kipper handles these reserved keywords by checking for them at compile time. The compiler compares against a hardcoded list of keywords and in case it finds one, it throws an ''ReservedIdentifierOverwriteError''. This list of keywords contains both the reserved words of JavaScript and TypeScript, as this minimizes redundancy and complexity. In addition to that, it also forces the developer to use sensible variable names, as JavaScript is quite leaneant with it's reserved keywords. Example \ref{lst:implementation:reservedkeywords} illustrates this.
+
+\begin{lstlisting}[language=TypeScript,caption=Reserved Keywords in TS and JS,label=lst:implementation:reservedkeywords]
+// Invalid in TypeScript
+let let = 5;  // Error: Cannot use 'let' as an identifier
+let number = 10;  // Error: Cannot use 'number' as an identifier
+
+// Valid in JavaScript
+var let = 5;  // No error
+var number = 10;  // No error
+\end{lstlisting}
+
+\subsubsection{Type Annotations}
+TypeScript introduces type annotations as part of its static type system. This means that while generating the TypeScript output, Kipper has to append type information in variable assignments, functions and lambdas. This works by overriding the JavaScript implementation of the code generator function and converting the AST-internal type of the node to a TypeScript type. Example ~\ref{lst:implementation:differencecodegeneratorfunctions} shows the difference between the JavaScript code generator function and the TypeScript code generator function for variable assignments. In the codeblock that generates TypeScript, there is an additional bit of code after the storage and the identifier, that inserts the type of the object. The function declaration and lambdas work similarly.
+
+\begin{lstlisting}[language=TypeScript,caption=Difference in code generator functions,label=lst:implementation:differencecodegeneratorfunctions]
+// JavaScript
+return [
+	[
+		storage, " ",
+		semanticData.identifier, ...(assign.length > 0 ? [" ", "=", " ", ...assign] : []), ";"
+	]
+];
+// Result: let x = 5;
+
+// TypeScript
+return [
+	[
+		storage, " ", semanticData.identifier, ":", " ", tsType, // This inserts the type
+		...(assign.length > 0 ? [" ", "=", " ", ...assign] : []),
+		";",
+	],
+];
+// Result: let x: number = 5;
+\end{lstlisting}
 
 \subsection{Stylistic Choices}
 
