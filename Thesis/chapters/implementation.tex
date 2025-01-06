@@ -324,6 +324,25 @@ return [
 \end{lstlisting}
 
 \subsection{Stylistic Choices}
+The syntax of Kipper is specifically designed to ease the transition of existing TypeScript and JavaScript developers to Kipper. Therefore it was important, to keep the output as similar to these languages as possible. We achieved this by adhering to the following principles.
+
+\subsubsection{Human readable output}
+The primary goal of Kipper's output generation is to produce code that mirrors human-written TS or JS as closely as possible. To achieve this, Kipper avoids unnecessary abstractions or layers that could obscure the intent of the code. For instance, variable names and function identifiers are preserved during transpilation without introducing machine-generated names or hashing schemes. This contrasts with languages like CoffeeScript, where the output, while functional, often requires familiarity with the transpiler's conventions to interpret effectively.
+
+\subsubsection{No Code Compression}
+Kipper explicitly avoids code compression techniques such as minification or inlining that can hinder readability. While compression is useful in production environments to reduce payload size, it is opposed to the goals of Kipper, as it negativly impacts code readability.
+
+\subsubsection{Standardized Style Format}
+Kipper enforces a standardized style format for its output to ensure consistency and predictability. It uses two spaces for block-level indentation to maintain clarity and avoid confusion with tab-based formatting. Braces are explicitly used for block delimiters, and semicolons terminate statements, adhering to common TypeScript/JavaScript conventions.
+
+\subsubsection{Scope Visibility}
+A critical aspect of Kipper’s design is the clear representation of scopes in the generated output. Kipper employs explicit declarations such as let, const, and function to demarcate variable and function scopes. Indentation and brace placement further enhance the visual hierarchy, making it easy to identify nested scopes and understand their boundaries. This approach contrasts with languages like Python, where indentation alone determines scope, or languages like Lua, where scope visibility may rely on implicit conventions.
+
+\subsubsection{Editable Code}
+One of Kipper’s unique selling points is that its transpiled output is not just readable but also editable. Developers can treat the generated TS/JS code as if it were written manually, enabling seamless integration with existing projects. By making the output editable, Kipper empowers developers to tailor the transpiled code to their specific needs without relying solely on the original Kipper source.
+
+\subsubsection{Comparison with other languages}
+CoffeeScript aimed to simplify JavaScript syntax but often produced output that was hard to debug due to its reliance on non-standard conventions. Kipper avoids these pitfalls by aligning its syntax and output with established TypeScript/JavaScript practices. While TypeScript generates clean and maintainable JavaScript, it requires a compilation step that may introduce additional complexity. Kipper simplifies this process by directly transpiling to both TypeScript and JavaScript, offering flexibility without sacrificing readability. Babel’s output is highly optimized for compatibility but can be dense and difficult to modify. Kipper prioritizes maintainability over optimization, ensuring that the output remains approachable for developers.
 
 \section{Integrated Runtime}
 \label{sec:integrated-runtime}
