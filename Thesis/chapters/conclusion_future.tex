@@ -1,0 +1,20 @@
+\section{Future}
+\label{sec:future}
+\setauthor{Lorenz Holzbauer}
+
+Currently, Kipper caters primarily to web developers by providing seamless integration with the TS and JS ecosystems. This focus aligns well with the popularity of JavaScript on both the client and server sides. However, the web development landscape is rapidly evolving, and developers are increasingly seeking high-performance solutions.
+
+\subsection{WebAssembly Support}
+%https://webassembly.org/
+%https://wasmer.io/
+
+WebAssembly is an open standard that enables high-performance, portable code execution across diverse environments, including browsers, servers, and embedded systems. Adding WebAssembly as a compilation target for Kipper presents a compelling opportunity to enhance performance. In addition it enables Kipper to run on as a standalone server application. With new technologies like wasmer, WebAssembly could power containers in the cloud while being a fraction of the size of a traditional container.
+
+Implementing WebAssembly as a target for Kipper is not without challenges. Unlike TS/JS, which are dynamically typed and inherently compatible with Kipper’s runtime model, Wasm requires a more rigorous type system and memory management model. This means the compiler needs to handle low-level memory management with garbage collection. Additionally, it would be neccessary to implement a compatibility layer with a runtime to handle Kipper's dynamic data requirements.
+
+Due to this issues, it is unlikely that WebAssembly support will land in Kipper in the next few versions.
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../thesis"
+%%% End:
