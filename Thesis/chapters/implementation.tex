@@ -95,7 +95,7 @@ For example, in Kipper, the lexer grammar includes constructs for identifying bo
 
 In the grammar above, comments are directed to a separate channel using the~\lstinline|-> channel| annotation. This helps isolate them from the main parsing flow while still retaining them for potential processing or documentation purposes. Pragmas, which are typically compiler directives, are handled similarly but redirected to a~\lstinline|PRAGMA| channel.
 
-Antlr4 grammars also include support for defining keywords, operators, and contextual language constructs. For instance,~\lstinline|Const| and~\lstinline|Var| are tokenized as reserved keywords, ensuring they are recognized unambiguously during lexical analysis. This explicit tokenization is critical for constructing a clear and predictable syntax tree, which serves as the foundation for the subsequent phases of interpretation and compilation.
+\Gls{antlr4} grammars also include support for defining keywords, operators, and contextual language constructs. For instance,~\lstinline|Const| and~\lstinline|Var| are tokenized as reserved keywords, ensuring they are recognized unambiguously during lexical analysis. This explicit tokenization is critical for constructing a clear and predictable syntax tree, which serves as the foundation for the subsequent phases of interpretation and compilation.
 
 \subsubsection{Syntactical Grammar Definition}
 \label{sec:parser-grammar-definition}
@@ -112,7 +112,7 @@ For example, a grammar rule defining a function declaration in Kipper could be e
 	parameterDeclaration : declarator ':' typeSpecifierExpression ;
 \end{lstlisting}
 
-In this grammar, the rule for~\lstinline|functionDeclaration| begins with the keyword~\lstinline|'def'|, followed by a~\lstinline|declarator| (which represents the function name or identifier), and then an optional~\lstinline|parameterList|. The rule includes a~\lstinline|typeSpecifierExpression|, indicating the return type of the function, and optionally a~\lstinline|compoundStatement|, which represents the function’s body.
+In this grammar, the rule for~\lstinline|functionDeclaration| begins with the keyword~\lstinline|'def'|, followed by a~\lstinline|declarator| (which represents the function name or identifier), and then an optional~\lstinline|parameterList|. The rule includes a~\lstinline|typeSpecifierExpression|, indicating the return type of the function, and optionally a~\lstinline|compoundStatement|, which represents the function's body.
 
 The~\lstinline|parameterList| rule handles the optional inclusion of one or more parameters, each defined by~\lstinline|parameterDeclaration|. Each~\lstinline|parameterDeclaration| consists of a~\lstinline|declarator| (the parameter's name) followed by a type specification. This structure clearly defines the expected syntax for a function declaration in Kipper, ensuring that the parser can accurately identify and process this construct.
 
@@ -171,15 +171,28 @@ Sub-lexing is crucial for Kipper due to features such as templating, where code 
 	\centering
 	\def\stackalignment{r}
 	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
-	\caption{The process of invocating a sub-lexer}
+	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
 	\label{fig:implementation:Sub-Lexer}
 \end{figure}
 
-
 \subsection{Syntactic analysis}
 
-\subsection{Translation to an AST}
+\subsubsection{Primary syntactic analysis of the token stream}
+
+With the lexer having already identified all tokens in a given program and ensured that only valid elements are present, the parser proceeds to analyze the program's structure and logic. This step is inherently more complex and often demands a significant amount of processing time. The complexity arises partly from the design of \Gls{antlr4} and partly from the computational effort required to transform a token stream into a viable syntax tree.
+
+The parser's primary task is to verify that the sequence of tokens conforms to the grammatical rules specified by the Kipper grammar. This involves checking whether constructs such as statements, expressions, and control structures are correctly formed.
+
+\subsubsection{Programmatic conditions \& context-sensitive rules}
+
+\subsection{AST (Abstract Syntax Tree)}
 \label{sec:translation-to-the-ast}
+
+\subsubsection{Parse Tree Walking}
+
+\subsubsection{Tree cleanup}
+
+\subsubsection{Utility provided by the AST}
 
 \section{Semantic Analysis}
 \label{sec:semantic-analysis}
@@ -476,11 +489,11 @@ var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
 \end{lstlisting}
 
 \subsubsection{Internal functions}
-Internal functions in Kipper serve as an essential part of the runtime, yet they are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes but are not directly accessible or callable in the user’s program. This ensures that the runtime environment remains clean and minimal while still delivering the required functionality.
+Internal functions in Kipper serve as an essential part of the runtime, yet they are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes but are not directly accessible or callable in the user's program. This ensures that the runtime environment remains clean and minimal while still delivering the required functionality.
 
 An example of an internal function would be the ''assignTypeMeta'' function, which adds metadata to a runtime type. This is useful for runtime type comparison and described in detail in chapter ~\ref{subsec:builtintypes}. This function never gets exposed to the user but is called internally when an interface gets declared.
 
-A key characteristic of internal functions is their dynamic inclusion in the runtime environment. During the requirements generation phase, the compiler identifies whether a program’s functionality depends on any internal mechanisms. If so, the corresponding internal functions are included in the runtime.
+A key characteristic of internal functions is their dynamic inclusion in the runtime environment. During the requirements generation phase, the compiler identifies whether a program's functionality depends on any internal mechanisms. If so, the corresponding internal functions are included in the runtime.
 
 \subsubsection{Requirements Generation}
 The requirements generation process in Kipper begins during the compilation phase. As the compiler traverses the Abstract Syntax Tree (AST), it analyzes the nodes to determine the features needed by the program. This analysis produces a set of requirements, which are then used to configure the runtime environment. This works by using feature registration. If an AST node needs a certain feature, the reference is added to the program context by using the ''this.programCtx.addInternalReference'' function. When a feature is added more once, all further additions get ignored, as the function is already available. After all the features are registeres, the target generates the source code in the required language and inserts it into the output code.
@@ -542,13 +555,13 @@ Kipper explicitly avoids code compression techniques such as minification or inl
 Kipper enforces a standardized style format for its output to ensure consistency and predictability. It uses two spaces for block-level indentation to maintain clarity and avoid confusion with tab-based formatting. Braces are explicitly used for block delimiters, and semicolons terminate statements, adhering to common TypeScript/JavaScript conventions.
 
 \subsubsection{Scope Visibility}
-A critical aspect of Kipper’s design is the clear representation of scopes in the generated output. Kipper employs explicit declarations such as let, const, and function to demarcate variable and function scopes. Indentation and brace placement further enhance the visual hierarchy, making it easy to identify nested scopes and understand their boundaries. This approach contrasts with languages like Python, where indentation alone determines scope, or languages like Lua, where scope visibility may rely on implicit conventions.
+A critical aspect of Kipper's design is the clear representation of scopes in the generated output. Kipper employs explicit declarations such as let, const, and function to demarcate variable and function scopes. Indentation and brace placement further enhance the visual hierarchy, making it easy to identify nested scopes and understand their boundaries. This approach contrasts with languages like Python, where indentation alone determines scope, or languages like Lua, where scope visibility may rely on implicit conventions.
 
 \subsubsection{Editable Code}
-One of Kipper’s unique selling points is that its transpiled output is not just readable but also editable. Developers can treat the generated TS/JS code as if it were written manually, enabling seamless integration with existing projects. By making the output editable, Kipper empowers developers to tailor the transpiled code to their specific needs without relying solely on the original Kipper source.
+One of Kipper's unique selling points is that its transpiled output is not just readable but also editable. Developers can treat the generated TS/JS code as if it were written manually, enabling seamless integration with existing projects. By making the output editable, Kipper empowers developers to tailor the transpiled code to their specific needs without relying solely on the original Kipper source.
 
 \subsubsection{Comparison with other languages}
-CoffeeScript aimed to simplify JavaScript syntax but often produced output that was hard to debug due to its reliance on non-standard conventions. Kipper avoids these pitfalls by aligning its syntax and output with established TypeScript/JavaScript practices. While TypeScript generates clean and maintainable JavaScript, it requires a compilation step that may introduce additional complexity. Kipper simplifies this process by directly transpiling to both TypeScript and JavaScript, offering flexibility without sacrificing readability. Babel’s output is highly optimized for compatibility but can be dense and difficult to modify. Kipper prioritizes maintainability over optimization, ensuring that the output remains approachable for developers.
+CoffeeScript aimed to simplify JavaScript syntax but often produced output that was hard to debug due to its reliance on non-standard conventions. Kipper avoids these pitfalls by aligning its syntax and output with established TypeScript/JavaScript practices. While TypeScript generates clean and maintainable JavaScript, it requires a compilation step that may introduce additional complexity. Kipper simplifies this process by directly transpiling to both TypeScript and JavaScript, offering flexibility without sacrificing readability. Babel's output is highly optimized for compatibility but can be dense and difficult to modify. Kipper prioritizes maintainability over optimization, ensuring that the output remains approachable for developers.
 
 \section{Integrated Runtime}
 \label{sec:integrated-runtime}
