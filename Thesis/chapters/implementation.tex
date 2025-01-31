@@ -128,13 +128,13 @@ The step of tokenization is fairly straightforward as it simply follows the defi
 
 The lexer operates as a state machine, scanning through the input character stream and categorizing sequences based on patterns defined in the grammar. These patterns may include regular expressions to match identifiers, numerical constants, or specific language keywords. Once tokens are identified they are put into the associated channels as explained in~\ref{sec:token-channels}.
 
-\begin{figure}[h!]
-	\centering
-	\def\stackalignment{r}
-	\includegraphics[scale=1]{./pics/Lexer-Algorithm.drawio}
-	\caption{The lexing process which categories the various tokens}
-	\label{fig:implementation:Lexer-Algorithm}
-\end{figure}
+%\begin{figure}[h!]
+%	\centering
+%	\def\stackalignment{r}
+%	\includegraphics[scale=1]{./pics/Lexer-Algorithm.drawio}
+%	\caption{The lexing process which categories the various tokens}
+%	\label{fig:implementation:Lexer-Algorithm}
+%\end{figure}
 
 \subsubsection{Token Channels}
 \label{sec:token-channels}
@@ -167,13 +167,13 @@ Besides standard sequential processing of the input, the Kipper Lexer also emplo
 
 Sub-lexing is crucial for Kipper due to features such as templating, where code fragments are embedded within strings. In such cases, the lexer must correctly differentiate between string elements and code atoms (the inserted snippets inside the string). By using a simple push-and-pop mechanism, the lexers can function similarly to a stack, layering processing contexts on top of one another. Each context processes its corresponding string subset, enabling correct parsing of both regular syntax and embedded code within strings. This modular approach ensures cleaner handling of complex tokenization scenarios and increases the lexer's flexibility.
 
-\begin{figure}[h!]
-	\centering
-	\def\stackalignment{r}
-	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
-	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
-	\label{fig:implementation:Sub-Lexer}
-\end{figure}
+%\begin{figure}[h!]
+%	\centering
+%	\def\stackalignment{r}
+%	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
+%	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
+%	\label{fig:implementation:Sub-Lexer}
+%\end{figure}
 
 \subsection{Syntactic analysis}
 
@@ -351,7 +351,7 @@ Kipper processes the previously generated \acrshort{ast} and its nodes in a bott
 
 The output generation in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. Once the setup is complete, the compiler iterates over the child nodes by calling the "translateCtxAndChildren" function. This function recursively traverses the tree, generating code for each child node. Each node returns a string containing its output code, which is then processed by its parent node. The process continues until the root node aggregates all the strings and sends the final merged output to a function that writes the code to a file.
 
-The implementation of this translation algorithm is provided in example~\ref{lst:implementation:translationalgorithm}.
+The implementation of this translation algorithm is provided in listing~\ref{lst:implementation:translationalgorithm}.
 
 \begin{lstlisting}[language=TypeScript,caption=The translation algorithm,label=lst:implementation:translationalgorithm]
 public async translate(): Promise<Array<TranslatedCodeLine>> {
@@ -374,9 +374,9 @@ public async translate(): Promise<Array<TranslatedCodeLine>> {
 }
 \end{lstlisting}
 
-The code generation function of a node takes the node as an argument and gets it's semantic and type-semantic data. This is then used to translate the children, which are properties of the semantic data, into source code. The result is then concatenated into a single string array and returned. This process can be seen in example ~\ref{lst:implementation:instanceofgeneration}. In this example, the instanceOf expression gets built.
+The code generation function of a node takes the node as an argument and gets it's semantic and type-semantic data. This is then used to translate the children, which are properties of the semantic data, into source code. The result is then concatenated into a single string array and returned. This process can be seen in listing ~\ref{lst:implementation:instanceofgeneration}. In this example, the instanceOf expression gets built.
 
-Clearly visible is the same ''translateCtxAndChildren'' function as in example~\ref{lst:implementation:translationalgorithm}. This is the treewalker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
+Clearly visible is the same ''translateCtxAndChildren'' function as in listing~\ref{lst:implementation:translationalgorithm}. This is the treewalker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
 
 \begin{lstlisting}[language=TypeScript,caption=The code generation function of a instanceOf expression,label=lst:implementation:instanceofgeneration]
 instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExpression> => {
@@ -397,7 +397,7 @@ There is a plethora of algoritms available to generate code in the target langua
 \subsubsection{Linear Algorithms}
 Linear algorithms are most often used when compiling a high-level language to machine code or bytecode. They treat the input as a flat, ordered sequence and sequentially process it. Intermediate representations often are either three-address-code or static-single-assignment code. Linear algorithms process the code one instruction at a time in a sequence. When an instruction is complete, it gets pushed to a list, which in the end is concatenated and written to the output file. When using linear algorithms, there are two major ways of representing the \acrshort{ir}.
 
-Three-address code consists of three operands and is typically an assignment and a binary operator ~\cite{wiki:threeaddress}. An instruction can have up to three operands, although it may have less. In the example ~\ref{lst:implementation:threeaddresscode}, the problem gets split up into multiple instructions. This allows the compiler to easily transform the instructions into assembly language or bytecode, which are similar in their structure. Furthermore, the compiler can identify unused code by checking if a variable gets used later on in the code.
+Three-address code consists of three operands and is typically an assignment and a binary operator ~\cite{wiki:threeaddress}. An instruction can have up to three operands, although it may have less. In the listing ~\ref{lst:implementation:threeaddresscode}, the problem gets split up into multiple instructions. This allows the compiler to easily transform the instructions into assembly language or bytecode, which are similar in their structure. Furthermore, the compiler can identify unused code by checking if a variable gets used later on in the code.
 \begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
 // Problem
 x = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
@@ -415,7 +415,7 @@ t9 := t7 / t8
 x := t9
 \end{lstlisting}
 
-The Static single-assignment form is a different intermediate representation, where each variable gets assigned exactly once \cite{wiki:singlestatic}. It is used in the most widely in compilers like \acrshort{gcc}. The main benefit is that it simplifies the code and improves the results of compiler optimizations. In example ~\ref{lst:implementation:staticsingleassignmentform}, the problem shows a variable ''y'' that gets assigned twice. The first assignment is therefore unnecessary. With the static single-assignment form, the compiler can determine that the assignment of ''y1'' was unnecessary, because it is never used in the code that comes after. Examples of optimizations that were enhanced by this form include dead-code elimination, constant propagation and register allocation.
+The Static single-assignment form is a different intermediate representation, where each variable gets assigned exactly once \cite{wiki:singlestatic}. It is used in the most widely in compilers like \acrshort{gcc}. The main benefit is that it simplifies the code and improves the results of compiler optimizations. In listing ~\ref{lst:implementation:staticsingleassignmentform}, the problem shows a variable ''y'' that gets assigned twice. The first assignment is therefore unnecessary. With the static single-assignment form, the compiler can determine that the assignment of ''y1'' was unnecessary, because it is never used in the code that comes after. Examples of optimizations that were enhanced by this form include dead-code elimination, constant propagation and register allocation.
 \begin{lstlisting}[language=TypeScript,caption=Static single-assignment form,label=lst:implementation:staticsingleassignmentform]
 // Problem
 y := 1
@@ -449,7 +449,7 @@ var valid: str = "321";
 print(valid[1:2]); // 2
 \end{lstlisting}
 
-When the compiler encounters the slice operator, it registers the function as needed and therefore includes it into the runtime. This process can be seen in example~\ref{lst:implementation:sliceinternal}. The compiler calls slice function in the ''BuiltInGenerator''. The ''BuiltInGenerator'' is a collection of functions that generate the code for the built in functions in the target languages. This means that each target language has to have a full set of ''BuiltInGenerators''. The generator in the example generates the required JavaScript code for the function by utilizing the built in ''slice'' function of JavaScript.
+When the compiler encounters the slice operator, it registers the function as needed and therefore includes it into the runtime. This process can be seen in listing~\ref{lst:implementation:sliceinternal}. The compiler calls slice function in the ''BuiltInGenerator''. The ''BuiltInGenerator'' is a collection of functions that generate the code for the built in functions in the target languages. This means that each target language has to have a full set of ''BuiltInGenerators''. The generator in the example generates the required JavaScript code for the function by utilizing the built in ''slice'' function of JavaScript.
 
 \begin{lstlisting}[language=TypeScript,caption=Slice in the JavaScript BuiltInGenerator,label=lst:implementation:sliceinternal]
 async slice(funcSpec: InternalFunction): Promise<Array<TranslatedCodeLine>> {
@@ -465,7 +465,7 @@ async slice(funcSpec: InternalFunction): Promise<Array<TranslatedCodeLine>> {
   }
 \end{lstlisting}
 
-The generated "slice" function can be found in example ~\ref{lst:implementation:slicegenerated}.
+The generated "slice" function can be found in listing ~\ref{lst:implementation:slicegenerated}.
 
 \begin{lstlisting}[language=TypeScript,caption=Slice in the target language,label=lst:implementation:slicegenerated]
 slice: function slice<T>(objLike: T, start: number | undefined, end: number | undefined): T {
@@ -478,7 +478,7 @@ The global scope in programming represents the top-level execution context where
 
 For example, JavaScript defines several global objects, such as window in browsers, global in Node.js, and self in Web Workers. Modern JavaScript unifies these under globalThis, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support globalThis, which is why fallback mechanisms are often used.
 
-The Kipper global scope contains all the runtime features that are required. It is important, that the global scope exists only once, therefore the programm needs to check at runtime, if the scope already exists. This can be seen in example ~\ref{lst:implementation:globalscopelogic}. It first checks if ''\_\_globalScope'' is already defined and uses it if available. If not, it attempts to use globalThis, the modern standard JavaScript global object. If ''globalThis'' is not defined, it checks for window in browser environments, global in Node.js, or self in Web Workers. If none of these are defined, it falls back to an empty object. This ensures that the ''\_\_globalScope'' variable is always initialized, regardless of the environment, allowing consistent and safe access to the global scope.
+The Kipper global scope contains all the runtime features that are required. It is important, that the global scope exists only once, therefore the programm needs to check at runtime, if the scope already exists. This can be seen in listing ~\ref{lst:implementation:globalscopelogic}. It first checks if ''\_\_globalScope'' is already defined and uses it if available. If not, it attempts to use globalThis, the modern standard JavaScript global object. If ''globalThis'' is not defined, it checks for window in browser environments, global in Node.js, or self in Web Workers. If none of these are defined, it falls back to an empty object. This ensures that the ''\_\_globalScope'' variable is always initialized, regardless of the environment, allowing consistent and safe access to the global scope.
 
 \begin{lstlisting}[language=TypeScript,caption=Global Scope Logic,label=lst:implementation:globalscopelogic]
 var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
@@ -506,7 +506,7 @@ One of the primary challenges in supporting both JavaScript and TypeScript as ta
 \subsubsection{Reserved Keywords}
 Both JavaScript and TypeScript have a set of reserved keywords that cannot be used as identifiers. However, TypeScript introduces additional constraints by reserving type-related keywords, which are not present in JavaScript. For instance, class is a reserved keyword in both languages and cannot be used as a variable name. In contrast, TypeScript also reserves names like let, number, and other type names, making them invalid as variable or function names.
 
-Kipper handles these reserved keywords by checking for them at compile time. The compiler compares against a hardcoded list of keywords and in case it finds one, it throws an ''ReservedIdentifierOverwriteError''. This list of keywords contains both the reserved words of JavaScript and TypeScript, as this minimizes redundancy and complexity. In addition to that, it also forces the developer to use sensible variable names, as JavaScript is quite leaneant with it's reserved keywords. example~\ref{lst:implementation:reservedkeywords} illustrates this.
+Kipper handles these reserved keywords by checking for them at compile time. The compiler compares against a hardcoded list of keywords and in case it finds one, it throws an ''ReservedIdentifierOverwriteError''. This list of keywords contains both the reserved words of JavaScript and TypeScript, as this minimizes redundancy and complexity. In addition to that, it also forces the developer to use sensible variable names, as JavaScript is quite leaneant with it's reserved keywords. listing~\ref{lst:implementation:reservedkeywords} illustrates this.
 
 \begin{lstlisting}[language=TypeScript,caption=Reserved Keywords in TS and JS,label=lst:implementation:reservedkeywords]
 // Invalid in TypeScript
@@ -519,7 +519,7 @@ var number = 10;  // No error
 \end{lstlisting}
 
 \subsubsection{Type Annotations}
-TypeScript introduces type annotations as part of its static type system. This means that while generating the TypeScript output, Kipper has to append type information in variable assignments, functions and lambdas. This works by overriding the JavaScript implementation of the code generator function and converting the AST-internal type of the node to a TypeScript type. Example ~\ref{lst:implementation:differencecodegeneratorfunctions} shows the difference between the JavaScript code generator function and the TypeScript code generator function for variable assignments. In the codeblock that generates TypeScript, there is an additional bit of code after the storage and the identifier, that inserts the type of the object. The function declaration and lambdas work similarly.
+TypeScript introduces type annotations as part of its static type system. This means that while generating the TypeScript output, Kipper has to append type information in variable assignments, functions and lambdas. This works by overriding the JavaScript implementation of the code generator function and converting the AST-internal type of the node to a TypeScript type. Listing ~\ref{lst:implementation:differencecodegeneratorfunctions} shows the difference between the JavaScript code generator function and the TypeScript code generator function for variable assignments. In the codeblock that generates TypeScript, there is an additional bit of code after the storage and the identifier, that inserts the type of the object. The function declaration and lambdas work similarly.
 
 \begin{lstlisting}[language=TypeScript,caption=Difference in code generator functions,label=lst:implementation:differencecodegeneratorfunctions]
 // JavaScript
@@ -602,7 +602,7 @@ class SeniorDeveloper extends Programmer { }
 
 \subsubsection{Structural Type Systems}
 
-Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with its object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In example~\ref{lst:implementation:ocamlstructuraltyping} there is a function that requires a function~\lstinline|speak| returning the type~\lstinline|string|. Both the~\lstinline|dog| object as well as the~\lstinline|cat| object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
+Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with its object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In listing~\ref{lst:implementation:ocamlstructuraltyping} there is a function that requires a function~\lstinline|speak| returning the type~\lstinline|string|. Both the~\lstinline|dog| object as well as the~\lstinline|cat| object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
 
 \begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
 	let make_speak (obj : < speak : string >) =
@@ -638,7 +638,7 @@ const duck: Duck = {
 
 const person: Duck = {
 	quack: function () {
-		console.log("I'm a person but I can quack!");
+		console.log("I am a person but I can quack!");
 	}
 };
 
@@ -682,7 +682,7 @@ Furthermore, classes are also exempt from this comparator behaviour, as classes 
 \subsection{Runtime Built-in Types}
 \label{subsec:builtintypes}
 
-Built-in runtime types serve as the foundation of the type system and make up the parts of more complex constructs like interfaces. Built-in runtime types are compared at runtime by comparing their references, as they are uniquely defined at the start of the output code and available in the global scope. The implementations of such structures can be seen in the listing~\ref{lst:implementation:builtinruntimetypes} down below.
+Built-in runtime types serve as the foundation of the type system and make up the parts of more complex constructs like interfaces. Built-in runtime types are compared at runtime by comparing their references, as they are uniquely defined at the start of the output code and available in the global scope. The implementations of such structures can be seen in listing~\ref{lst:implementation:builtinruntimetypes}.
 
 \begin{lstlisting}[language=TypeScript,caption=Examples for the built-in runtime types,label=lst:implementation:builtinruntimetypes]
 	const __type_any =
@@ -702,7 +702,7 @@ const __type_Array = new KipperGenericType("Array", undefined, undefined, {T: __
 const __type_Func = new KipperGenericType("Func", undefined, undefined, {T: [], R: __type_any});
 \end{lstlisting}
 
-As can be seen in listing~\ref{lst:implementation:genericbuiltintypes}, generic types are implemented using a special~\lstinline|KipperGenericType| class. This class, shown in listing~\ref{lst:implementation:generickippertype}, extends the~\lstinline|KipperType| and includes an additional field for generic arguments. Most importantly, it includes the method~\lstinline|changeGenericTypeArguments|. which allows for modifying a type's generic arguments at runtime. It is used in lambda and array definitions, where the built-in generic runtime type is used and then modified to represent the specified generic parameters. When for example an array is initialized, it first gets assigned the default~\lstinline|Array<any>| runtime type, which is then modified by the ~\lstinline|changeGenericTypeArguments| method to create the required type, such ~\lstinline|Array<num>|. Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of argument types. The~\lstinline|Func<T..., R>| type on the other hand is used by lambda definitions, which are user-defined functions with a specific return type and arguments without a name.
+As can be seen in listing~\ref{lst:implementation:genericbuiltintypes}, generic types are implemented using a special~\lstinline|KipperGenericType| class. This class, shown in listing~\ref{lst:implementation:generickippertype}, extends the~\lstinline|KipperType| and includes an additional field for generic arguments. Most importantly, it includes the method~\lstinline|changeGenericTypeArguments|. which allows for modifying a type's generic arguments at runtime. It is used in lambda and array definitions, where the built-in generic runtime type is used and then modified to represent the specified generic parameters. When for example an array is initialized, it first gets assigned the default~\lstinline|Array<any>| runtime type, which is then modified by the ~\lstinline|changeGenericTypeArguments| method to create the required type, such ~\lstinline|Array<num>|. Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of argument types. The~\lstinline|Func<T..., R>| type on the other hand is used by lambda definitions, which are user-defined functions with a specific return type and arguments without a name \ref{lst:implementation:generickippertype}.
 
 \begin{lstlisting}[language=Typescript,caption=Generic Kipper Type,label=lst:implementation:generickippertype]
 class KipperGenericType extends KipperType {
@@ -727,7 +727,7 @@ class KipperGenericType extends KipperType {
 
 \subsection{Runtime Errors}
 
-Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base~\lstinline|KipperError| type has a name property and extends the target language's error type as can be seen in listing~\ref{lst:implementation:kippererrortypes}. Additional error types inherit this base type and extend it with additional error information. For instance, the ~\lstinline|KipperNotImplementedError| is used whenever a feature that is not yet implemented is used by the developer.
+Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base~\lstinline|KipperError| type has a name property and extends the target language's error type as can be seen in listing~\ref{lst:implementation:kippererrortypes}. Additional error types inherit this base type and extend it with additional error information. For instance, the ~\lstinline|KipperIndexError| is used whenever an index was out of bounds.
 
 \begin{lstlisting}[language=Typescript,caption=Kipper error types,label=lst:implementation:kippererrortypes]
 class KipperError extends Error {
@@ -736,11 +736,12 @@ class KipperError extends Error {
 		this.name = "KipError";
 	}
 }
-class KipperNotImplementedError extends KipperError {
-	constructor(msg) {
-		super(msg);
-		this.name = "KipNotImplementedError";
-	}
+
+class KipperIndexError extends KipperError {
+	constructor(msg) { 
+		super(msg); 
+		this.name = 'KipIndexError'; 
+	} 
 }
 \end{lstlisting}
 
@@ -801,12 +802,12 @@ If we translate the interfaces shown above in listing~\ref{lst:implementation:in
 
 As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a~\lstinline|KipperType| instance, identified by the ~\lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-Notable usages for runtime typechecking include the~\lstinline|matches| operator \ref{subsec:matches} and the~\lstinline|typeof| operator \ref{subsec:typeof}.
+Notable usages for runtime typechecking include the~\lstinline|matches| operator, as can be seen in section~\ref{subsec:matches} and the~\lstinline|typeof| operator, described in section~\ref{subsec:typeof}.
 
 \subsection{Matches Operator for Interfaces}
 \label{subsec:matches}
 
-The primary feature of the Kipper programming language is its runtime type comparison. There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the~\lstinline|instanceof| operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
+There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the~\lstinline|instanceof| operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
 
 Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the~\lstinline|instanceof| operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching", is applied to primitives and interfaces. Structural comparisons are implemented using the matches operator as can been seen in listing~\ref{lst:implementation:runtimeinterface}.
 
@@ -834,11 +835,11 @@ var x: X = {
 var res: bool = x matches X; // -> true
 \end{lstlisting}
 
-As can be seen in example~\ref{lst:implementation:matchesoperator}, the matches operator can compare interfaces by properties and methods. It takes two arguments, an object and a type which it should match. Properties are compared recursively and methods are compared by name, arguments and return type.
+As can be seen in listing~\ref{lst:implementation:matchesoperator}, the matches operator can compare interfaces by properties and methods. It takes two arguments, an object and a type which it should match. Properties are compared recursively and methods are compared by name, arguments and return type.
 
 Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being present in the type it should check against. The order of properties does not matter. When the name is found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitives.
 
-This property match algorithm is implemented as can seen in listing~\ref{lst:implementation:matchesproperty}.
+This property match algorithm is implemented as given in listing~\ref{lst:implementation:matchesproperty}.
 
 \begin{lstlisting}[language=Typescript,caption=Matches operator property comparison,label=lst:implementation:matchesproperty]
 for (const field of pattern.fields) {
@@ -899,12 +900,12 @@ for (const field of pattern.methods) {
 }
 \end{lstlisting}
 
-When none of these condition is false, the input object matches the input type and they can be seen as compatible.
+When none of these condition are false, the input object matches the input type and they can be seen as compatible.
 
 \subsection{Typeof Operator}
 \label{subsec:typeof}
 
-In the Kipper programming language, the~\lstinline|typeof| operator is used to get the type of an object at runtime. This operator can be used to check if a variable or expression is of a particular type, such as a string, number, boolean, etc. Most commonly, it is used to check for null and undefined objects, to avoid type errors when an object is of unknown type. The returned type object can be compared by reference to check for type equality. As can bee seen in example~\ref{lst:implementation:typeofoperator}, the parantheses are optional. We decided to allow both syntax styles, due to our goal of being similar to TypeScript and JavaScript, which both implement it the same way.
+In the Kipper programming language, the~\lstinline|typeof| operator is used to get the type of an object at runtime. This operator can be used to check if a variable or expression is of a particular type, such as a string, number, boolean, etc. Most commonly, it is used to check for null and undefined objects, to avoid type errors when an object is of unknown type. The returned type object can be compared by reference to check for type equality. As can bee seen in listing~\ref{lst:implementation:typeofoperator}, the parantheses are optional. We decided to allow both syntax styles, due to our goal of being similar to TypeScript and JavaScript, which both implement it the same way.
 
 \begin{lstlisting}[language=Typescript,caption=Typeof operator used to determine the type of an input expression,label=lst:implementation:typeofoperator]
 typeof 49; // "__kipper.builtIn.num"
@@ -913,7 +914,7 @@ typeof("Hello, World!"); // "__kipper.builtIn.str"
 
 The ~\lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the ~\lstinline|typeof null| returns~\lstinline|object| due to historical reasons, Kipper correctly identifies ~\lstinline|null| as ~\lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in example~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective~\lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
+At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in listing~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective~\lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
 
 \begin{lstlisting}[language=Typescript,caption=Logical implementation of the typeof operator in TypeScript, label=lst:implementation:typeofimplementation]
 typeOf: (value) => {
