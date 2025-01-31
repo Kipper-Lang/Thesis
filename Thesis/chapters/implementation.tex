@@ -215,6 +215,7 @@ Given these issues, Kipper has implements its own error recovery algorithm into 
 
 \section{Type System}
 \setauthor{Fabian Baitura}
+\label{sec:type-system}
 
 The type system is the primary element of a modern object-oriented programming languages and in the case of Kipper it is the primary area of attention.
 
@@ -639,7 +640,11 @@ Given that duck typing allows dynamic data to be easily checked and assigned to 
 
 \subsection{Runtime Type Concept in Kipper}
 
-The primary goal of the Kipper runtime type system is to allow untyped values to be compared with defined types, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors. During code generation, all user-defined interfaces are converted into runtime types that store the information needed to perform type checks. These are then utilised alongside the built-in runtime types, such as ~\lstinline|num|,~\lstinline|str| or~\lstinline|obj|, to enable the compiler to add necessary checks and runtime references for any cast, match or typeof operation.
+As previously explained (see section~\ref{sec:type-system}) the Kipper programming language utilises a similar type system to TypeScript with static typing and a duck-typing approach to complex data and \acrshort{oop} structures. However, unlike TypeScript, we want to ensure full type safety at a runtime level and force the developer to specify the required types and handle edge cases, such as casts and type inference.
+
+Using this approach Kipper allows untyped values, as is the case with the~\lstinline|any| type that is often returned by requests or web elements, or dynamic values to be compared with types that have clearly defined boundaries, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors.
+
+To allow this functionality, during code generation all user-defined interfaces are converted into runtime types that store the information needed to perform type checks, which form the basis of casts and strict type safety. These are then utilised alongside the built-in runtime types, such as~\lstinline|num|,~\lstinline|str| or~\lstinline|obj|, to enable the compiler to add necessary checks and runtime references to any cast, match or typeof operation, guaranteeing that they are fully type-safe.
 
 With the exception of interfaces, classes, and generics, types are primarily distinguished by their names. In these cases, type equality checks are performed using nominal comparisons, where the name acts as a unique identifier within the given scope e.g. type~\lstinline|num| is only assignable to~\lstinline|num|. For more complex structures, additional information—such as members or generic parameters—is also considered.
 
@@ -648,8 +653,6 @@ In the case of interfaces, the names and types of fields and methods are used as
 For generics, which include~\lstinline|Array<T>| and~\lstinline|Func<T..., R>|, the identifier is used alongside the provided generic parameters to determine assignability. This ensures that when one generic is assigned to another, all parameters must match. For instance,~\lstinline|Array<num>| cannot be assigned to~\lstinline|Array<str>"|and vice versa, even if their overall structure is identical.
 
 For user-defined classes, the compiler relies on the prototype to serve as the discriminator. In practice, this behaviour is similar to that of primitives, as different classes cannot be assigned to each other.
-
-To ensure future compatibility with inheritance, Kipper also includes a "baseType" property, which allows types to be linked in an inheritance chain. However, this feature is currently unused.
 
 \subsection{Base Type for the Kipper Runtime}
 \label{subsec:basetype}
