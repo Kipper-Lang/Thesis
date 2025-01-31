@@ -337,9 +337,9 @@ As of now, Kipper generates either TypeScript or JavaScript code as its output. 
 
 Currently, Kipper does not include a middle-end component. This decision was made to avoid the additional complexity associated with implementing a full middle-end, as the resulting performance improvements in generated code would be only marginal. Instead, the frontend directly passes the \acrshort{ast} (Abstract Syntax Tree) to the backend. While Kipper does perform some post-analysis optimizations, these are presently limited to treeshaking.
 
-\subsection{Abstraction during previous processing}
+\subsection{Role of the AST in the output generation}
 
-Kipper uses an \acrshort{ast} as the primary representation of the code from the input program. The \acrshort{ast} serves as a hierarchical structure that represents the program's source code. The root node of the \acrshort{ast} corresponds to the entire program, while each child node represents a specific construct such as a statement, scope, or other language feature.
+Kipper generally uses an \acrshort{ast} as the primary representation of the code from the input program. The \acrshort{ast} serves as a hierarchical structure that represents the program's source code. The root node of the \acrshort{ast} corresponds to the entire program, while each child node represents a specific construct such as a statement, scope, or other language feature.
 
 Each node in the \acrshort{ast} contains the semantic data and type-related information of the corresponding statement, as well as a string representation of the original parser node. Additionally, every node includes a kind identification property—a unique, hard-coded number in the compiler—to uniquely identify the type of the node. This property aids in determining the type of construct, such as a declaration, an expression, or a statement.
 
@@ -567,20 +567,6 @@ CoffeeScript aimed to simplify JavaScript syntax but often produced output that 
 \label{sec:integrated-runtime}
 \setauthor{Lorenz Holzbauer}
 
-\subsection{Runtime Type Concept}
-
-The primary goal of the Kipper runtime type system is to allow untyped values to be compared with defined types, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors. During code generation, all user-defined interfaces are converted into runtime types that store the information needed to perform type checks. These are then utilised alongside the built-in runtime types, such as ~\lstinline|num|,~\lstinline|str| or~\lstinline|obj|, to enable the compiler to add necessary checks and runtime references for any cast, match or typeof operation.
-
-With the exception of interfaces, classes, and generics, types are primarily distinguished by their names. In these cases, type equality checks are performed using nominal comparisons, where the name acts as a unique identifier within the given scope e.g. type~\lstinline|num| is only assignable to~\lstinline|num|. For more complex structures, additional information—such as members or generic parameters—is also considered.
-
-In the case of interfaces, the names and types of fields and methods are used as discriminators. These fields and methods represent the minimum blueprint that an object must implement to be considered compatible with the interface and thus "assignable". In this regard, Kipper adopts the same duck-typing approach found in TypeScript.
-
-For generics, which include~\lstinline|Array<T>| and~\lstinline|Func<T..., R>|, the identifier is used alongside the provided generic parameters to determine assignability. This ensures that when one generic is assigned to another, all parameters must match. For instance,~\lstinline|Array<num>| cannot be assigned to~\lstinline|Array<str>"|and vice versa, even if their overall structure is identical.
-
-For user-defined classes, the compiler relies on the prototype to serve as the discriminator. In practice, this behaviour is similar to that of primitives, as different classes cannot be assigned to each other.
-
-To ensure future compatibility with inheritance, Kipper also includes a "baseType" property, which allows types to be linked in an inheritance chain. However, this feature is currently unused.
-
 \subsection{Runtime Type Implementations in other Languages}
 \label{chap:runtime-other-languages}
 
@@ -651,7 +637,21 @@ const dog: Duck = {
 
 Given that duck typing allows dynamic data to be easily checked and assigned to any interface, Kipper adopts a similar system to that of TypeScript but introduces notable differences in how interfaces behave and how dynamic data is handled. For instance, casting an~\lstinline|any| object to an interface in Kipper will result in a runtime error if the object does not possess all the required members. In contrast, TypeScript permits such an operation without performing any type checks at runtime.
 
-\subsection{Runtime Base Type}
+\subsection{Runtime Type Concept in Kipper}
+
+The primary goal of the Kipper runtime type system is to allow untyped values to be compared with defined types, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors. During code generation, all user-defined interfaces are converted into runtime types that store the information needed to perform type checks. These are then utilised alongside the built-in runtime types, such as ~\lstinline|num|,~\lstinline|str| or~\lstinline|obj|, to enable the compiler to add necessary checks and runtime references for any cast, match or typeof operation.
+
+With the exception of interfaces, classes, and generics, types are primarily distinguished by their names. In these cases, type equality checks are performed using nominal comparisons, where the name acts as a unique identifier within the given scope e.g. type~\lstinline|num| is only assignable to~\lstinline|num|. For more complex structures, additional information—such as members or generic parameters—is also considered.
+
+In the case of interfaces, the names and types of fields and methods are used as discriminators. These fields and methods represent the minimum blueprint that an object must implement to be considered compatible with the interface and thus "assignable". In this regard, Kipper adopts the same duck-typing approach found in TypeScript.
+
+For generics, which include~\lstinline|Array<T>| and~\lstinline|Func<T..., R>|, the identifier is used alongside the provided generic parameters to determine assignability. This ensures that when one generic is assigned to another, all parameters must match. For instance,~\lstinline|Array<num>| cannot be assigned to~\lstinline|Array<str>"|and vice versa, even if their overall structure is identical.
+
+For user-defined classes, the compiler relies on the prototype to serve as the discriminator. In practice, this behaviour is similar to that of primitives, as different classes cannot be assigned to each other.
+
+To ensure future compatibility with inheritance, Kipper also includes a "baseType" property, which allows types to be linked in an inheritance chain. However, this feature is currently unused.
+
+\subsection{Base Type for the Kipper Runtime}
 \label{subsec:basetype}
 
 In practice, all user-defined and built-in types inherit from a basic~\lstinline|KipperType| class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing~\ref{lst:implementation:runtimetypestructure}.
@@ -679,7 +679,7 @@ Type~\lstinline|any| is an exception and is the only type that accepts any value
 
 Furthermore, classes are also exempt from this comparator behaviour, as classes behave like a value during runtime and provide a prototype which can simply be used to check if an object is an instance of that class.
 
-\subsection{Runtime Built-in Types}
+\subsection{Built-in Types for the Kipper Runtime}
 \label{subsec:builtintypes}
 
 Built-in runtime types serve as the foundation of the type system and make up the parts of more complex constructs like interfaces. Built-in runtime types are compared at runtime by comparing their references, as they are uniquely defined at the start of the output code and available in the global scope. The implementations of such structures can be seen in listing~\ref{lst:implementation:builtinruntimetypes}.
@@ -802,14 +802,14 @@ If we translate the interfaces shown above in listing~\ref{lst:implementation:in
 
 As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a~\lstinline|KipperType| instance, identified by the ~\lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-Notable usages for runtime typechecking include the~\lstinline|matches| operator, as can be seen in section~\ref{subsec:matches} and the~\lstinline|typeof| operator, described in section~\ref{subsec:typeof}.
+Notable usages for runtime type-checking include the~\lstinline|matches| operator (See section \ref{subsec:matches}) and the~\lstinline|typeof| operator (See section \ref{subsec:typeof}).
 
 \subsection{Matches Operator for Interfaces}
 \label{subsec:matches}
 
 There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the~\lstinline|instanceof| operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
 
-Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the~\lstinline|instanceof| operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching", is applied to primitives and interfaces. Structural comparisons are implemented using the matches operator as can been seen in listing~\ref{lst:implementation:runtimeinterface}.
+Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the~\lstinline|instanceof| operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching", is applied to primitives and interfaces. Structural comparisons are implemented using the matches operator as given in listing~\ref{lst:implementation:matchesoperator}.
 
 \begin{lstlisting}[language=Typescript,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
 interface Y {
@@ -900,7 +900,7 @@ for (const field of pattern.methods) {
 }
 \end{lstlisting}
 
-When none of these condition are false, the input object matches the input type and they can be seen as compatible.
+When none of these conditions are false, the input object matches the input type and they can be seen as compatible.
 
 \subsection{Typeof Operator}
 \label{subsec:typeof}
