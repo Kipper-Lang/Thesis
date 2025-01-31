@@ -1,27 +1,34 @@
-\section{Future}
+\section{Potential Features}
 \label{sec:future}
 \setauthor{Lorenz Holzbauer}
 
-Currently, Kipper caters primarily to web developers by providing seamless integration with the TS and JS ecosystems. This focus aligns well with the popularity of JavaScript on both the client and server sides. However, the web development landscape is rapidly evolving, and developers are increasingly seeking high-performance solutions.
+Currently, Kipper primarily serves web developers by offering integration with the TypeScript (TS) and JavaScript (JS) ecosystems. This focus aligns with the widespread use of JavaScript on both client and server sides. However, the web development landscape is evolving, and there is a growing demand among developers for high-performance solutions.
 
 \subsection{WebAssembly Support}
 %https://webassembly.org/
 %https://wasmer.io/
 
-WebAssembly is an open standard that enables high-performance, portable code execution across diverse environments, including browsers, servers, and embedded systems. Adding WebAssembly as a compilation target for Kipper presents a compelling opportunity to enhance performance. In addition it enables Kipper to run on as a standalone server application. With new technologies like wasmer, WebAssembly could power containers in the cloud while being a fraction of the size of a traditional container.
+WebAssembly is an open standard that enables high-performance, portable code execution across diverse environments, including browsers, servers, and embedded systems. Adding WebAssembly as a compilation target for Kipper provides a potential avenue for enhancing performance and allows Kipper to function as a standalone server application. Emerging technologies such as Wasmer demonstrate that WebAssembly could also support cloud-based container environments while occupying only a fraction of the size of traditional containers.
 
-Implementing WebAssembly as a target for Kipper is not without challenges. Unlike TS/JS, which are dynamically typed and inherently compatible with Kipper’s runtime model, Wasm requires a more rigorous type system and memory management model. This means the compiler needs to handle low-level memory management with garbage collection. Additionally, it would be neccessary to implement a compatibility layer with a runtime to handle Kipper's dynamic data requirements.
+Implementing WebAssembly as a target for Kipper presents several challenges. Unlike TypeScript and JavaScript, which are dynamically typed and compatible with Kipper’s runtime model, WebAssembly requires a more structured type system and memory management approach. This necessitates that the compiler handle low-level memory management, including garbage collection. Additionally, a compatibility layer with a runtime would need to be developed to manage Kipper’s dynamic data requirements.
 
-Due to this issues, it is unlikely that WebAssembly support will land in Kipper in the next few versions.
+Given these challenges, it is unlikely that WebAssembly support will be included in Kipper in the near future.
 
 \subsection{IDE Support}
-IDE support plays a crucial role in increasing developer adoption and productivity. By providing advanced tooling within popular IDEs, Kipper can establish itself as a practical choice for developers working on TS and JS projects. Enhanced IDE integration contributes to code quality and the overall developer experience.
 
-One of the foundational requirements for Kipper IDE support is robust syntax highlighting. Highlighting keywords, data types, and structures unique to Kipper ensures code readability and reduces cognitive load for developers. This already implemented in the web-editor of Kipper. IntelliSense and autocompletion are equally important. IDEs can offer context-aware suggestions for code completion, parameter hints, and documentation pop-ups, mirroring the functionality developers expect in TS and JS environments.
+IDE support is an important factor in fostering developer adoption and productivity. Providing tooling within popular IDEs can position Kipper as a viable option for developers working on TypeScript (TS) and JavaScript (JS) projects. Effective IDE integration can contribute to code quality and the overall development process.
 
-Static analysis tools are important for maintaining code quality. By integrating a Kipper-specific linter within IDEs, developers can receive real-time feedback on potential errors, best practices, and stylistic consistency.
+A key requirement for Kipper IDE support is syntax highlighting. Highlighting keywords, data types, and structures specific to Kipper can improve code readability and reduce cognitive load for developers. This feature is available in the web editor of Kipper. IntelliSense and autocompletion are also significant components, enabling IDEs to provide context-aware suggestions for code completion, parameter hints, and documentation pop-ups, similar to the functionality common in TS and JS environments.
 
-While initial efforts may focus on Visual Studio Code due to its popularity and extensibility, other IDEs like the JetBrains products "Webstorm" and "IntelliJ Idea" should also be considered. Broad IDE support ensures that Kipper is accessible to a wider audience, accommodating developers’ preferences.
+Static analysis tools can assist in maintaining code quality. Integrating a Kipper-specific linter within IDEs allows developers to receive feedback on potential errors, best practices, and stylistic consistency during development.
+
+Initial development efforts may focus on Visual Studio Code due to its widespread use and extensibility. However, consideration for additional IDEs, such as JetBrains products including WebStorm and IntelliJ IDEA, can help accommodate different developer preferences and workflows. Broader IDE compatibility may increase accessibility and support diverse development environments.
+
+\section{Integration with other languages}
+\setauthor{Luna Klatzer}
+
+\section{Project Result}
+\setauthor{Luna Klatzer}
 
 %%% Local Variables:
 %%% mode: LaTeX
