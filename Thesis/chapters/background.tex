@@ -30,7 +30,7 @@ id = resp.id; // Assigns a string even though that was not intended
 		Implicit conversions, such as treating "null" or "undefined" as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
 
 		\begin{lstlisting}[language=JavaScript,caption=Broad ability to perform "invalid" operations despite clear error case,label=lst:background:problematicflexibility]
-let discountRate = cart.appliedDiscount; // Let's assume it's actually "applied_discount" not "appliedDiscount" so it returns "undefined"
+let discountRate = cart.appliedDiscount; // Assuming it is actually "applied_discount" not "appliedDiscount" so it returns "undefined"
 
 return price * (1 - discountRate); // -> yields NaN (Not A Number)
 		\end{lstlisting}
@@ -52,7 +52,7 @@ Examples include:
 		Accessing a missing property, which returns "undefined", and later receiving an error due to "undefined" not being an object, as demonstrated in listing~\ref{lst:background:missingpropertyerror}.
 
 		\begin{lstlisting}[language=JavaScript,caption=Accessing a missing property returns undefined which later causes an error,label=lst:background:missingpropertyerror]
-// Let's assume this is some kind of API response that incorrectly returned some data
+// Assuming this is some kind of API response that incorrectly returned some data
 let user = {
 	name: "Alice"
 };
@@ -99,11 +99,9 @@ These constraints highlight the challenges inherent in adapting a dynamically ty
 
 \subsubsection{Unchecked compile-time casts}
 
-As already mentioned TypeScript works on a compile-time-only basis, which does not allow for any runtime type checks. That also naturally means any standard functionality like casts can also not be checked for, since such type functionality requires the language to be able to reflect on its type structure during runtime. Given the fact though that casts, which allow the developer to narrow the type of a value down, are a necessity in everyday programs, TypeScript is forced to provide what you can call "trust-based casts". The developer can, like in any other language, specify what a specific value is expected to be, but unlike usual casts are primarily unchecked, meaning you can, if you want, cast anything to anything with no determined constraint.
+As already mentioned TypeScript works on a compile-time-only basis, which does not allow for any runtime type checks. That also naturally means any standard functionality like casts can also not be checked for, since such type functionality requires the language to be able to reflect on its type structure during runtime. Given the fact though that casts, which allow the developer to narrow the type of a value down, are a necessity in everyday programs, TypeScript is forced to provide what can be called "trust-based casts". This means, that TypeScript trusts the developer to check for type compatibility. The language therefore allows any type to be cast to any other type.
 
-While in principle this maintains the status quo and provides the developer with more freedom, it also opens up another challenge that must be looked out for when writing code. If one of those casts goes wrong and isn't valid, the developer will only know that at runtime and will have no assistance to fix it. To overcome this developers can themselves implement runtime type checks, which prevent type mismatches in ambiguous contexts. While it is a common approach, it is fairly impractical and adds a heavy burden on the developer as it requires constant maintenance and recurring rewrites to ensure the type checks are up-to-date and valid.
-
-Let's look at an example~\ref{lst:background:uncheckedcompilecasts}.
+While in principle this maintains the status quo and provides the developer with more freedom, it also opens up another challenge that must be looked out for when writing code. If one of those casts goes wrong and is not valid, the developer will only know that at runtime and will have no assistance to fix it. To overcome this developers can themselves implement runtime type checks, which prevent type mismatches in ambiguous contexts. While it is a common approach, it is fairly impractical and adds a heavy burden on the developer as it requires constant maintenance and recurring rewrites to ensure the type checks are up-to-date and valid.
 
 \begin{lstlisting}[language=TypeScript,caption=Unchecked compile-time casts in TypeScript,label=lst:background:uncheckedcompilecasts]
 class SuperClass {
@@ -127,19 +125,19 @@ class LowerClass extends MiddleClass {
 }
 
 const c1 = <MiddleClass>new SuperClass(); // Unchecked cast
-console.log(c1.superField.name); // Runtime Error! Doesn't actually exist
+console.log(c1.superField.name); // Runtime Error! "c1.superField" does not actually exist
 
 const c2 = <LowerClass>new MiddleClass(); // Unchecked cast
-console.log(c2.classField.superField.name); // Runtime Error! Doesn't actually exist
+console.log(c2.classField.superField.name); // Runtime Error! "c2.classField.superField" does not actually exist
 \end{lstlisting}
 
-Here we have a simple example of an inheritance structure, where we access the properties of a child that is itself also another object. Due to the nature of TypeScript operations such as casts are mostly unchecked and usually work on the base of trusting the developer to know what they're doing. That means that in the example given above, the compiler does not realise that the operation the developer is performing is invalid and will result in a failure at runtime (can't access property "name", c1.superField is undefined). Furthermore, given that JavaScript only reports on such errors when a property on an undefined value is accessed, the undefined variable may go unused for a while before it is the cause of any problem. This leads to volatile code that can in many cases not be guaranteed to work unless the developer actively pays attention to such errors and makes sure that their code does not unintentionally force unchecked casts or other similar untyped operations.
+In listing~\ref{lst:background:uncheckedcompilecasts}, we have a simple example of an inheritance structure, where we access the properties of a child that is itself also another object. Due to the nature of TypeScript operations such as casts are mostly unchecked and usually work on the base of trusting the developer to know what they are doing. That means that in the example given above, the compiler does not realise that the operation the developer is performing is invalid and will result in a failure at runtime (can not access property "name", c1.superField is undefined). Furthermore, given that JavaScript only reports on such errors when a property of an undefined value is accessed, the undefined variable may go unused for a while before it is the cause of any problem. This leads to volatile code that can in many cases not be guaranteed to work unless the developer actively pays attention to such errors and makes sure that their code does not unintentionally force unchecked casts or other similar untyped operations.
 
 \subsubsection{Ambiguous dynamic data}
 
-Another similar issue occurs when dealing with dynamic or untyped data, which does not report on its structure and as such is handled as if it were a JavaScript value, where all type checks and security measures are disabled. This for one makes sense given the goal of ensuring compatibility with the underlying language, but it also creates another major problem where errors regarding any-typed values can completely go undetected. Consequently, if we were to receive data from a client or server we can not ensure that the data we received is fully valid or corresponds to the expected pattern. This is a problem that does not have a workaround or a solution in TypeScript.
+A similar issue occurs when dealing with dynamic or untyped data, which does not report on its structure and as such is handled as if it were a JavaScript value, where all type checks and security measures are disabled. This for one makes sense given the goal of ensuring compatibility with the underlying language, but it also creates another major problem where errors regarding any-typed values can completely go undetected. Consequently, if we were to receive data from a client or server we can not ensure that the data we received is fully valid or corresponds to the expected pattern. This is a problem that does not have a workaround or a solution in TypeScript.
 
-For example~\ref{lst:background:ambigdata}:
+An example of such a situation is given in listing~\ref{lst:background:ambigdata}:
 
 \begin{lstlisting}[language=TypeScript,caption=Ambiguous dynamic data in TypeScript,label=lst:background:ambigdata]
 interface Data {
@@ -163,11 +161,11 @@ var data = <Data>receiveUserReq(); // Unsafe casting with unknown data
 console.log(data.z.z1); // No Runtime Error! But returns "undefined"
 \end{lstlisting}
 
-For the most part, developers are expected to simply watch out for such cases and implement their own security measures. There are potential libraries which can be utilised to add runtime checks which check the data received, but such solutions require an entirely new layer of abstraction which must be managed manually by a developer. This additional boilerplate code also increases the complexity of a program and has to be actively maintained to keep working.
+For the most part, developers are expected to simply watch out for such cases and implement their own security measures. There are potential libraries which can be utilised to add runtime checks, but such solutions require an entirely new layer of abstraction which must be managed manually by a developer. This additional boilerplate code also increases the complexity of a program and has to be actively maintained to keep working.
 
-Good examples of technologies that provide runtime object schema matching are "Zod"~\cite{zod} and "joi"~\cite{joi}. Both are fairly popular and actively used by API developers who need to develop secure endpoints and ensure accurate request data. While they are a good approach to fixing the problem after the fact, they still create their own difficulties. We will examine these later in the implementation section, where we will more thoroughly compare Kipper's approach to other tools.
+Good examples of technologies that provide runtime object schema matching are "Zod"~\cite{zod} and "joi"~\cite{joi}. Both are fairly popular and actively used by API developers who need to develop secure endpoints and ensure accurate request data. While they are a good approach to fixing the problem, they still create their own difficulties. We will examine these later in the implementation section, where we will more thoroughly compare Kipper's approach to other tools.
 
-\section{How could it have been better}
+\section{Examples of runtime type checking in other languages}
 \setauthor{Fabian Baitura}
 
 \subsection{Case study: Java}
@@ -182,14 +180,14 @@ Rust's type system is strongly and statically typed, like Java, but it emphasize
 
 \subsection{Drawing comparisons to JavaScript}
 
-Unlike the two languages we've just described, JavaScript is rather unique in its design and structure. As already mentioned, there is no proper reflection system, enforced type checks or type safety when running code, only really throwing errors when there is no other way around it. Moreover, you can say that JavaScript has no design or structure at all, and was more conceptualised as a fully dynamic type-less language with no OOP support in mind. This has caused quite a few problems in the years following the original version of JavaScript, as it has more and more developed into an OOP language while not providing any proper type functionality commonly present in such systems. Even languages like Python, which is also a dynamic interpreted language, provide static type hints and checks to ensure proper type safety when writing code.
+Unlike the two languages we have just described, JavaScript is rather unique in its design and structure. As already mentioned, there is no proper reflection system, enforced type checks or type safety when running code, only really throwing errors when there is no other way around it. Moreover, it can be said that JavaScript has no design or structure at all, and was more conceptualised as a fully dynamic type-less language with no OOP support in mind. This has caused quite a few problems in the years following the original version of JavaScript, as it has more and more developed into an OOP language while not providing any proper type functionality commonly present in such systems. Even languages like Python, which is also a dynamic interpreted language, provide static type hints and checks to ensure proper type safety when writing code.
 
-Nonetheless, as JavaScript is currently one of the most important languages out there, the system can under no circumstances be changed as it would break backwards compatibility with previous systems and destroy the web as we know it today. This has caused quite a dilemma, which persists until today. Many tools like TypeScript have been developed since then and are seen as the de-facto solution for these problems, but it's a rather bad solution given all the current restraints, unavoidable edge cases and vulnerabilities that can be easily introduced.
+Nonetheless, as JavaScript is currently one of the most important languages out there, the system can under no circumstances be changed as it would break backwards compatibility with previous systems and destroy the web as we know it today. This has caused quite a dilemma, which persists until today. Many tools like TypeScript have been developed since then and are seen as the de-facto solution for these problems, but it is a rather bad solution given all the current restraints, unavoidable edge cases and vulnerabilities that can be easily introduced.
 
 \section{Tackling the issue at its core}
 \setauthor{Lorenz Holzbauer}
 
-As we have already mentioned, JavaScript is a language that can under no circumstances be changed or it would mean that most websites would break in newer browser versions. This phenomenon is also often described as "Don't break the web", the idea that any new functionality must incorporate all the previous standards and systems to ensure that older websites work and look the same. Naturally this also then extends to TypeScript, which has at its core a standard JavaScript system that can also not be changed or altered to go against the ECMAScript standard. Consequently, the most effective approach to ensuring a safe development environment for developers is to build upon JavaScript by extending its standard functionalities through a custom, unofficial system that incorporates the necessary structures and safety measures.
+As we have already mentioned, JavaScript is a language that can under no circumstances be changed or it would mean that most websites would break in newer browser versions. This phenomenon is also often described as "Do not break the web", the idea that any new functionality must incorporate all the previous standards and systems to ensure that older websites work and look the same. Naturally this also then extends to TypeScript, which has at its core a standard JavaScript system that can also not be changed or altered to go against the ECMAScript standard. Consequently, the most effective approach to ensuring a safe development environment for developers is to build upon JavaScript by extending its standard functionalities through a custom, unofficial system that incorporates the necessary structures and safety measures.
 
-This is where Kipper comes into play—a language that implements a custom system, which is later transpiled into JavaScript or TypeScript. By incorporating an additional runtime and non-standard syntax, Kipper enables runtime type checks, addressing gaps left by TypeScript's compile-time-only system. This approach is particularly advantageous, as it allows the system to extend beyond JavaScript standards, introducing structures tailored to the requirements of modern programs. Accordingly, developers can rely on Kipper to enhance code security and ensure that no dynamic structures remain unchecked or bypass the type system due to edge cases.
+The above approach is exactly the aim of Kipper—a language that implements a custom runtime type system, which is later transpiled into JavaScript or TypeScript. By incorporating an additional runtime and non-standard syntax, Kipper enables runtime type checks. This approach is particularly advantageous, as it allows the system to extend beyond JavaScript standards, introducing structures tailored to the requirements of modern programs. Accordingly, developers can rely on Kipper to enhance code security and ensure that no dynamic structures remain unchecked or bypass the type system due to edge cases.
 
