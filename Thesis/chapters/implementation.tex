@@ -128,13 +128,13 @@ The step of tokenization is fairly straightforward as it simply follows the defi
 
 The lexer operates as a state machine, scanning through the input character stream and categorizing sequences based on patterns defined in the grammar. These patterns may include regular expressions to match identifiers, numerical constants, or specific language keywords. Once tokens are identified they are put into the associated channels as explained in~\ref{sec:token-channels}.
 
-%\begin{figure}[h!]
-%	\centering
-%	\def\stackalignment{r}
-%	\includegraphics[scale=1]{./pics/Lexer-Algorithm.drawio}
-%	\caption{The lexing process which categories the various tokens}
-%	\label{fig:implementation:Lexer-Algorithm}
-%\end{figure}
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\includegraphics[scale=1]{./pics/Lexer-Algorithm.drawio}
+	\caption{The lexing process which categories the various tokens}
+	\label{fig:implementation:Lexer-Algorithm}
+\end{figure}
 
 \subsubsection{Token Channels}
 \label{sec:token-channels}
@@ -167,13 +167,13 @@ Besides standard sequential processing of the input, the Kipper Lexer also emplo
 
 Sub-lexing is crucial for Kipper due to features such as templating, where code fragments are embedded within strings. In such cases, the lexer must correctly differentiate between string elements and code atoms (the inserted snippets inside the string). By using a simple push-and-pop mechanism, the lexers can function similarly to a stack, layering processing contexts on top of one another. Each context processes its corresponding string subset, enabling correct parsing of both regular syntax and embedded code within strings. This modular approach ensures cleaner handling of complex tokenization scenarios and increases the lexer's flexibility.
 
-%\begin{figure}[h!]
-%	\centering
-%	\def\stackalignment{r}
-%	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
-%	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
-%	\label{fig:implementation:Sub-Lexer}
-%\end{figure}
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
+	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
+	\label{fig:implementation:Sub-Lexer}
+\end{figure}
 
 \subsection{Syntactic analysis}
 
