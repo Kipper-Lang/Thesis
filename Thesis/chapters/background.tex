@@ -170,13 +170,139 @@ Good examples of technologies that provide runtime object schema matching are "Z
 
 \subsection{Case study: Java}
 
-Java is a statically typed OOP programming language, which is next to C\# one of the primary languages used throughout the world of programming. It runs on a VM-based architecture designed to allow the developer to deploy cross-platform applications and work with powerful dynamic object structures. Like other high-level languages, it provides reflection, a concept essential for the purpose of runtime type checking and validations. Unlike TypeScript, operations in the code are always checked during compile time and runtime if necessary, and can never be simply ignored by the developer. As such when you work with the language and deploy an application you can be sure that the casts and type operations are safe, or at least will have an error thrown in the case of failure. This is a heavy contrast to the entirely dynamic and type-less structure present in JavaScript, which doesn't provide such safeguards and relies on the developer for security.
+Java is a statically typed object-oriented programming language that runs on the Java Virtual Machine (JVM). It is widely used in enterprise applications, Android development, and large-scale systems due to its robust type system and memory management capabilities. Unlike JavaScript and TypeScript, which Kipper transpiles to, Java enforces type safety at both compile-time and runtime. This enforcement ensures that type errors are caught early and that unexpected behavior due to type inconsistencies is minimized.
+
+One of Java’s key runtime type features is its use of 	reflection, which allows a program to inspect and modify its own structure during execution. Reflection enables Java to perform dynamic type checking, instantiate objects of arbitrary classes, and call methods dynamically based on type information. This mechanism is crucial for frameworks such as Spring and Hibernate, which rely on runtime type inspection for dependency injection and object-relational mapping.
+
+\subsubsection{Runtime Type Checking}
+
+Java enforces strict runtime type checking to ensure the correctness of operations involving polymorphism and casting. The JVM performs type checks before executing certain operations, preventing unsafe conversions. An example of this is listing~\ref{lst:background:runtimetypechecksjava}. In this example, the ~\lstinline|instanceof| operator ensures that the object is of type ~\lstinline|Dog| before performing a downcast. This prevents a ~\lstinline|ClassCastException|, which would otherwise occur if the object were of an incompatible type.
+
+
+\begin{lstlisting}[language=Java,caption=Runtime typechecks in Java,label=lst:background:runtimetypechecksjava]
+class Animal {
+	void makeSound() {
+		System.out.println("Some sound");
+	}
+}
+
+class Dog extends Animal {
+	void makeSound() {
+		System.out.println("Bark");
+	}
+}
+
+public class TypeCheckExample {
+	public static void main(String[] args) {
+		Animal myAnimal = new Dog(); // Upcasting
+		if (myAnimal instanceof Dog) {
+			Dog myDog = (Dog) myAnimal; // Safe downcasting
+			myDog.makeSound();
+		}
+	}
+}
+\end{lstlisting}
+
+\subsubsection{Reflection}
+
+Java provides a rich set of reflection APIs that allow the program to examine and manipulate class structures at runtime. The ~\lstinline|java.lang.reflect| package enables dynamic method invocation, field modification, and even dynamic class loading. In snippet~\ref{lst:background:javareflection}, the Java reflection API allows to retrieve method names and invoke them dynamically. This is particularly useful in frameworks and tools that require runtime type information, such as dependency injection frameworks and dynamic proxies.
+
+\begin{lstlisting}[language=Java,caption=Reflection in Java,label=lst:background:javareflection]
+import java.lang.reflect.Method;
+
+class ExampleClass {
+	public void sayHello() {
+		System.out.println("Hello, world!");
+	}
+}
+
+public class ReflectionExample {
+	public static void main(String[] args) throws Exception {
+		Class<?> c = ExampleClass.class;
+		Object obj = c.getDeclaredConstructor().newInstance();
+		
+		for (Method method : c.getDeclaredMethods()) {
+			System.out.println("Method: " + method.getName());
+			method.invoke(obj);
+		}
+	}
+}
+\end{lstlisting}
+
+Java’s runtime type system offers strong guarantees by enforcing type safety through reflection, dynamic type checking, and explicit exception handling. In contrast, JavaScript’s dynamic nature makes it more flexible but also prone to type-related errors.
 
 \subsection{Case study: Rust}
 
-Rust is a systems programming language designed to offer memory safety without a garbage collector. One of the standout features of Rust is its ownership system, which enforces strict rules for memory allocation and deallocation, preventing common bugs like null pointer dereferencing or data races in concurrent programming. This guarantees memory safety at compile-time without needing a runtime environment to manage memory, unlike languages such as Java and JavaScript, which use garbage collection to manage memory dynamically.
+Rust is a statically typed systems programming language designed for performance and safety. Unlike Java, which relies on a garbage collector and runtime type checks, Rust enforces strict compile-time guarantees to ensure memory safety and type correctness. This results in minimal runtime overhead, making Rust an appealing choice for high-performance applications. However, Rust does provide mechanisms for runtime type inspection when necessary, such as trait objects and dynamic dispatch.
 
-Rust's type system is strongly and statically typed, like Java, but it emphasizes immutability and borrowing concepts to manage data lifetimes and concurrency safely. Unlike Java, Rust does not have reflection, but it provides powerful meta-programming features via macros. Rust also promotes zero-cost abstractions, ensuring that high-level abstractions have no runtime overhead, making it a popular choice for applications requiring both performance and safety. Despite working on the basis of a completely different programming paradigm it still manages to be type-safe or more accurately memory-safe. The compiler makes sure that there are no ambiguities left that could potentially lead to runtime errors and provides absolute safety in a way that still allows a certain freedom to the developer.
+Rust’s type system is centered around ownership, borrowing, and lifetimes, ensuring that memory safety is enforced at compile time without requiring a garbage collector. Despite its strong static typing, Rust also allows for limited runtime type checking through its ~\lstinline|Any| trait and dynamic trait objects. Unlike JavaScript, Rust minimizes dynamic type handling in favor of compile-time guarantees.
+
+\subsubsection{Runtime Type Checking}
+Rust does not rely on runtime type checking in the same way as Java or JavaScript. Instead, it enforces type safety at compile time. However, Rust does provide some runtime mechanisms for working with dynamically typed values, such as the ~\lstinline|Any| trait from the ~\lstinline|std::any| module. The ~\lstinline|Any| trait allows type checking and downcasting at runtime, similar to Java's ~\lstinline|instanceof| operator.
+
+In listing~\ref{lst:background:runtimetypecheckrust}, the ~\lstinline|Any| trait is used to inspect and downcast a trait object to a concrete type. The ~\lstinline|is::<T>()| method allows checking if a value is of a specific type, while ~\lstinline|downcast_ref::<T>()| safely extracts a reference to the underlying type.
+
+\begin{lstlisting}[language=Rust,caption=Runtime type checking in Rust,label=lst:background:runtimetypecheckrust]
+use std::any::Any;
+
+fn check_type(value: &dyn Any) {
+	if value.is::<i32>() {
+		println!("Value is an i32!");
+	} else if value.is::<String>() {
+		println!("Value is a String!");
+	} else {
+		println!("Unknown type");
+	}
+}
+
+fn main() {
+	let num = 42;
+	let text = "Hello".to_string();
+	
+	check_type(&num);
+	check_type(&text);
+}
+\end{lstlisting}
+
+While the ~\lstinline|Any| trait enables some level of runtime type checking, its use is generally discouraged in idiomatic Rust. The language prefers static polymorphism through generics and trait bounds, ensuring type correctness at compile time.
+
+\subsubsection{Trait Objects and Dynamic Dispatch}
+
+Rust’s trait system allows for polymorphism without runtime type checking. However, when dynamic dispatch is required, Rust provides trait objects, which enable runtime method resolution similar to Java’s virtual method table (vtable) approach. Unlike Java’s reflection-based system, Rust’s trait objects still enforce strict type constraints at compile time while allowing method calls to be dynamically resolved at runtime.
+
+In listing~\ref{lst:background:rusttraitobjects}, a trait ~\lstinline|Animal| is defined, and trait objects (~\lstinline|&dyn Animal|) are used to allow polymorphism. This enables different implementations to be stored in the same collection and accessed dynamically.
+
+\begin{lstlisting}[language=Rust,caption=Trait objects and dynamic dispatch in Rust,label=lst:background:rusttraitobjects]
+trait Animal {
+	fn make_sound(&self);
+}
+
+struct Dog;
+impl Animal for Dog {
+	fn make_sound(&self) {
+		println!("Bark");
+	}
+}
+
+struct Cat;
+impl Animal for Cat {
+	fn make_sound(&self) {
+		println!("Meow");
+	}
+}
+
+fn main() {
+	let animals: Vec<&dyn Animal> = vec![&Dog, &Cat];
+	for animal in animals {
+		animal.make_sound(); // Dynamically dispatched
+	}
+}
+\end{lstlisting}
+
+This mechanism provides dynamic polymorphism without exposing the entire type system to runtime modification as in Java’s reflection API. Unlike Java’s reflection, Rust does not allow modifying class structures at runtime, maintaining stricter safety guarantees.
+
+Rust’s runtime type system differs significantly from Java’s and JavaScript’s approaches. Java relies on runtime reflection and dynamic type checking to handle polymorphism and introspection, whereas Rust enforces stricter compile-time type safety and only allows limited runtime type inspection through ~\lstinline|Any| and dynamic trait objects. JavaScript, on the other hand, is dynamically typed, meaning type errors may only surface at runtime, whereas Rust eliminates most type-related errors before execution.
+
 
 \section{Tackling the issue at its core}
 \setauthor{Lorenz Holzbauer}
