@@ -13,48 +13,59 @@ Furthermore, as discussed in greater detail in section~\ref{sec:output-generatio
 
 The Kipper compiler processes the program through multiple phases, each building upon the previous one to progressively enrich the semantic and logical representation of the program. The phases and their corresponding responsible components are as follows:
 
-\begin{enumerate}
-	\item Lexical Analysis~(See~\ref{sec:lexing-parsing})
-	\begin{itemize}
-		\item Performed by: Antlr4 Kipper Lexer
-		\item This phase tokenizes the source code into a stream of lexemes, identifying the basic units of syntax.
-	\end{itemize}
-	\item Syntax Analysis - Parsing~(See~\ref{sec:lexing-parsing})
-	\begin{itemize}
-		\item Performed by: Antlr4 Kipper Parser
-		\item In this phase, the lexed tokens are organized into a parse tree based on the grammar rules of the Kipper language.
-	\end{itemize}
-	\item Parse Tree Translation to AST~(See~\ref{sec:translation-to-the-ast})
-	\begin{itemize}
-		\item Performed by: Kipper Core Compiler
-		\item Converts the parse tree into an Abstract Syntax Tree (AST), a more abstract and language-independent representation of the code.
-	\end{itemize}
-	\item Semantic Analysis~(See~\ref{sec:semantic-analysis})
-	\begin{itemize}
-		\item Performed by: Kipper Core Compiler
-		\item This phase is split into three separate steps:
-		\begin{enumerate}
-			\item Primary Semantic Analysis: Validates language semantics such as variable declarations and scope resolution.
-			\item Preliminary Type Analysis: This phase performs initial type validations and checks. It includes tasks such as loading type definitions that might be referenced elsewhere in the program. These types need to be pre-loaded to ensure they are available and correctly resolved during subsequent stages of compilation.
-			\item Primary Type Analysis: Conducts in-depth type validation and resolves type-related issues for the given statements and expressions.
-		\end{enumerate}
-	\end{itemize}
-	\item Target-Specific Requirement Checking
-	\begin{itemize}
-		\item Performed by: Target Semantic Analyser
-		\item Ensures compliance with the specific requirements of the target platform (JavaScript or TypeScript).
-	\end{itemize}
-	\item Optimization
-	\begin{itemize}
-		\item Performed by: Kipper Core Compiler
-		\item Performs code optimizations, currently focused on treeshaking to eliminate unused code.
-	\end{itemize}
-	\item Target-Specific Translation~(See~\ref{sec:output-generation})
-	\begin{itemize}
-		\item Performed by: Target Translator
-		\item Translates the optimized AST into the desired target language (JavaScript or TypeScript).
-	\end{itemize}
-\end{enumerate}
+\paragraph{Lexical Analysis}
+\begin{itemize}
+	\item Detailed explanation in section~\ref{sec:lexing-parsing}
+	\item Performed by: Antlr4 Kipper Lexer
+	\item This phase tokenizes the source code into a stream of lexemes, identifying the basic units of syntax.
+\end{itemize}
+
+\paragraph{Syntax Analysis - Parsing}
+\begin{itemize}
+	\item Detailed explanation in section~\ref{sec:lexing-parsing}
+	\item Performed by: Antlr4 Kipper Parser
+	\item In this phase, the lexed tokens are organized into a parse tree based on the grammar rules of the Kipper language.
+\end{itemize}
+
+\paragraph{Parse Tree Translation to AST}
+\begin{itemize}
+	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
+	\item Performed by: Kipper Core Compiler
+	\item Converts the parse tree into an Abstract Syntax Tree (AST), a more abstract and language-independent representation of the code.
+\end{itemize}
+
+\paragraph{Semantic Analysis}
+\begin{itemize}
+	\item Detailed explanation in section~\ref{sec:semantic-analysis}
+	\item Performed by: Kipper Core Compiler
+	\item This phase is split into three separate steps:
+	\begin{enumerate}
+		\item Primary Semantic Analysis: Validates language semantics such as variable declarations and scope resolution.
+		\item Preliminary Type Analysis: This phase performs initial type validations and checks. It includes tasks such as loading type definitions that might be referenced elsewhere in the program. These types need to be pre-loaded to ensure they are available and correctly resolved during subsequent stages of compilation.
+		\item Primary Type Analysis: Conducts in-depth type validation and resolves type-related issues for the given statements and expressions.
+	\end{enumerate}
+\end{itemize}
+
+\paragraph{Target-Specific Requirement Checking}
+\begin{itemize}
+	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
+	\item Performed by: Target Semantic Analyser
+	\item Ensures compliance with the specific requirements of the target platform (JavaScript or TypeScript).
+\end{itemize}
+
+\paragraph{Optimization}
+\begin{itemize}
+	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
+	\item Performed by: Kipper Core Compiler
+	\item Performs code optimizations, currently focused on treeshaking to eliminate unused code.
+\end{itemize}
+
+\paragraph{Target-Specific Translation}
+\begin{itemize}
+\item Detailed explanation in section~\ref{sec:output-generation}
+\item Performed by: Target Translator
+\item Translates the optimized AST into the desired target language (JavaScript or TypeScript).
+\end{itemize}
 
 Each phase of the compiler is executed sequentially, with each step requiring the successful completion of the previous one. This ensures that each module of the compiler can safely rely on the correctness and completeness of the information provided by earlier steps. However, this approach limits the compiler's ability to recover from errors or detect all faults in a single execution. As a trade-off, this method simplifies the implementation and reduces overall complexity. Unlike TypeScript, for example, this means that the compiler cannot ignore certain errors and work around them. 
 
@@ -70,7 +81,7 @@ In the Kipper compiler, these two steps are carried out by the Kipper Lexer and 
 
 The primary utility provided by \Gls{antlr4} lies in its ability to generate lexers and parsers automatically from an input file written in the Antlr4-specific ".g4" context-free grammar format. For Kipper, the lexer and parser each have distinct definitions, specifying the individual tokens and the rules for constructing the syntax tree that organizes and groups these tokens.
 
-These definitions are created in a manner similar to other syntactical specification methods, such as \acrshort{bnf} (Backus-Naur Form), commonly used for context-free formal grammars. However, unlike \acrshort{bnf}, Antlr4 grammars have the added capability to include programmatic conditions and invocations, enabling more dynamic and adaptable grammar definitions.
+These definitions are created in a manner similar to other syntactical specification methods, such as~\acrshort{bnf} (Backus-Naur Form), commonly used for context-free formal grammars. However, unlike~\acrshort{bnf}, Antlr4 grammars have the added capability to include programmatic conditions and invocations, enabling more dynamic and adaptable grammar definitions.
 
 \subsubsection{Lexer Grammar Definition}
 \label{sec:lexer-grammar-definition}
@@ -130,7 +141,6 @@ The lexer operates as a state machine, scanning through the input character stre
 
 \begin{figure}[h!]
 	\centering
-	\def\stackalignment{r}
 	\includegraphics[scale=1]{./pics/Lexer-Algorithm.drawio}
 	\caption{The lexing process which categories the various tokens}
 	\label{fig:implementation:Lexer-Algorithm}
@@ -169,30 +179,67 @@ Sub-lexing is crucial for Kipper due to features such as templating, where code 
 
 \begin{figure}[h!]
 	\centering
-	\def\stackalignment{r}
 	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
 	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
-	\label{fig:implementation:Sub-Lexer}
+	\label{fig:implementation:sub-lexer}
 \end{figure}
 
 \subsection{Syntactic analysis}
 
 \subsubsection{Primary syntactic analysis of the token stream}
 
-With the lexer having already identified all tokens in a given program and ensured that only valid elements are present, the parser proceeds to analyze the program's structure and logic. This step is inherently more complex and often demands a significant amount of processing time. The complexity arises partly from the design of \Gls{antlr4} and partly from the computational effort required to transform a token stream into a viable syntax tree.
+With the lexer having already identified all tokens in a given program and ensured that only valid elements are present, the parser proceeds to analyze the program's structure and logic. This step is inherently more complex and often demands a significant amount of processing time. The complexity arises partly from the computational effort required to transform a token stream into a viable syntax tree and partly from the design of \Gls{antlr4}, which generates detailed context objects for each node in a program and as such requires a lot of memory and processing to call up each context.
 
 The parser's primary task is to verify that the sequence of tokens conforms to the grammatical rules specified by the Kipper grammar. This involves checking whether constructs such as statements, expressions, and control structures are correctly formed.
 
+\subsubsection{Building the parse tree}
+
+Similar to the hierarchical structure defined by Kipper's grammar rules, the parse tree generated by the Kipper Parser also exhibits a hierarchical organization. Each parse node may have multiple child nodes and is connected to a single parent node, positioned syntactically one level higher within the tree. These nodes can either represent a rule node, such as~\lstinline|expression|, or correspond directly to a simple lexer token.
+
+The construction of a parse tree begins with a designated root node representing an entire file. From this root, branching occurs through intermediate rule nodes that capture various grammatical constructs, such as statements, definitions and expressions. These intermediate nodes eventually lead to leaf nodes, which are simple lexer tokens forming the smallest syntactic components of the program, such as identifiers, keywords, operators, and literals.
+
+This hierarchical structure enables easy traversal and analysis of the program during later stages of compilation or interpretation. For instance, an arithmetic expression in a program, such as \lstinline|a + b * c|, would form a subtree where the root node corresponds to an expression rule, with child nodes representing the individual terms and operations in the correct precedence order.
+
+A simplified representation of this tree structure is shown in figure~\ref{fig:implementation:parse-tree}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.8]{./pics/Parse-Tree.drawio}
+	\caption{A simplified parse tree representation of the statement~\lstinline|var x: num = 4;|.}
+	\label{fig:implementation:parse-tree}
+\end{figure}
+
 \subsubsection{Programmatic conditions \& context-sensitive rules}
+
+In addition to standard context-free rules, there are grammar rules that incorporate programmatic conditions, requiring specific requirements to be met beyond the standard syntactic structure. These rules are inherently context-sensitive, as they cannot be identified without considering the program’s position and overall logic.
+
+An example of a context-sensitive rule is the compound statement~\lstinline|{ }|, which groups multiple statements and is typically used as the body of functions and methods. By definition, such statements are generally permitted only as top-level program nodes or as children of other statements, excluding cases where expressions such as lambda expressions specify one as a child. To accommodate lambdas having a structured body, two types of compound statements are defined. While they serve the same practical purpose, they are logically different due to their different contexts of usage: one as a child of another statement and another as a child of a lambda expression.
 
 \subsection{AST (Abstract Syntax Tree)}
 \label{sec:translation-to-the-ast}
 
+The~\acrshort{ast} represents a tree which groups together the most logically essential elements of a specific items and disregards all the other items not necessary in further processing. Lexer tokens, such as \lstinline|:|, \lstinline|=| or \lstinline|;| may be important syntactically as indicators for specific operations and structures, but once a specific parser rule kind has been determined and the meaning can be derived from that alone these tokens are not necessary anymore and can be discarded.
+
 \subsubsection{Parse Tree Walking}
 
-\subsubsection{Tree cleanup}
+To transform the parse tree generated by the Kipper Parser, the compiler uses a tree-walking algorithm that systematically traverses the tree by entering and exiting grammar rules. During this process, the algorithm invokes specific handlers when they are defined for particular parse nodes. These handlers are designed to process only the most significant parse nodes, which typically correspond to essential syntactic constructs of the source code.
+
+When a handler is called, it constructs a new~\acrshort{ast} node and attaches it to the growing~\acrshort{ast}. This selective processing approach ensures that irrelevant parse tree details, such as redundant intermediate nodes or syntactic artifacts, are automatically excluded from the~\acrshort{ast}. The resulting~\acrshort{ast} is a simplified and more abstract representation of the program's structure, capturing only the semantically relevant elements needed for subsequent stages of the compilation process.
+
+The~\acrshort{ast} generation result of such a tree walk process can be seen in figure~\ref{fig:implementation:ast}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=1]{./pics/AST.drawio}
+	\caption{An AST produced by the statement~\lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (See~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
+	\label{fig:implementation:ast}
+\end{figure}
 
 \subsubsection{Utility provided by the AST}
+
+In addition to providing a simplified abstraction of the original parse tree, individual~\acrshort{ast} nodes also handle processing for several subsequent stages. Encapsulating these steps within a single class allows semantic analysis and type analysis to be efficiently layered and properly structured. This design is a core aspect of the compiler, as it centralizes data storage and ensures that the results of one processing stage directly influence subsequent stages.
+
+For instance, if a node fails to successfully complete semantic analysis, the subsequent stages are automatically skipped. The node and any related parent structures are marked as faulty, allowing the compiler to handle errors gracefully without immediately crashing (See~\ref{sec:error-recovery} for a detailed explanation). Furthermore, the standardized and detailed structure of the~\acrshort{ast} enables easy integration with other processing steps, as it stores or references all necessary information for specific parts of a program. This is particularly important during output generation (See~\ref{sec:output-generation}), where all existing information is required to accurately generate output code which logically adheres to the original program.
 
 \section{Semantic Analysis}
 \label{sec:semantic-analysis}
@@ -203,6 +250,7 @@ The parser's primary task is to verify that the sequence of tokens conforms to t
 \setauthor{Luna Klatzer}
 
 \section{Error recovery}
+\label{sec:error-recovery}
 \setauthor{Luna Klatzer}
 
 The functionality of error recovery is integral to most modern compilers, as it allows the compiler to report multiple errors in a single compilation pass. Basic compilers often operate on an immediate fail-safe principle: upon encountering an error, the compilation process halts immediately to prevent the compiler from making incorrect assumptions about the program. While this approach ensures the integrity of the compilation process, it introduces a significant drawback. For large and complex programs, developers may need to repeatedly correct errors and recompile to uncover additional issues, leading to unnecessary delays and inefficiencies during the development process.
@@ -322,7 +370,7 @@ Consider the primitive value value = 10;. When a method such as value.toString()
 
 The Kipper compiler utilizes a modular architecture, allowing for the definition of custom targets and providing flexibility to accommodate various use cases. This modularity extends beyond basic configuration, enabling developers to specify target-specific features or behaviors. The modular design is achieved by dividing the compiler into two primary components: a frontend and a backend.
 
-For comparison, the \acrshort{gcc} compiler achieves modularity by dividing its architecture into three components, as illustrated in Figure~\ref{fig:implementation:gcccompiler}. The frontend is responsible for verifying syntax and semantics, scanning the input, and performing type checking. It subsequently generates an intermediate representation (IR) of the code.
+For comparison, the~\acrshort{gcc} compiler achieves modularity by dividing its architecture into three components, as illustrated in Figure~\ref{fig:implementation:gcccompiler}. The frontend is responsible for verifying syntax and semantics, scanning the input, and performing type checking. It subsequently generates an intermediate representation (IR) of the code.
 
 The middle-end then optimizes this intermediate representation, which is designed to be independent of the CPU target. Examples of middle-end optimizations include dead code elimination and detection of unreachable code. Finally, the backend takes the optimized intermediate code and generates target-dependent code. In the case of GCC, this involves generating assembly code.
 
@@ -336,19 +384,19 @@ The middle-end then optimizes this intermediate representation, which is designe
 
 As of now, Kipper generates either TypeScript or JavaScript code as its output. The target language is specified in the Kipper CLI utility using the flag --target={js|ts}. If this flag is not provided, the default target is JavaScript.
 
-Currently, Kipper does not include a middle-end component. This decision was made to avoid the additional complexity associated with implementing a full middle-end, as the resulting performance improvements in generated code would be only marginal. Instead, the frontend directly passes the \acrshort{ast} (Abstract Syntax Tree) to the backend. While Kipper does perform some post-analysis optimizations, these are presently limited to treeshaking.
+Currently, Kipper does not include a middle-end component. This decision was made to avoid the additional complexity associated with implementing a full middle-end, as the resulting performance improvements in generated code would be only marginal. Instead, the frontend directly passes the~\acrshort{ast} (Abstract Syntax Tree) to the backend. While Kipper does perform some post-analysis optimizations, these are presently limited to treeshaking.
 
 \subsection{Role of the AST in the output generation}
 
-Kipper generally uses an \acrshort{ast} as the primary representation of the code from the input program. The \acrshort{ast} serves as a hierarchical structure that represents the program's source code. The root node of the \acrshort{ast} corresponds to the entire program, while each child node represents a specific construct such as a statement, scope, or other language feature.
+Kipper generally uses an~\acrshort{ast} as the primary representation of the code from the input program. The~\acrshort{ast} serves as a hierarchical structure that represents the program's source code. The root node of the~\acrshort{ast} corresponds to the entire program, while each child node represents a specific construct such as a statement, scope, or other language feature.
 
-Each node in the \acrshort{ast} contains the semantic data and type-related information of the corresponding statement, as well as a string representation of the original parser node. Additionally, every node includes a kind identification property—a unique, hard-coded number in the compiler—to uniquely identify the type of the node. This property aids in determining the type of construct, such as a declaration, an expression, or a statement.
+Each node in the~\acrshort{ast} contains the semantic data and type-related information of the corresponding statement, as well as a string representation of the original parser node. Additionally, every node includes a kind identification property—a unique, hard-coded number in the compiler—to uniquely identify the type of the node. This property aids in determining the type of construct, such as a declaration, an expression, or a statement.
 
-Every node also maintains a list of child nodes, representing nested or dependent components of the construct. Once the \acrshort{ast} is fully constructed, it is wrapped and passed to the code generator for further processing.
+Every node also maintains a list of child nodes, representing nested or dependent components of the construct. Once the~\acrshort{ast} is fully constructed, it is wrapped and passed to the code generator for further processing.
 
 \subsection{Algorithm}
 
-Kipper processes the previously generated \acrshort{ast} and its nodes in a bottom-to-top manner. This approach ensures that the translation of child nodes is completed before their parent nodes are processed. Consequently, parent nodes can extract necessary information from their children. This is especially important for complex structures, as they depend on the code generated by their children, embedding it into their own output. The generated code is passed to the parent as an array of tokens—simply output code in text form. This process is entirely safe since the \acrshort{ast} has already been validated for syntactical and semantic correctness during earlier phases. Each node is independently responsible for generating its own output code, a design choice that ensures modularity and flexibility.
+Kipper processes the previously generated~\acrshort{ast} and its nodes in a bottom-to-top manner. This approach ensures that the translation of child nodes is completed before their parent nodes are processed. Consequently, parent nodes can extract necessary information from their children. This is especially important for complex structures, as they depend on the code generated by their children, embedding it into their own output. The generated code is passed to the parent as an array of tokens—simply output code in text form. This process is entirely safe since the~\acrshort{ast} has already been validated for syntactical and semantic correctness during earlier phases. Each node is independently responsible for generating its own output code, a design choice that ensures modularity and flexibility.
 
 The output generation in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. Once the setup is complete, the compiler iterates over the child nodes by calling the "translateCtxAndChildren" function. This function recursively traverses the tree, generating code for each child node. Each node returns a string containing its output code, which is then processed by its parent node. The process continues until the root node aggregates all the strings and sends the final merged output to a function that writes the code to a file.
 
@@ -393,10 +441,10 @@ instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExp
 The code generator functions of Kipper are implemented in a class called ''JavaScriptTargetCodeGenerator''. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that differ. This eliminates duplicate code fragments.
 
 \subsection{Algorithms used for Output Generation}
-There is a plethora of algoritms available to generate code in the target language. They can be classified by their input data structure. Some algoritms need a tree-like \acrshort{ir}, others need a linear \acrshort{ir} structure.
+There is a plethora of algoritms available to generate code in the target language. They can be classified by their input data structure. Some algoritms need a tree-like~\acrshort{ir}, others need a linear~\acrshort{ir} structure.
 
 \subsubsection{Linear Algorithms}
-Linear algorithms are most often used when compiling a high-level language to machine code or bytecode. They treat the input as a flat, ordered sequence and sequentially process it. Intermediate representations often are either three-address-code or static-single-assignment code. Linear algorithms process the code one instruction at a time in a sequence. When an instruction is complete, it gets pushed to a list, which in the end is concatenated and written to the output file. When using linear algorithms, there are two major ways of representing the \acrshort{ir}.
+Linear algorithms are most often used when compiling a high-level language to machine code or bytecode. They treat the input as a flat, ordered sequence and sequentially process it. Intermediate representations often are either three-address-code or static-single-assignment code. Linear algorithms process the code one instruction at a time in a sequence. When an instruction is complete, it gets pushed to a list, which in the end is concatenated and written to the output file. When using linear algorithms, there are two major ways of representing the~\acrshort{ir}.
 
 Three-address code consists of three operands and is typically an assignment and a binary operator ~\cite{wiki:threeaddress}. An instruction can have up to three operands, although it may have less. In the listing ~\ref{lst:implementation:threeaddresscode}, the problem gets split up into multiple instructions. This allows the compiler to easily transform the instructions into assembly language or bytecode, which are similar in their structure. Furthermore, the compiler can identify unused code by checking if a variable gets used later on in the code.
 \begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
@@ -416,7 +464,7 @@ t9 := t7 / t8
 x := t9
 \end{lstlisting}
 
-The Static single-assignment form is a different intermediate representation, where each variable gets assigned exactly once \cite{wiki:singlestatic}. It is used in the most widely in compilers like \acrshort{gcc}. The main benefit is that it simplifies the code and improves the results of compiler optimizations. In listing ~\ref{lst:implementation:staticsingleassignmentform}, the problem shows a variable ''y'' that gets assigned twice. The first assignment is therefore unnecessary. With the static single-assignment form, the compiler can determine that the assignment of ''y1'' was unnecessary, because it is never used in the code that comes after. Examples of optimizations that were enhanced by this form include dead-code elimination, constant propagation and register allocation.
+The Static single-assignment form is a different intermediate representation, where each variable gets assigned exactly once \cite{wiki:singlestatic}. It is used in the most widely in compilers like~\acrshort{gcc}. The main benefit is that it simplifies the code and improves the results of compiler optimizations. In listing ~\ref{lst:implementation:staticsingleassignmentform}, the problem shows a variable ''y'' that gets assigned twice. The first assignment is therefore unnecessary. With the static single-assignment form, the compiler can determine that the assignment of ''y1'' was unnecessary, because it is never used in the code that comes after. Examples of optimizations that were enhanced by this form include dead-code elimination, constant propagation and register allocation.
 \begin{lstlisting}[language=TypeScript,caption=Static single-assignment form,label=lst:implementation:staticsingleassignmentform]
 // Problem
 y := 1
@@ -432,7 +480,7 @@ x1 := y2
 \subsubsection{Tree-based Algorithms}
 Tree-based algorithms are often used in transpilers, as the code needs to stay human readable most of the time, and the general structure of the code should be preserved. This means, that the strucure of scopes and statements should roughly stay the same. Therefore the components are stored in a node in a tree-like structure. Kipper uses a bottom-up code generation algorithm. This means, that a treewalker recurses through the tree and generates the output starting from the most deeply nested node. We chose to use this method, because it was easier to visualize and implement and we wanted the source to stay human readable and extendable without aggressive optimizations and changes on the source. This is not possible with linear algorithms, as they transform the code either into the three-address code form or the static single-assignment form. While this happend, important information about the context and structure of the code gets lost.
 
-Tree-based code generation can be used to generate bytecode. This bytecode gets optimized and further compiled by a linear algorithm. Tree-based algorithms have the disadvantage of allowing only local optimizations in the respective nodes. In addition, they can be computationally expensive, in case the input gets too complex, as the treewalker is a recursive function. Therefore, in professional compilers the tree-based design is not often used. \acrshort{gcc} uses a tree-based design in two of it's language independent \acrshort{ir}s, GIMPLE and GENERIC ~\cite{gcc:gimpletuples}.
+Tree-based code generation can be used to generate bytecode. This bytecode gets optimized and further compiled by a linear algorithm. Tree-based algorithms have the disadvantage of allowing only local optimizations in the respective nodes. In addition, they can be computationally expensive, in case the input gets too complex, as the treewalker is a recursive function. Therefore, in professional compilers the tree-based design is not often used. \acrshort{gcc} uses a tree-based design in two of it's language independent~\acrshort{ir}s, GIMPLE and GENERIC ~\cite{gcc:gimpletuples}.
 
 \subsection{Requirements}
 \label{sec:requirements}
@@ -573,7 +621,7 @@ CoffeeScript aimed to simplify JavaScript syntax but often produced output that 
 
 \subsubsection{Nominal Type Systems}
 
-Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in listing~\ref{lst:implementation:javanominaltyping}. Here a ~\lstinline|Programmer| is an~\lstinline|Employee|, but not the other way around. This means~\lstinline|Programmer| instances have all the properties and methods an~\lstinline|Employee| has while also having additional ones specific to~\lstinline|Programmer| The relationships are as such inherited, so~\lstinline|SeniorDeveloper| is still an~\lstinline|Employee| and a~\lstinline|Programmer| at the same time. Even though the Senior Developer adds no new functionality to the~\lstinline|Programmer|, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar or even identical but not related structures.
+Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in listing~\ref{lst:implementation:javanominaltyping}. Here a ~\lstinline|Programmer| is an~\lstinline|Employee|, but not the other way around. This means~\lstinline|Programmer| instances have all the properties and methods an~\lstinline|Employee| has while also having additional ones specific to~\lstinline|Programmer|. The relationships are as such inherited, so~\lstinline|SeniorDeveloper| is still an~\lstinline|Employee| and a~\lstinline|Programmer| at the same time. Even though the~\lstinline|SeniorDeveloper| adds no new functionality to the~\lstinline|Programmer|, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar or even identical but not related structures.
 
 \begin{lstlisting}[language=Java,caption=Example of nominal typing in Java,label=lst:implementation:javanominaltyping]
 class Employee {
@@ -610,7 +658,7 @@ Structural type systems compare types by their structure. This means, if two dif
 
 \subsubsection{Duck Typed Systems - Duck Typing}
 
-Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the duck and the person have the same methods and properties, henceforth they are of the same type. The dog object on the other hand does not implement the "quack" function, which equates to not being a duck. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
+Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the~\lstinline|duck| and the~\lstinline|person| have the same methods and properties, henceforth they are of the same type. The~\lstinline|dog| object on the other hand does not implement the~\lstinline|quack|function, which equates to not being a~\lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
 
 \begin{lstlisting}[language=Typescript,caption=Example of duck typing in TypeScript,label=lst:implementation:javascriptducktyping]
 interface Duck {
@@ -640,7 +688,7 @@ Given that duck typing allows dynamic data to be easily checked and assigned to 
 
 \subsection{Runtime Type Concept in Kipper}
 
-As previously explained (see section~\ref{sec:type-system}) the Kipper programming language utilises a similar type system to TypeScript with static typing and a duck-typing approach to complex data and \acrshort{oop} structures. However, unlike TypeScript, we want to ensure full type safety at a runtime level and force the developer to specify the required types and handle edge cases, such as casts and type inference.
+As previously explained (see section~\ref{sec:type-system}) the Kipper programming language utilises a similar type system to TypeScript with static typing and a duck-typing approach to complex data and~\acrshort{oop} structures. However, unlike TypeScript, we want to ensure full type safety at a runtime level and force the developer to specify the required types and handle edge cases, such as casts and type inference.
 
 Using this approach Kipper allows untyped values, as is the case with the~\lstinline|any| type that is often returned by requests or web elements, or dynamic values to be compared with types that have clearly defined boundaries, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors.
 
