@@ -83,7 +83,8 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	captionpos=b,
 	frame=single,
 	framesep=4pt,
-	framerule=0.5pt
+	framerule=0.5pt,
+	framextopmargin=6pt
 }
 
 \lstdefinelanguage{TypeScript}{
@@ -103,30 +104,30 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	captionpos=b,
 	frame=single,
 	framesep=4pt,
-	framerule=0.5pt
+	framerule=0.5pt,
+	framextopmargin=6pt
 }
 \lstdefinelanguage{Rust}{
 	morekeywords={
 		as, break, const, continue, crate, else, enum, extern, false, fn, for, if, impl, in, let, loop, match, mod, move, mut, pub, ref, return, self, Self, static, struct, super, trait, true, type, unsafe, use, where, while, async, await, dyn
 	},
-	keywordstyle=\color{blue}\bfseries,
 	morekeywords=[2]{abstract, become, box, do, final, macro, override, priv, try, typeof, unsized, virtual, yield},
-	keywordstyle=[2]\color{darkgray}\bfseries,
 	sensitive=true,
-	morecomment=[l]{//},           % Line comments
-	morecomment=[s]{/*}{*/},       % Block comments
+	morestring=[b]{"}, % Strings enclosed in double quotes
+	morestring=[b]{'}, % Strings enclosed in single quotes
+	morecomment=[l]{//}, % Line comments
+	morecomment=[s]{/*}{*/}, % Block comments
+	keywordstyle=\color{blue}\bfseries,
+	sensitive=true,
 	commentstyle=\color{gray}\itshape,
-	morestring=[b]",               % Strings enclosed in double quotes
-	morestring=[b]',               % Strings enclosed in single quotes
 	stringstyle=\color{green!50!black},
 	identifierstyle=\color{black},
 	basicstyle=\ttfamily\normalsize,
 	captionpos=b,
 	frame=single,
 	framesep=4pt,
-	framerule=0pt,
-	showstringspaces=false,
-	tabsize=4
+	framerule=0.5pt,
+	framextopmargin=6pt
 }
 \lstdefinelanguage{Antlr4}{
 	morekeywords={grammar,parser,lexer,options,returns,locals,throws,catch,finally,
@@ -145,7 +146,8 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	captionpos=b,
 	frame=single,
 	framesep=4pt,
-	framerule=0.5pt
+	framerule=0.5pt,
+	framextopmargin=6pt
 }
 \lstset{
 	language=TypeScript,
@@ -171,7 +173,8 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	captionpos=b,
 	frame=single,
 	framesep=4pt,
-	framerule=0.5pt
+	framerule=0.5pt,
+	framextopmargin=6pt
 }
 
 \usepackage{caption}
