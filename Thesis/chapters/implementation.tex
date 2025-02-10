@@ -133,9 +133,9 @@ Using these syntax rules, the Kipper parser can build a detailed parse tree, wit
 
 \subsubsection{Primary tokenisation}
 
-The primary task of the lexical analysis is the tokenization of the individual characters into grouped tokens which represent syntactical elements, such as identifiers, keywords, constant values, etc. Tokens serve as the building blocks for higher-level constructs in the parsing process, providing a simplified and structured representation of the raw source code.
+The primary task of the lexical analysis is the tokenisation of the individual characters into grouped tokens which represent syntactical elements, such as identifiers, keywords, constant values, etc. Tokens serve as the building blocks for higher-level constructs in the parsing process, providing a simplified and structured representation of the raw source code.
 
-The step of tokenization is fairly straightforward as it simply follows the definitions provided in the grammar file (see~\ref{sec:lexer-grammar-definition}) and throws errors in case no associated token definition is found. Each token is assigned a specific type based on the grammar rules, ensuring that the source code adheres to the language's syntactical structure. If a character sequence does not match any defined rule, an error is raised, indicating the presence of invalid syntax.
+The step of tokenisation is fairly straightforward as it simply follows the definitions provided in the grammar file (see~\ref{sec:lexer-grammar-definition}) and throws errors in case no associated token definition is found. Each token is assigned a specific type based on the grammar rules, ensuring that the source code adheres to the language's syntactical structure. If a character sequence does not match any defined rule, an error is raised, indicating the presence of invalid syntax.
 
 The lexer operates as a state machine, scanning through the input character stream and categorizing sequences based on patterns defined in the grammar. These patterns may include regular expressions to match identifiers, numerical constants, or specific language keywords. Once tokens are identified they are put into the associated channels as explained in~\ref{sec:token-channels}.
 
@@ -175,12 +175,12 @@ The remaining channels are special-purpose streams that are excluded during pars
 
 Besides standard sequential processing of the input, the Kipper Lexer also employs a technique called sub-lexing. Sub-lexing involves branching off the main lexing process and invoking a sub-lexer that operates under its own set of rules and guidelines. This specialized lexer handles specific subsets of tokens that require unique processing rules.
 
-Sub-lexing is crucial for Kipper due to features such as templating, where code fragments are embedded within strings. In such cases, the lexer must correctly differentiate between string elements and code atoms (the inserted snippets inside the string). By using a simple push-and-pop mechanism, the lexers can function similarly to a stack, layering processing contexts on top of one another. Each context processes its corresponding string subset, enabling correct parsing of both regular syntax and embedded code within strings. This modular approach ensures cleaner handling of complex tokenization scenarios and increases the lexer's flexibility.
+Sub-lexing is crucial for Kipper due to features such as templating, where code fragments are embedded within strings. In such cases, the lexer must correctly differentiate between string elements and code atoms (the inserted snippets inside the string). By using a simple push-and-pop mechanism, the lexers can function similarly to a stack, layering processing contexts on top of one another. Each context processes its corresponding string subset, enabling correct parsing of both regular syntax and embedded code within strings. This modular approach ensures cleaner handling of complex tokenisation scenarios and increases the lexer's flexibility.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
-	\caption{The process of invocating a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
+	\caption{The process of invoking a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
 	\label{fig:implementation:sub-lexer}
 \end{figure}
 
@@ -188,7 +188,7 @@ Sub-lexing is crucial for Kipper due to features such as templating, where code 
 
 \subsubsection{Primary syntactic analysis of the token stream}
 
-With the lexer having already identified all tokens in a given program and ensured that only valid elements are present, the parser proceeds to analyze the program's structure and logic. This step is inherently more complex and often demands a significant amount of processing time. The complexity arises partly from the computational effort required to transform a token stream into a viable syntax tree and partly from the design of \Gls{antlr4}, which generates detailed context objects for each node in a program and as such requires a lot of memory and processing to call up each context.
+With the lexer having already identified all tokens in a given program and ensured that only valid elements are present, the parser proceeds to analyse the program's structure and logic. This step is inherently more complex and often demands a significant amount of processing time. The complexity arises partly from the computational effort required to transform a token stream into a viable syntax tree and partly from the design of \Gls{antlr4}, which generates detailed context objects for each node in a program and as such requires a lot of memory and processing to call up each context.
 
 The parser's primary task is to verify that the sequence of tokens conforms to the grammatical rules specified by the Kipper grammar. This involves checking whether constructs such as statements, expressions, and control structures are correctly formed.
 
@@ -261,114 +261,13 @@ Given these issues, Kipper has implements its own error recovery algorithm into 
 
 \subsection{Special case: Syntax errors}
 
-\section{Type System}
-\setauthor{Fabian Baitura}
-\label{sec:type-system}
-
-The type system is the primary element of a modern object-oriented programming languages and in the case of Kipper it is the primary area of attention.
-
-\subsection{Intended Purpose \& Concept}
-
-The purpose of a type system pre-defines the conditions and expectations of how the type system should act in various cases of ambiguity, type matching and derivative type definitions.
-
-\subsection{Existing Foundation \& Environment}
-
-As Kipper is a language that transpiles to either JavaScript or TypeScript (a superset of JavaScript), it is essential to consider the existing foundation and environment when designing and developing its type system. While Kipper is not as constrained as TypeScript, ensuring seamless interoperability and ease of translation with the underlying environment remains critical. This is particularly important since Kipper is designed to run both on the web and locally using Node.js or other JavaScript runtimes.
-
-To achieve this, it is crucial to understand the foundation upon which JavaScript itself was built. JavaScript, created in 1995 by Brendan Eich, was initially envisioned as a lightweight scripting language to add interactivity to web pages. Its dynamic and loosely-typed nature provided flexibility and adaptability but also introduced susceptibility to errors in larger applications. Over time, JavaScript has been refined to improve its reliability and scalability for handling complex applications. However, its core type system has largely remained the same and hasn't been altered as a safe guard to ensure that backwards compatibility is preserved.
-
-\subsubsection{Weak Dynamic Type System}
-
-JavaScript is a dynamically typed language, meaning variables can hold values of different types during runtime. Unlike statically typed languages such as TypeScript or Java, JavaScript does not require explicit declaration of a variable's data type.
-
-\begin{lstlisting}[caption=Holding Values of different Types during Runtime]
-let foo = 10; // foo is a number
-foo = "Hello"; // foo is now a string
-foo = [1, 2, 3, 4, 5]; // foo is now an array
-\end{lstlisting}
-
-In contrast, TypeScript enforces static typing, ensuring that a variable's type remains consistent throughout its lifecycle. This prevents unintentional type changes and improves code reliability.
-
-\begin{lstlisting}[caption=Statically Typed Language TypeScript]
-let foo: number = 1; // x is explicitly declared as a number
-foo = "Hello"; // Error: Type 'string' is not assignable to type 'number"
-\end{lstlisting}
-
-JavaScript is also a weakly typed language, meaning that it allows operations between different data types without the need for explicit type conversion. This flexibility can sometimes lead to unexpected results, as JavaScript automatically coerces values to the appropriate type when performing operations.
-
-\begin{lstlisting}[caption=Automatic type conversion in JavaScript]
-let quantity = 7; // quantity is an integer
-let value = "20"; // value is a string
-
-let total = quantity + value; // JavaScript automatically converts quantity to string
-console.log(total); // Output: "720"
-\end{lstlisting}
-
-In the example above, the number 7 is stored in the variable quantity, and the string "20" is stored in the variable value. Typically, when attempting to add a number and a string, one might expect an error due to the mismatch in data types. However, JavaScript performs implicit type coercion, automatically converting the number into a string before performing the operation.
-
-In this case, JavaScript converts the number 7 to the string "7" and concatenates it with the string "20", resulting in the string "720". This type conversion occurs implicitly, without the need for explicit instructions to JavaScript.
-
-However, implicit type coercion can sometimes lead to unintended results if not handled carefully. It is important to understand how JavaScript performs these conversions to prevent unexpected behavior in your code. Awareness of these implicit conversions helps ensure that operations between different data types do not produce erroneous or undesirable outcomes.
-
-\subsubsection{Primitives \& Core Types}
-
-In JavaScript, a primitive (or primitive value, primitive data type) is a data type that is not an object and does not have methods or properties. There are seven primitive data types:
-
-\begin{itemize}
-	\item ~\lstinline|string|
-	\item ~\lstinline|number|
-	\item ~\lstinline|bigint|
-	\item ~\lstinline|boolean|
-	\item ~\lstinline|undefined|
-	\item ~\lstinline|symbol|
-	\item ~\lstinline|null|
-\end{itemize}
-
-Unique among the primitive types in JavaScript are undefined and null.
-
-In JavaScript, null is considered a primitive value due to its seemingly simple nature. However, when using the typeof operator, it unexpectedly returns~\lstinline|object|. This is a known quirk in JavaScript and is considered a historical bug in the language that has been maintained for compatibility reasons.
-
-\begin{lstlisting}[caption=typeof null return "object" in JavaScript]
-	console.log(typeof null); // "object"
-\end{lstlisting}
-
-undefined is a primitive value automatically assigned to variables that have been declared but not yet assigned a value, or to formal function parameters for which no actual arguments are provided.
-
-\begin{lstlisting}[caption=typeof null return "object" in JavaScript ]
-	let item; // declare a variable without assigning a value
-
-	console.log(`The value of item is ${item}`); // logs "The value of item is undefined"
-\end{lstlisting}
-
-All primitives in JavaScript are immutable, meaning they cannot be altered directly. It is important to distinguish between a primitive value and a variable that holds a primitive value. While a variable can be reassigned to a new value, the primitive value itself cannot be modified in the same way that objects, arrays, and functions can be altered. JavaScript does not provide utilities to mutate primitive values.
-
-Primitives, such as numbers and strings, do not inherently have methods. However, they appear to behave as though they do, due to JavaScript's automatic wrapping, or "auto-boxing," of primitive values into their corresponding wrapper objects. For example, when a method like toString() is called on a primitive number, JavaScript internally creates a temporary Number object. The method is then executed on this object, not directly on the primitive value.
-
-Consider the primitive value value = 10;. When a method such as value.toString() is invoked, JavaScript automatically wraps the primitive 10 in a Number object and calls Number.prototype.toString() on it. This behavior occurs invisibly to the programmer and serves as a helpful mental model for understanding various behaviors in JavaScript. For example, when attempting to "mutate" a primitive, such as assigning a property to a string (str.foo = 1), the original string is not modified. Instead, the value is assigned to a temporary wrapper object.
-
-\subsubsection{Custom Dynamic Structures}
-
-\subsubsection{Prototype Inheritance System}
-
-\subsection{Translating the foundation to Kipper}
-
-\subsection{Drawing comparisons to TypeScript}
-
-\subsection{Kipper Primitives}
-
-\subsection{Kipper Generics}
-
-\subsection{Kipper Interfaces \& Duck-Typing}
-
-\subsection{Kipper Classes \& Prototyping}
-
 \section{Output Generation}
 \label{sec:output-generation}
 \setauthor{Lorenz Holzbauer}
 
 \subsection{Introduction}
 
-The Kipper compiler utilizes a modular architecture, allowing for the definition of custom targets and providing flexibility to accommodate various use cases. This modularity extends beyond basic configuration, enabling developers to specify target-specific features or behaviors. The modular design is achieved by dividing the compiler into two primary components: a frontend and a backend.
+The Kipper compiler utilizes a modular architecture, allowing for the definition of custom targets and providing flexibility to accommodate various use cases. This modularity extends beyond basic configuration, enabling developers to specify target-specific features or behaviours. The modular design is achieved by dividing the compiler into two primary components: a frontend and a backend.
 
 For comparison, the~\acrshort{gcc} compiler achieves modularity by dividing its architecture into three components, as illustrated in Figure~\ref{fig:implementation:gcccompiler}. The frontend is responsible for verifying syntax and semantics, scanning the input, and performing type checking. It subsequently generates an intermediate representation (IR) of the code.
 
@@ -384,7 +283,7 @@ The middle-end then optimizes this intermediate representation, which is designe
 
 As of now, Kipper generates either TypeScript or JavaScript code as its output. The target language is specified in the Kipper CLI utility using the flag --target={js|ts}. If this flag is not provided, the default target is JavaScript.
 
-Currently, Kipper does not include a middle-end component. This decision was made to avoid the additional complexity associated with implementing a full middle-end, as the resulting performance improvements in generated code would be only marginal. Instead, the frontend directly passes the~\acrshort{ast} (Abstract Syntax Tree) to the backend. While Kipper does perform some post-analysis optimizations, these are presently limited to treeshaking.
+Currently, Kipper does not include a middle-end component. This decision was made to avoid the additional complexity associated with implementing a full middle-end, as the resulting performance improvements in generated code would be only marginal. Instead, the frontend directly passes the~\acrshort{ast} (Abstract Syntax Tree) to the backend. While Kipper does perform some post-analysis optimizations, these are presently limited to tree-shaking.
 
 \subsection{Role of the AST in the output generation}
 
@@ -398,7 +297,7 @@ Every node also maintains a list of child nodes, representing nested or dependen
 
 Kipper processes the previously generated~\acrshort{ast} and its nodes in a bottom-to-top manner. This approach ensures that the translation of child nodes is completed before their parent nodes are processed. Consequently, parent nodes can extract necessary information from their children. This is especially important for complex structures, as they depend on the code generated by their children, embedding it into their own output. The generated code is passed to the parent as an array of tokens—simply output code in text form. This process is entirely safe since the~\acrshort{ast} has already been validated for syntactical and semantic correctness during earlier phases. Each node is independently responsible for generating its own output code, a design choice that ensures modularity and flexibility.
 
-The output generation in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. Once the setup is complete, the compiler iterates over the child nodes by calling the "translateCtxAndChildren" function. This function recursively traverses the tree, generating code for each child node. Each node returns a string containing its output code, which is then processed by its parent node. The process continues until the root node aggregates all the strings and sends the final merged output to a function that writes the code to a file.
+The output generation in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. Once the setup is complete, the compiler iterates over the child nodes by calling the~\lstinline|translateCtxAndChildren| function. This function recursively traverses the tree, generating code for each child node. Each node returns a string containing its output code, which is then processed by its parent node. The process continues until the root node aggregates all the strings and sends the final merged output to a function that writes the code to a file.
 
 The implementation of this translation algorithm is provided in listing~\ref{lst:implementation:translationalgorithm}.
 
@@ -423,9 +322,9 @@ public async translate(): Promise<Array<TranslatedCodeLine>> {
 }
 \end{lstlisting}
 
-The code generation function of a node takes the node as an argument and gets it's semantic and type-semantic data. This is then used to translate the children, which are properties of the semantic data, into source code. The result is then concatenated into a single string array and returned. This process can be seen in listing ~\ref{lst:implementation:instanceofgeneration}. In this example, the instanceOf expression gets built.
+The code generation function of a node takes the node as an argument and gets it's semantic and type-semantic data. This is then used to translate the children, which are properties of the semantic data, into source code. The result is then concatenated into a single string array and returned. This process can be seen in listing ~\ref{lst:implementation:instanceofgeneration}. In this example, the~\lstinline|instanceOf| expression gets built.
 
-Clearly visible is the same ''translateCtxAndChildren'' function as in listing~\ref{lst:implementation:translationalgorithm}. This is the treewalker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
+Clearly visible is the same~\lstinline|translateCtxAndChildren| function as in listing~\ref{lst:implementation:translationalgorithm}. This is the tree-walker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
 
 \begin{lstlisting}[language=TypeScript,caption=The code generation function of a instanceOf expression,label=lst:implementation:instanceofgeneration]
 instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExpression> => {
@@ -438,15 +337,16 @@ instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExp
   };
 \end{lstlisting}
 
-The code generator functions of Kipper are implemented in a class called ''JavaScriptTargetCodeGenerator''. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that differ. This eliminates duplicate code fragments.
+The code generator functions of Kipper are implemented in a class called~\lstinline|JavaScriptTargetCodeGenerator|. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that differ. This eliminates duplicate code fragments.
 
 \subsection{Algorithms used for Output Generation}
-There is a plethora of algoritms available to generate code in the target language. They can be classified by their input data structure. Some algoritms need a tree-like~\acrshort{ir}, others need a linear~\acrshort{ir} structure.
+There is a plethora of algorithms available to generate code in the target language. They can be classified by their input data structure. Some algorithms need a tree-like~\acrshort{ir}, others need a linear~\acrshort{ir} structure.
 
 \subsubsection{Linear Algorithms}
 Linear algorithms are most often used when compiling a high-level language to machine code or bytecode. They treat the input as a flat, ordered sequence and sequentially process it. Intermediate representations often are either three-address-code or static-single-assignment code. Linear algorithms process the code one instruction at a time in a sequence. When an instruction is complete, it gets pushed to a list, which in the end is concatenated and written to the output file. When using linear algorithms, there are two major ways of representing the~\acrshort{ir}.
 
 Three-address code consists of three operands and is typically an assignment and a binary operator ~\cite{wiki:threeaddress}. An instruction can have up to three operands, although it may have less. In the listing ~\ref{lst:implementation:threeaddresscode}, the problem gets split up into multiple instructions. This allows the compiler to easily transform the instructions into assembly language or bytecode, which are similar in their structure. Furthermore, the compiler can identify unused code by checking if a variable gets used later on in the code.
+
 \begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
 // Problem
 x = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
@@ -478,6 +378,7 @@ x1 := y2
 \end{lstlisting}
 
 \subsubsection{Tree-based Algorithms}
+
 Tree-based algorithms are often used in transpilers, as the code needs to stay human readable most of the time, and the general structure of the code should be preserved. This means, that the strucure of scopes and statements should roughly stay the same. Therefore the components are stored in a node in a tree-like structure. Kipper uses a bottom-up code generation algorithm. This means, that a treewalker recurses through the tree and generates the output starting from the most deeply nested node. We chose to use this method, because it was easier to visualize and implement and we wanted the source to stay human readable and extendable without aggressive optimizations and changes on the source. This is not possible with linear algorithms, as they transform the code either into the three-address code form or the static single-assignment form. While this happend, important information about the context and structure of the code gets lost.
 
 Tree-based code generation can be used to generate bytecode. This bytecode gets optimized and further compiled by a linear algorithm. Tree-based algorithms have the disadvantage of allowing only local optimizations in the respective nodes. In addition, they can be computationally expensive, in case the input gets too complex, as the treewalker is a recursive function. Therefore, in professional compilers the tree-based design is not often used. \acrshort{gcc} uses a tree-based design in two of it's language independent~\acrshort{ir}s, GIMPLE and GENERIC ~\cite{gcc:gimpletuples}.
