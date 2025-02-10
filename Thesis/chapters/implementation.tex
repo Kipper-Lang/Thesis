@@ -293,7 +293,57 @@ Each node in the~\acrshort{ast} contains the semantic data and type-related info
 
 Every node also maintains a list of child nodes, representing nested or dependent components of the construct. Once the~\acrshort{ast} is fully constructed, it is wrapped and passed to the code generator for further processing.
 
-\subsection{Algorithm}
+\subsection{Algorithms used for Output Generation}
+
+There is a plethora of algorithms available to generate code in the target language. They can be classified by their input data structure. Some algorithms need a tree-like~\acrshort{ir}, others need a linear~\acrshort{ir} structure.
+
+\subsubsection{Linear Algorithms}
+
+Linear algorithms are commonly employed when compiling high-level languages to machine code or bytecode. These algorithms treat the input as a flat, ordered sequence and process it sequentially. Intermediate representations (IR) are typically in the form of three-address code or static-single-assignment (SSA) form. Linear algorithms process the code one instruction at a time in sequence. Upon completion of an instruction, it is added to a list, which is eventually concatenated and written to the output file.
+
+Three-address code consists of three operands and typically represents an assignment with a binary operator~\cite{wiki:threeaddress}. An instruction may have up to three operands, although fewer can also be used. In listing~\ref{lst:implementation:threeaddresscode}, the problem is divided into multiple instructions. This structure allows the compiler to easily translate the instructions into assembly language or bytecode, which share a similar format. Additionally, the compiler can identify unused code by determining whether a variable is referenced later in the code.
+
+\begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
+// Problem
+x = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
+
+// Solution
+t1 := b * b
+t2 := 4 * a
+t3 := t2 * c
+t4 := t1 - t3
+t5 := sqrt(t4)
+t6 := 0 - b
+t7 := t5 + t6
+t8 := 2 * a
+t9 := t7 / t8
+x := t9
+\end{lstlisting}
+
+The Static Single-Assignment (SSA) form is an alternative intermediate representation in which each variable is assigned exactly once~\cite{wiki:singlestatic}. It is widely used in compilers such as~\acrshort{gcc}. The primary advantage of SSA is that it simplifies the code and enhances the effectiveness of compiler optimizations.
+
+In listing~\ref{lst:implementation:staticsingleassignmentform}, a variable \lstinline|y| is assigned twice. The first assignment is redundant. In SSA form, the compiler can identify that the assignment to \lstinline|y1| is unnecessary, as it is not used in the subsequent code. Optimizations improved by the use of SSA include dead-code elimination, constant propagation, and register allocation.
+
+\begin{lstlisting}[language=TypeScript,caption=Static single-assignment form,label=lst:implementation:staticsingleassignmentform]
+// Problem
+y := 1
+y := 2
+x := y
+
+// Solution
+y1 := 1
+y2 := 2
+x1 := y2
+\end{lstlisting}
+
+\subsubsection{Tree-based Algorithms}
+
+Tree-based algorithms are commonly employed in transpilers, as they allow the code to remain human-readable while preserving the general structure of the source code. This ensures that the structure of scopes and statements is maintained. Consequently, the components of the code are represented as nodes in a tree-like structure. Kipper adopts a bottom-up code generation algorithm, where a tree-walker recursively traverses the tree and generates the output starting from the most deeply nested node. This method was chosen for its ease of visualization and implementation, as well as the desire to retain human-readable and extendable source code without aggressive optimizations or transformations. This is not achievable with linear algorithms, which transform the code into either three-address code or static single-assignment form, leading to a loss of important contextual and structural information.
+
+Tree-based code generation can be used to generate bytecode, which is then optimized and further compiled by a linear algorithm. However, tree-based algorithms have the limitation of enabling only local optimizations within the respective nodes. Additionally, they can be computationally expensive, particularly when dealing with complex input, due to the recursive nature of the tree-walking process. As a result, tree-based designs are not commonly employed in bytecode-generating compilers. However, \acrshort{gcc} uses a tree-based design in two of its language-independent IRs: GIMPLE and GENERIC~\cite{gcc:gimpletuples}.
+
+
+\subsection{Generation Algorithm}
 
 The output generation process in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. After completing the setup, the compiler iterates over the previously generated~\acrshort{ast} nodes by invoking the \lstinline|translateCtxAndChildren| function for each node. This function recursively traverses the tree, generating code for each child node. Each node returns a string representing its output code, which is subsequently processed by its parent node. The process continues until the root node aggregates all generated strings and passes the final merged output to a function responsible for writing the code to a file.
 
@@ -339,57 +389,15 @@ instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExp
 
 The code generator functions for the individual nodes are implemented in the code generator class \lstinline|JavaScriptTargetCodeGenerator|. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that are unique to TypeScript. This eliminates duplicate code fragments.
 
-\subsection{Algorithms used for Output Generation}
-There is a plethora of algorithms available to generate code in the target language. They can be classified by their input data structure. Some algorithms need a tree-like~\acrshort{ir}, others need a linear~\acrshort{ir} structure.
-
-\subsubsection{Linear Algorithms}
-Linear algorithms are most often used when compiling a high-level language to machine code or bytecode. They treat the input as a flat, ordered sequence and sequentially process it. Intermediate representations often are either three-address-code or static-single-assignment code. Linear algorithms process the code one instruction at a time in a sequence. When an instruction is complete, it gets pushed to a list, which in the end is concatenated and written to the output file. When using linear algorithms, there are two major ways of representing the~\acrshort{ir}.
-
-Three-address code consists of three operands and is typically an assignment and a binary operator ~\cite{wiki:threeaddress}. An instruction can have up to three operands, although it may have less. In the listing ~\ref{lst:implementation:threeaddresscode}, the problem gets split up into multiple instructions. This allows the compiler to easily transform the instructions into assembly language or bytecode, which are similar in their structure. Furthermore, the compiler can identify unused code by checking if a variable gets used later on in the code.
-
-\begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
-// Problem
-x = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
-
-// Solution
-t1 := b * b
-t2 := 4 * a
-t3 := t2 * c
-t4 := t1 - t3
-t5 := sqrt(t4)
-t6 := 0 - b
-t7 := t5 + t6
-t8 := 2 * a
-t9 := t7 / t8
-x := t9
-\end{lstlisting}
-
-The Static single-assignment form is a different intermediate representation, where each variable gets assigned exactly once \cite{wiki:singlestatic}. It is used in the most widely in compilers like~\acrshort{gcc}. The main benefit is that it simplifies the code and improves the results of compiler optimizations. In listing ~\ref{lst:implementation:staticsingleassignmentform}, the problem shows a variable ''y'' that gets assigned twice. The first assignment is therefore unnecessary. With the static single-assignment form, the compiler can determine that the assignment of ''y1'' was unnecessary, because it is never used in the code that comes after. Examples of optimizations that were enhanced by this form include dead-code elimination, constant propagation and register allocation.
-\begin{lstlisting}[language=TypeScript,caption=Static single-assignment form,label=lst:implementation:staticsingleassignmentform]
-// Problem
-y := 1
-y := 2
-x := y
-
-// Solution
-y1 := 1
-y2 := 2
-x1 := y2
-\end{lstlisting}
-
-\subsubsection{Tree-based Algorithms}
-
-Tree-based algorithms are often used in transpilers, as the code needs to stay human readable most of the time, and the general structure of the code should be preserved. This means, that the strucure of scopes and statements should roughly stay the same. Therefore the components are stored in a node in a tree-like structure. Kipper uses a bottom-up code generation algorithm. This means, that a treewalker recurses through the tree and generates the output starting from the most deeply nested node. We chose to use this method, because it was easier to visualize and implement and we wanted the source to stay human readable and extendable without aggressive optimizations and changes on the source. This is not possible with linear algorithms, as they transform the code either into the three-address code form or the static single-assignment form. While this happend, important information about the context and structure of the code gets lost.
-
-Tree-based code generation can be used to generate bytecode. This bytecode gets optimized and further compiled by a linear algorithm. Tree-based algorithms have the disadvantage of allowing only local optimizations in the respective nodes. In addition, they can be computationally expensive, in case the input gets too complex, as the treewalker is a recursive function. Therefore, in professional compilers the tree-based design is not often used. \acrshort{gcc} uses a tree-based design in two of it's language independent~\acrshort{ir}s, GIMPLE and GENERIC ~\cite{gcc:gimpletuples}.
-
-\subsection{Requirements}
+\subsection{Target Requirements Generation}
 \label{sec:requirements}
+
 Kipper is designed to have a runtime that is as small as possible while still having all the needed functionality bundled in it. This means, that the compiler should only include functions and objects into the runtime, that are needed by the user. This alligns with our goal of keeping the compiler modular and minimal. Due to the removal of unused components in a process called ''treeshaking'', the output code is kept small and efficient.
 
 Kipper includes a range of built-in functions and features to support its runtime environment. These built-ins are organized and managed using a scoped approach. The global scope contains core runtime features that are always required, such as basic type handling and error reporting. Beyond the global scope, additional features are selectively included based on the specific requirements of the program being compiled.
 
 \subsubsection{Conditional features}
+
 Conditional features are runtime components that are included only when explicitly required by the program being compiled. These features can range from commonly used operations like match and slice to more specialized or program-specific utilities. Unlike essential runtime components housed in the global scope, conditional features are added selectively based on an analysis of the program's structure and functionality. The decision to include conditional features occurs during the requirements generation phase. As the compiler traverses the Abstract Syntax Tree (AST), it examines each node to determine whether a specific built-in function or runtime operation is invoked. If a feature like slice is used in the source code, it is flagged as necessary and included in the consolidated requirements list. This ensures that only the relevant components are integrated into the final runtime environment.
 
 An example of a conditional feature would be the ''slice'' function ~\ref{lst:implementation:slicefunction}. This function takes an array as input and extracts a section starting from the index the first argument provides and ending at the index the second argument provides.
@@ -424,6 +432,7 @@ slice: function slice<T>(objLike: T, start: number | undefined, end: number | un
 \end{lstlisting}
 
 \subsubsection{The global scope}
+
 The global scope in programming represents the top-level execution context where variables, functions, and objects are accessible throughout the entire runtime environment unless explicitly restricted. In JavaScript, the global scope is particularly significant as it varies across runtime environments like browsers, Node.js, and Web Workers. This variability necessitates robust mechanisms for identifying and managing the global context to ensure compatibility across environments.
 
 For example, JavaScript defines several global objects, such as window in browsers, global in Node.js, and self in Web Workers. Modern JavaScript unifies these under globalThis, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support globalThis, which is why fallback mechanisms are often used.
@@ -439,6 +448,7 @@ var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
 \end{lstlisting}
 
 \subsubsection{Internal functions}
+
 Internal functions in Kipper serve as an essential part of the runtime, yet they are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes but are not directly accessible or callable in the user's program. This ensures that the runtime environment remains clean and minimal while still delivering the required functionality.
 
 An example of an internal function would be the ''assignTypeMeta'' function, which adds metadata to a runtime type. This is useful for runtime type comparison and described in detail in chapter ~\ref{subsec:builtintypes}. This function never gets exposed to the user but is called internally when an interface gets declared.
@@ -446,14 +456,17 @@ An example of an internal function would be the ''assignTypeMeta'' function, whi
 A key characteristic of internal functions is their dynamic inclusion in the runtime environment. During the requirements generation phase, the compiler identifies whether a program's functionality depends on any internal mechanisms. If so, the corresponding internal functions are included in the runtime.
 
 \subsubsection{Requirements Generation}
+
 The requirements generation process in Kipper begins during the compilation phase. As the compiler traverses the Abstract Syntax Tree (AST), it analyzes the nodes to determine the features needed by the program. This analysis produces a set of requirements, which are then used to configure the runtime environment. This works by using feature registration. If an AST node needs a certain feature, the reference is added to the program context by using the ''this.programCtx.addInternalReference'' function. When a feature is added more once, all further additions get ignored, as the function is already available. After all the features are registeres, the target generates the source code in the required language and inserts it into the output code.
 
 \subsection{Differences between the Target Languages}
+
 The implementation of a compiler or transpiler targeting multiple programming languages often requires handling the specific quirks and requirements of each target. As Kipper is a webdevelopment language, we target both TypeScript and JavaScript. Both languages share a common foundation but diverge significantly in their syntax rules, semantics, and type systems.
 
 One of the primary challenges in supporting both JavaScript and TypeScript as target languages is their differing treatment of identifiers, reserved keywords, and type declarations. While JavaScript is dynamically typed and relatively permissive in terms of variable naming and usage, TypeScript enforces a stricter set of rules due to its static type-checking capabilities.
 
 \subsubsection{Reserved Keywords}
+
 Both JavaScript and TypeScript have a set of reserved keywords that cannot be used as identifiers. However, TypeScript introduces additional constraints by reserving type-related keywords, which are not present in JavaScript. For instance, class is a reserved keyword in both languages and cannot be used as a variable name. In contrast, TypeScript also reserves names like let, number, and other type names, making them invalid as variable or function names.
 
 Kipper handles these reserved keywords by checking for them at compile time. The compiler compares against a hardcoded list of keywords and in case it finds one, it throws an ''ReservedIdentifierOverwriteError''. This list of keywords contains both the reserved words of JavaScript and TypeScript, as this minimizes redundancy and complexity. In addition to that, it also forces the developer to use sensible variable names, as JavaScript is quite leaneant with it's reserved keywords. listing~\ref{lst:implementation:reservedkeywords} illustrates this.
