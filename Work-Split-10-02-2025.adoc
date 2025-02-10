@@ -1,0 +1,17 @@
+= Work Split 10/02/2025 - Diploma Thesis
+
+|===
+|Luna & Lorenz |Fabo
+
+|Type System -> Kipper Primitives
+|Intended Purpose & Concept
+
+|Type System -> Kipper Generics
+|Existing foundation in the web (JS, TS, WebAssembly)
+
+|Type System -> Kipper Interfaces
+|Translating the foundation to Kipper
+
+|Type System -> Kipper Classes
+|Features (Classes, Methods, Properties, Constructor, `this`, Dot-Notation Accessing)
+|===
