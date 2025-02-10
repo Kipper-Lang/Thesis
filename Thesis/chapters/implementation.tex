@@ -104,9 +104,9 @@ For example, in Kipper, the lexer grammar includes constructs for identifying bo
 	Var : 'var';
 \end{lstlisting}
 
-In the grammar above, comments are directed to a separate channel using the~\lstinline|-> channel| annotation. This helps isolate them from the main parsing flow while still retaining them for potential processing or documentation purposes. Pragmas, which are typically compiler directives, are handled similarly but redirected to a~\lstinline|PRAGMA| channel.
+In the grammar above, comments are directed to a separate channel using the \lstinline|-> channel| annotation. This helps isolate them from the main parsing flow while still retaining them for potential processing or documentation purposes. Pragmas, which are typically compiler directives, are handled similarly but redirected to a \lstinline|PRAGMA| channel.
 
-\Gls{antlr4} grammars also include support for defining keywords, operators, and contextual language constructs. For instance,~\lstinline|Const| and~\lstinline|Var| are tokenized as reserved keywords, ensuring they are recognized unambiguously during lexical analysis. This explicit tokenization is critical for constructing a clear and predictable syntax tree, which serves as the foundation for the subsequent phases of interpretation and compilation.
+\Gls{antlr4} grammars also include support for defining keywords, operators, and contextual language constructs. For instance, \lstinline|Const| and \lstinline|Var| are tokenized as reserved keywords, ensuring they are recognized unambiguously during lexical analysis. This explicit tokenization is critical for constructing a clear and predictable syntax tree, which serves as the foundation for the subsequent phases of interpretation and compilation.
 
 \subsubsection{Syntactical Grammar Definition}
 \label{sec:parser-grammar-definition}
@@ -123,9 +123,9 @@ For example, a grammar rule defining a function declaration in Kipper could be e
 	parameterDeclaration : declarator ':' typeSpecifierExpression ;
 \end{lstlisting}
 
-In this grammar, the rule for~\lstinline|functionDeclaration| begins with the keyword~\lstinline|'def'|, followed by a~\lstinline|declarator| (which represents the function name or identifier), and then an optional~\lstinline|parameterList|. The rule includes a~\lstinline|typeSpecifierExpression|, indicating the return type of the function, and optionally a~\lstinline|compoundStatement|, which represents the function's body.
+In this grammar, the rule for \lstinline|functionDeclaration| begins with the keyword \lstinline|'def'|, followed by a \lstinline|declarator| (which represents the function name or identifier), and then an optional \lstinline|parameterList|. The rule includes a \lstinline|typeSpecifierExpression|, indicating the return type of the function, and optionally a \lstinline|compoundStatement|, which represents the function's body.
 
-The~\lstinline|parameterList| rule handles the optional inclusion of one or more parameters, each defined by~\lstinline|parameterDeclaration|. Each~\lstinline|parameterDeclaration| consists of a~\lstinline|declarator| (the parameter's name) followed by a type specification. This structure clearly defines the expected syntax for a function declaration in Kipper, ensuring that the parser can accurately identify and process this construct.
+The \lstinline|parameterList| rule handles the optional inclusion of one or more parameters, each defined by \lstinline|parameterDeclaration|. Each \lstinline|parameterDeclaration| consists of a \lstinline|declarator| (the parameter's name) followed by a type specification. This structure clearly defines the expected syntax for a function declaration in Kipper, ensuring that the parser can accurately identify and process this construct.
 
 Using these syntax rules, the Kipper parser can build a detailed parse tree, with nodes representing various language constructs, such as function definitions, parameters, and expressions. This hierarchical structure allows for efficient interpretation or compilation of Kipper code.
 
@@ -167,7 +167,7 @@ The remaining channels are special-purpose streams that are excluded during pars
 \begin{itemize}
 	\item The \textbf{comments channel} is dedicated to storing all comments, which are logically irrelevant to the program and do not require parsing or further processing.
 	\item The \textbf{pragma channel} contains compiler pragmas—special instructions to the compiler that are processed independently from the standard syntax rules.
-	\item The \textbf{ignored channel} is reserved for special characters that are significant only for token differentiation but have no logical relevance to the program, such as spaces. While spaces are critical for separating tokens, like with~\lstinline|var x| and~\lstinline|varx| they do not contribute to the program's logic and are therefore excluded from parsing.
+	\item The \textbf{ignored channel} is reserved for special characters that are significant only for token differentiation but have no logical relevance to the program, such as spaces. While spaces are critical for separating tokens, like with \lstinline|var x| and \lstinline|varx| they do not contribute to the program's logic and are therefore excluded from parsing.
 \end{itemize}
 	
 \subsubsection{Nested Sub-Lexing}
@@ -180,7 +180,7 @@ Sub-lexing is crucial for Kipper due to features such as templating, where code 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.8]{./pics/Sub-Lexer.drawio}
-	\caption{The process of invoking a sub-lexer with the sample input~\lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between~\lstinline|\{| and~\lstinline|\}| is passed onto the sub-lexer.}
+	\caption{The process of invoking a sub-lexer with the sample input \lstinline|f"Result: \{sample + 4\}"| (An example of a template string, or also format string, in the Kipper language), where all content between \lstinline|\{| and \lstinline|\}| is passed onto the sub-lexer.}
 	\label{fig:implementation:sub-lexer}
 \end{figure}
 
@@ -194,7 +194,7 @@ The parser's primary task is to verify that the sequence of tokens conforms to t
 
 \subsubsection{Building the parse tree}
 
-Similar to the hierarchical structure defined by Kipper's grammar rules, the parse tree generated by the Kipper Parser also exhibits a hierarchical organization. Each parse node may have multiple child nodes and is connected to a single parent node, positioned syntactically one level higher within the tree. These nodes can either represent a rule node, such as~\lstinline|expression|, or correspond directly to a simple lexer token.
+Similar to the hierarchical structure defined by Kipper's grammar rules, the parse tree generated by the Kipper Parser also exhibits a hierarchical organization. Each parse node may have multiple child nodes and is connected to a single parent node, positioned syntactically one level higher within the tree. These nodes can either represent a rule node, such as \lstinline|expression|, or correspond directly to a simple lexer token.
 
 The construction of a parse tree begins with a designated root node representing an entire file. From this root, branching occurs through intermediate rule nodes that capture various grammatical constructs, such as statements, definitions and expressions. These intermediate nodes eventually lead to leaf nodes, which are simple lexer tokens forming the smallest syntactic components of the program, such as identifiers, keywords, operators, and literals.
 
@@ -205,7 +205,7 @@ A simplified representation of this tree structure is shown in figure~\ref{fig:i
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.8]{./pics/Parse-Tree.drawio}
-	\caption{A simplified parse tree representation of the statement~\lstinline|var x: num = 4;|.}
+	\caption{A simplified parse tree representation of the statement \lstinline|var x: num = 4;|.}
 	\label{fig:implementation:parse-tree}
 \end{figure}
 
@@ -213,7 +213,7 @@ A simplified representation of this tree structure is shown in figure~\ref{fig:i
 
 In addition to standard context-free rules, there are grammar rules that incorporate programmatic conditions, requiring specific requirements to be met beyond the standard syntactic structure. These rules are inherently context-sensitive, as they cannot be identified without considering the program’s position and overall logic.
 
-An example of a context-sensitive rule is the compound statement~\lstinline|{ }|, which groups multiple statements and is typically used as the body of functions and methods. By definition, such statements are generally permitted only as top-level program nodes or as children of other statements, excluding cases where expressions such as lambda expressions specify one as a child. To accommodate lambdas having a structured body, two types of compound statements are defined. While they serve the same practical purpose, they are logically different due to their different contexts of usage: one as a child of another statement and another as a child of a lambda expression.
+An example of a context-sensitive rule is the compound statement \lstinline|{ }|, which groups multiple statements and is typically used as the body of functions and methods. By definition, such statements are generally permitted only as top-level program nodes or as children of other statements, excluding cases where expressions such as lambda expressions specify one as a child. To accommodate lambdas having a structured body, two types of compound statements are defined. While they serve the same practical purpose, they are logically different due to their different contexts of usage: one as a child of another statement and another as a child of a lambda expression.
 
 \subsection{AST (Abstract Syntax Tree)}
 \label{sec:translation-to-the-ast}
@@ -231,7 +231,7 @@ The~\acrshort{ast} generation result of such a tree walk process can be seen in 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=1]{./pics/AST.drawio}
-	\caption{An AST produced by the statement~\lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (see~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
+	\caption{An AST produced by the statement \lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (see~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
 	\label{fig:implementation:ast}
 \end{figure}
 
@@ -295,11 +295,13 @@ Every node also maintains a list of child nodes, representing nested or dependen
 
 \subsection{Algorithm}
 
-Kipper processes the previously generated~\acrshort{ast} and its nodes in a bottom-to-top manner. This approach ensures that the translation of child nodes is completed before their parent nodes are processed. Consequently, parent nodes can extract necessary information from their children. This is especially important for complex structures, as they depend on the code generated by their children, embedding it into their own output. The generated code is passed to the parent as an array of tokens—simply output code in text form. This process is entirely safe since the~\acrshort{ast} has already been validated for syntactical and semantic correctness during earlier phases. Each node is independently responsible for generating its own output code, a design choice that ensures modularity and flexibility.
+The output generation process in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. After completing the setup, the compiler iterates over the previously generated~\acrshort{ast} nodes by invoking the \lstinline|translateCtxAndChildren| function for each node. This function recursively traverses the tree, generating code for each child node. Each node returns a string representing its output code, which is subsequently processed by its parent node. The process continues until the root node aggregates all generated strings and passes the final merged output to a function responsible for writing the code to a file.
 
-The output generation in Kipper begins by setting up the target environment and generating any necessary requirements, as detailed in section~\ref{sec:requirements}. Once the setup is complete, the compiler iterates over the child nodes by calling the~\lstinline|translateCtxAndChildren| function. This function recursively traverses the tree, generating code for each child node. Each node returns a string containing its output code, which is then processed by its parent node. The process continues until the root node aggregates all the strings and sends the final merged output to a function that writes the code to a file.
+This bottom-up processing approach ensures that the translation of child nodes is completed before their corresponding parent nodes are processed. Consequently, parent nodes can extract and integrate any required information from their child nodes. This methodology is particularly critical for complex structures, as these often depend on the embedded code generated by their children. The generated code is conveyed to the parent as an array of tokens, which represent the textual form of the output code.
 
-The implementation of this translation algorithm is provided in listing~\ref{lst:implementation:translationalgorithm}.
+The output generation process guarantees reliability because the~\acrshort{ast} has already undergone validation for syntactic and semantic correctness during earlier compilation phases.
+
+The implementation of this translation algorithm is presented in listing~\ref{lst:implementation:translationalgorithm}.
 
 \begin{lstlisting}[language=TypeScript,caption=The translation algorithm,label=lst:implementation:translationalgorithm]
 public async translate(): Promise<Array<TranslatedCodeLine>> {
@@ -322,11 +324,9 @@ public async translate(): Promise<Array<TranslatedCodeLine>> {
 }
 \end{lstlisting}
 
-The code generation function of a node takes the node as an argument and gets it's semantic and type-semantic data. This is then used to translate the children, which are properties of the semantic data, into source code. The result is then concatenated into a single string array and returned. This process can be seen in listing ~\ref{lst:implementation:instanceofgeneration}. In this example, the~\lstinline|instanceOf| expression gets built.
+The code generation function of a node takes the node as an argument and retrieves its semantic and type-semantic data. This information is then used to translate the node's children, which are properties defined within the semantic data, into source code. The generated code fragments are concatenated into a single string array and returned. This process is demonstrated in listing~\ref{lst:implementation:instanceofgeneration}, where the translation of an \lstinline|instanceOf| expression is shown as an example.
 
-Clearly visible is the same~\lstinline|translateCtxAndChildren| function as in listing~\ref{lst:implementation:translationalgorithm}. This is the tree-walker function. It visits every node in the AST and starts the code generation by the bottom-most node. It generates the code for a nodes children and then the node itself. This allows a node to control the order of compilation of their children.
-
-\begin{lstlisting}[language=TypeScript,caption=The code generation function of a instanceOf expression,label=lst:implementation:instanceofgeneration]
+\begin{lstlisting}[language=TypeScript,caption=The code generation function of a \lstinline|instanceOf| expression,label=lst:implementation:instanceofgeneration]
 instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExpression> => {
 	const semanticData = node.getSemanticData();
 	const typeData = node.getTypeSemanticData();
@@ -337,7 +337,7 @@ instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExp
   };
 \end{lstlisting}
 
-The code generator functions of Kipper are implemented in a class called~\lstinline|JavaScriptTargetCodeGenerator|. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that differ. This eliminates duplicate code fragments.
+The code generator functions for the individual nodes are implemented in the code generator class \lstinline|JavaScriptTargetCodeGenerator|. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that are unique to TypeScript. This eliminates duplicate code fragments.
 
 \subsection{Algorithms used for Output Generation}
 There is a plethora of algorithms available to generate code in the target language. They can be classified by their input data structure. Some algorithms need a tree-like~\acrshort{ir}, others need a linear~\acrshort{ir} structure.
@@ -522,7 +522,7 @@ CoffeeScript aimed to simplify JavaScript syntax but often produced output that 
 
 \subsubsection{Nominal Type Systems}
 
-Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in listing~\ref{lst:implementation:javanominaltyping}. Here a ~\lstinline|Programmer| is an~\lstinline|Employee|, but not the other way around. This means~\lstinline|Programmer| instances have all the properties and methods an~\lstinline|Employee| has while also having additional ones specific to~\lstinline|Programmer|. The relationships are as such inherited, so~\lstinline|SeniorDeveloper| is still an~\lstinline|Employee| and a~\lstinline|Programmer| at the same time. Even though the~\lstinline|SeniorDeveloper| adds no new functionality to the~\lstinline|Programmer|, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar or even identical but not related structures.
+Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in listing~\ref{lst:implementation:javanominaltyping}. Here a  \lstinline|Programmer| is an \lstinline|Employee|, but not the other way around. This means \lstinline|Programmer| instances have all the properties and methods an \lstinline|Employee| has while also having additional ones specific to \lstinline|Programmer|. The relationships are as such inherited, so \lstinline|SeniorDeveloper| is still an \lstinline|Employee| and a \lstinline|Programmer| at the same time. Even though the \lstinline|SeniorDeveloper| adds no new functionality to the \lstinline|Programmer|, it is not treated the same. Nominal typing improves code readability and maintainability, due to the explicit inheritance declaration. On the other hand, this increases code redundancy for similar or even identical but not related structures.
 
 \begin{lstlisting}[language=Java,caption=Example of nominal typing in Java,label=lst:implementation:javanominaltyping]
 class Employee {
@@ -538,7 +538,7 @@ class SeniorDeveloper extends Programmer { }
 
 \subsubsection{Structural Type Systems}
 
-Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with its object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In listing~\ref{lst:implementation:ocamlstructuraltyping} there is a function that requires a function~\lstinline|speak| returning the type~\lstinline|string|. Both the~\lstinline|dog| object as well as the~\lstinline|cat| object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
+Structural type systems compare types by their structure. This means, if two differently named types have the same properties and methods, then they are the same type. An example of this would be OCaml, with its object subsystem being typed this way. Classes in OCaml only serve as functions for creating objects. In listing~\ref{lst:implementation:ocamlstructuraltyping} there is a function that requires a function \lstinline|speak| returning the type \lstinline|string|. Both the \lstinline|dog| object as well as the \lstinline|cat| object fulfill this condition, therefore both are treated equal. Most importantly, these compatibility checks happen at compile time, as OCaml is a static language. Structural typing allows for a lot of flexibility as it promotes code reuse. Furthermore it avoids explicit inheritance hierarchies.
 
 \begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
 	let make_speak (obj : < speak : string >) =
@@ -559,7 +559,7 @@ Structural type systems compare types by their structure. This means, if two dif
 
 \subsubsection{Duck Typed Systems - Duck Typing}
 
-Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the~\lstinline|duck| and the~\lstinline|person| have the same methods and properties, henceforth they are of the same type. The~\lstinline|dog| object on the other hand does not implement the~\lstinline|quack|function, which equates to not being a~\lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
+Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the \lstinline|duck| and the \lstinline|person| have the same methods and properties, henceforth they are of the same type. The \lstinline|dog| object on the other hand does not implement the \lstinline|quack|function, which equates to not being a \lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
 
 \begin{lstlisting}[language=Typescript,caption=Example of duck typing in TypeScript,label=lst:implementation:javascriptducktyping]
 interface Duck {
@@ -585,28 +585,28 @@ const dog: Duck = {
 }; // <- causes an error in the static type checker
 \end{lstlisting}
 
-Given that duck typing allows dynamic data to be easily checked and assigned to any interface, Kipper adopts a similar system to that of TypeScript but introduces notable differences in how interfaces behave and how dynamic data is handled. For instance, casting an~\lstinline|any| object to an interface in Kipper will result in a runtime error if the object does not possess all the required members. In contrast, TypeScript permits such an operation without performing any type checks at runtime.
+Given that duck typing allows dynamic data to be easily checked and assigned to any interface, Kipper adopts a similar system to that of TypeScript but introduces notable differences in how interfaces behave and how dynamic data is handled. For instance, casting an \lstinline|any| object to an interface in Kipper will result in a runtime error if the object does not possess all the required members. In contrast, TypeScript permits such an operation without performing any type checks at runtime.
 
 \subsection{Runtime Type Concept in Kipper}
 
 As previously explained (see section~\ref{sec:type-system}) the Kipper programming language utilises a similar type system to TypeScript with static typing and a duck-typing approach to complex data and~\acrshort{oop} structures. However, unlike TypeScript, we want to ensure full type safety at a runtime level and force the developer to specify the required types and handle edge cases, such as casts and type inference.
 
-Using this approach Kipper allows untyped values, as is the case with the~\lstinline|any| type that is often returned by requests or web elements, or dynamic values to be compared with types that have clearly defined boundaries, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors.
+Using this approach Kipper allows untyped values, as is the case with the \lstinline|any| type that is often returned by requests or web elements, or dynamic values to be compared with types that have clearly defined boundaries, such as primitives, arrays, functions, classes, and interfaces, removing any ambiguities that could cause errors.
 
-To allow this functionality, during code generation all user-defined interfaces are converted into runtime types that store the information needed to perform type checks, which form the basis of casts and strict type safety. These are then utilised alongside the built-in runtime types, such as~\lstinline|num|,~\lstinline|str| or~\lstinline|obj|, to enable the compiler to add necessary checks and runtime references to any cast, match or typeof operation, guaranteeing that they are fully type-safe.
+To allow this functionality, during code generation all user-defined interfaces are converted into runtime types that store the information needed to perform type checks, which form the basis of casts and strict type safety. These are then utilised alongside the built-in runtime types, such as \lstinline|num|, \lstinline|str| or \lstinline|obj|, to enable the compiler to add necessary checks and runtime references to any cast, match or typeof operation, guaranteeing that they are fully type-safe.
 
-With the exception of interfaces, classes, and generics, types are primarily distinguished by their names. In these cases, type equality checks are performed using nominal comparisons, where the name acts as a unique identifier within the given scope e.g. type~\lstinline|num| is only assignable to~\lstinline|num|. For more complex structures, additional information—such as members or generic parameters—is also considered.
+With the exception of interfaces, classes, and generics, types are primarily distinguished by their names. In these cases, type equality checks are performed using nominal comparisons, where the name acts as a unique identifier within the given scope e.g. type \lstinline|num| is only assignable to \lstinline|num|. For more complex structures, additional information—such as members or generic parameters—is also considered.
 
 In the case of interfaces, the names and types of fields and methods are used as discriminators. These fields and methods represent the minimum blueprint that an object must implement to be considered compatible with the interface and thus "assignable". In this regard, Kipper adopts the same duck-typing approach found in TypeScript.
 
-For generics, which include~\lstinline|Array<T>| and~\lstinline|Func<T..., R>|, the identifier is used alongside the provided generic parameters to determine assignability. This ensures that when one generic is assigned to another, all parameters must match. For instance,~\lstinline|Array<num>| cannot be assigned to~\lstinline|Array<str>"|and vice versa, even if their overall structure is identical.
+For generics, which include \lstinline|Array<T>| and \lstinline|Func<T..., R>|, the identifier is used alongside the provided generic parameters to determine assignability. This ensures that when one generic is assigned to another, all parameters must match. For instance, \lstinline|Array<num>| cannot be assigned to \lstinline|Array<str>"|and vice versa, even if their overall structure is identical.
 
 For user-defined classes, the compiler relies on the prototype to serve as the discriminator. In practice, this behaviour is similar to that of primitives, as different classes cannot be assigned to each other.
 
 \subsection{Base Type for the Kipper Runtime}
 \label{subsec:basetype}
 
-In practice, all user-defined and built-in types inherit from a basic~\lstinline|KipperType| class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing~\ref{lst:implementation:runtimetypestructure}.
+In practice, all user-defined and built-in types inherit from a basic \lstinline|KipperType| class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing~\ref{lst:implementation:runtimetypestructure}.
 
 \begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
 	class KipperType {
@@ -627,7 +627,7 @@ In practice, all user-defined and built-in types inherit from a basic~\lstinline
 
 As already mentioned types primarily rely on identifier checks to differentiate themselves from other types. Given though that there are slight differences in how types operate, they generally define themselves with what they are compatible using a comparator function. This comparator is already predefined for all built-ins in the runtime library and any user structures build on top of the existing rules established in the library.
 
-Type~\lstinline|any| is an exception and is the only type that accepts any value you provide. However, assigning "any" to anything other than~\lstinline|any| is forbidden and it is necessary to cast it to a different type in order to use the stored value. By ~\lstinline|any| is as useless as possible, in order to force the developer into typechecking it.
+Type \lstinline|any| is an exception and is the only type that accepts any value you provide. However, assigning "any" to anything other than \lstinline|any| is forbidden and it is necessary to cast it to a different type in order to use the stored value. By  \lstinline|any| is as useless as possible, in order to force the developer into typechecking it.
 
 Furthermore, classes are also exempt from this comparator behaviour, as classes behave like a value during runtime and provide a prototype which can simply be used to check if an object is an instance of that class.
 
@@ -647,14 +647,14 @@ Built-in runtime types serve as the foundation of the type system and make up th
 	new KipperType("str", undefined, undefined, undefined, (a, b) => a.name === b.name);
 \end{lstlisting}
 
-In addition to the core primitive types—such as~\lstinline|bool|,~\lstinline|str|,~\lstinline|num|, and others—there are built-in implementations for generic types, including~\lstinline|Array<T>| and ~\lstinline|Func<T..., R>|. These additionally define their generic parameters which generally default to a standard~\lstinline|any| type as can be seen in listing~\ref{lst:implementation:genericbuiltintypes}.
+In addition to the core primitive types—such as \lstinline|bool|, \lstinline|str|, \lstinline|num|, and others—there are built-in implementations for generic types, including \lstinline|Array<T>| and  \lstinline|Func<T..., R>|. These additionally define their generic parameters which generally default to a standard \lstinline|any| type as can be seen in listing~\ref{lst:implementation:genericbuiltintypes}.
 
 \begin{lstlisting}[language=Typescript,caption=Generic built-in types,label=lst:implementation:genericbuiltintypes]
 const __type_Array = new KipperGenericType("Array", undefined, undefined, {T: __type_any});
 const __type_Func = new KipperGenericType("Func", undefined, undefined, {T: [], R: __type_any});
 \end{lstlisting}
 
-As can be seen in listing~\ref{lst:implementation:genericbuiltintypes}, generic types are implemented using a special~\lstinline|KipperGenericType| class. This class, shown in listing~\ref{lst:implementation:generickippertype}, extends the~\lstinline|KipperType| and includes an additional field for generic arguments. Most importantly, it includes the method~\lstinline|changeGenericTypeArguments|. which allows for modifying a type's generic arguments at runtime. It is used in lambda and array definitions, where the built-in generic runtime type is used and then modified to represent the specified generic parameters. When for example an array is initialized, it first gets assigned the default~\lstinline|Array<any>| runtime type, which is then modified by the ~\lstinline|changeGenericTypeArguments| method to create the required type, such ~\lstinline|Array<num>|. Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of argument types. The~\lstinline|Func<T..., R>| type on the other hand is used by lambda definitions, which are user-defined functions with a specific return type and arguments without a name \ref{lst:implementation:generickippertype}.
+As can be seen in listing~\ref{lst:implementation:genericbuiltintypes}, generic types are implemented using a special \lstinline|KipperGenericType| class. This class, shown in listing~\ref{lst:implementation:generickippertype}, extends the \lstinline|KipperType| and includes an additional field for generic arguments. Most importantly, it includes the method \lstinline|changeGenericTypeArguments|. which allows for modifying a type's generic arguments at runtime. It is used in lambda and array definitions, where the built-in generic runtime type is used and then modified to represent the specified generic parameters. When for example an array is initialized, it first gets assigned the default \lstinline|Array<any>| runtime type, which is then modified by the  \lstinline|changeGenericTypeArguments| method to create the required type, such  \lstinline|Array<num>|. Arrays for example use the specified type for their elements, whilst functions require a return type as well as an array of argument types. The \lstinline|Func<T..., R>| type on the other hand is used by lambda definitions, which are user-defined functions with a specific return type and arguments without a name \ref{lst:implementation:generickippertype}.
 
 \begin{lstlisting}[language=Typescript,caption=Generic Kipper Type,label=lst:implementation:generickippertype]
 class KipperGenericType extends KipperType {
@@ -679,7 +679,7 @@ class KipperGenericType extends KipperType {
 
 \subsection{Runtime Errors}
 
-Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base~\lstinline|KipperError| type has a name property and extends the target language's error type as can be seen in listing~\ref{lst:implementation:kippererrortypes}. Additional error types inherit this base type and extend it with additional error information. For instance, the ~\lstinline|KipperIndexError| is used whenever an index was out of bounds.
+Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base \lstinline|KipperError| type has a name property and extends the target language's error type as can be seen in listing~\ref{lst:implementation:kippererrortypes}. Additional error types inherit this base type and extend it with additional error information. For instance, the  \lstinline|KipperIndexError| is used whenever an index was out of bounds.
 
 \begin{lstlisting}[language=Typescript,caption=Kipper error types,label=lst:implementation:kippererrortypes]
 class KipperError extends Error {
@@ -719,9 +719,9 @@ Now take for example the given interfaces seen in listing~\ref{lst:implementatio
 
 At compile time, the generator function iterates over the interface's members and differentiates between properties and methods. The function keeps separate lists of already generated runtime representations for properties and methods.
 
-If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built-in type, the respective runtime type already provided by the Kipper runtime library is used. If not, we can assume the property's type is a reference to another type structure, which will be simply referenced in our new type structure. This data is stored in an instance of~\lstinline|__kipper.Property|, which is finally added to the list of properties in the interface.
+If it detects a property, the type and semantic data of the given property is extracted. When the property's type is a built-in type, the respective runtime type already provided by the Kipper runtime library is used. If not, we can assume the property's type is a reference to another type structure, which will be simply referenced in our new type structure. This data is stored in an instance of \lstinline|__kipper.Property|, which is finally added to the list of properties in the interface.
 
-In case a method is detected, the generator function fetches the return type and the method's name. If the method has any arguments, the name and type of each argument also gets evaluated and then included in the definition of the~\lstinline|__kipper.Method|. After that, it gets added to the interface as well and is stored in its own separate method list.
+In case a method is detected, the generator function fetches the return type and the method's name. If the method has any arguments, the name and type of each argument also gets evaluated and then included in the definition of the \lstinline|__kipper.Method|. After that, it gets added to the interface as well and is stored in its own separate method list.
 
 If we translate the interfaces shown above in listing~\ref{lst:implementation:inputinterface} it would look similar to that in listing~\ref{lst:implementation:runtimeinterface}.
 
@@ -752,16 +752,16 @@ If we translate the interfaces shown above in listing~\ref{lst:implementation:in
 	);
 \end{lstlisting}
 
-As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a~\lstinline|KipperType| instance, identified by the ~\lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
+As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a \lstinline|KipperType| instance, identified by the  \lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-Notable usages for runtime type-checking include the~\lstinline|matches| operator (see section \ref{subsec:matches}) and the~\lstinline|typeof| operator (see section \ref{subsec:typeof}).
+Notable usages for runtime type-checking include the \lstinline|matches| operator (see section \ref{subsec:matches}) and the \lstinline|typeof| operator (see section \ref{subsec:typeof}).
 
 \subsection{Matches Operator for Interfaces}
 \label{subsec:matches}
 
-There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the~\lstinline|instanceof| operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
+There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the \lstinline|instanceof| operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
 
-Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the~\lstinline|instanceof| operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching", is applied to primitives and interfaces. Structural comparisons are implemented using the matches operator as given in listing~\ref{lst:implementation:matchesoperator}.
+Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the \lstinline|instanceof| operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching", is applied to primitives and interfaces. Structural comparisons are implemented using the matches operator as given in listing~\ref{lst:implementation:matchesoperator}.
 
 \begin{lstlisting}[language=Typescript,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
 interface Y {
@@ -857,16 +857,16 @@ When none of these conditions are false, the input object matches the input type
 \subsection{Typeof Operator}
 \label{subsec:typeof}
 
-In the Kipper programming language, the~\lstinline|typeof| operator is used to get the type of an object at runtime. This operator can be used to check if a variable or expression is of a particular type, such as a string, number, boolean, etc. Most commonly, it is used to check for null and undefined objects, to avoid type errors when an object is of unknown type. The returned type object can be compared by reference to check for type equality. As can bee seen in listing~\ref{lst:implementation:typeofoperator}, the parantheses are optional. We decided to allow both syntax styles, due to our goal of being similar to TypeScript and JavaScript, which both implement it the same way.
+In the Kipper programming language, the \lstinline|typeof| operator is used to get the type of an object at runtime. This operator can be used to check if a variable or expression is of a particular type, such as a string, number, boolean, etc. Most commonly, it is used to check for null and undefined objects, to avoid type errors when an object is of unknown type. The returned type object can be compared by reference to check for type equality. As can bee seen in listing~\ref{lst:implementation:typeofoperator}, the parantheses are optional. We decided to allow both syntax styles, due to our goal of being similar to TypeScript and JavaScript, which both implement it the same way.
 
 \begin{lstlisting}[language=Typescript,caption=Typeof operator used to determine the type of an input expression,label=lst:implementation:typeofoperator]
 typeof 49; // "__kipper.builtIn.num"
 typeof("Hello, World!"); // "__kipper.builtIn.str"
 \end{lstlisting}
 
-The ~\lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the ~\lstinline|typeof null| returns~\lstinline|object| due to historical reasons, Kipper correctly identifies ~\lstinline|null| as ~\lstinline|__kipper.builtIn.null|.
+The  \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the  \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies  \lstinline|null| as  \lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in listing~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective~\lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
+At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in listing~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
 
 \begin{lstlisting}[language=Typescript,caption=Logical implementation of the typeof operator in TypeScript, label=lst:implementation:typeofimplementation]
 typeOf: (value) => {
@@ -892,7 +892,7 @@ typeOf: (value) => {
 }
 \end{lstlisting}
 
-Although linguistically quite similar, the~\lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called~\lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
+Although linguistically quite similar, the \lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called \lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
 
 \begin{lstlisting}[language=Typescript,caption=Specifying the type based on a reference variable, label=lst:implementation:typeoftypespecifier]
 var t: num = 3;
