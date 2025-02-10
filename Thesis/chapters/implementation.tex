@@ -13,28 +13,28 @@ Furthermore, as discussed in greater detail in section~\ref{sec:output-generatio
 
 The Kipper compiler processes the program through multiple phases, each building upon the previous one to progressively enrich the semantic and logical representation of the program. The phases and their corresponding responsible components are as follows:
 
-\paragraph{Lexical Analysis}
+\subsubsection{Lexical Analysis}
 \begin{itemize}
 	\item Detailed explanation in section~\ref{sec:lexing-parsing}
 	\item Performed by: Antlr4 Kipper Lexer
 	\item This phase tokenizes the source code into a stream of lexemes, identifying the basic units of syntax.
 \end{itemize}
 
-\paragraph{Syntax Analysis - Parsing}
+\subsubsection{Syntax Analysis - Parsing}
 \begin{itemize}
 	\item Detailed explanation in section~\ref{sec:lexing-parsing}
 	\item Performed by: Antlr4 Kipper Parser
 	\item In this phase, the lexed tokens are organized into a parse tree based on the grammar rules of the Kipper language.
 \end{itemize}
 
-\paragraph{Parse Tree Translation to AST}
+\subsubsection{Parse Tree Translation to AST}
 \begin{itemize}
 	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
 	\item Performed by: Kipper Core Compiler
 	\item Converts the parse tree into an Abstract Syntax Tree (AST), a more abstract and language-independent representation of the code.
 \end{itemize}
 
-\paragraph{Semantic Analysis}
+\subsubsection{Semantic Analysis}
 \begin{itemize}
 	\item Detailed explanation in section~\ref{sec:semantic-analysis}
 	\item Performed by: Kipper Core Compiler
@@ -46,21 +46,21 @@ The Kipper compiler processes the program through multiple phases, each building
 	\end{enumerate}
 \end{itemize}
 
-\paragraph{Target-Specific Requirement Checking}
+\subsubsection{Target-Specific Requirement Checking}
 \begin{itemize}
 	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
 	\item Performed by: Target Semantic Analyser
 	\item Ensures compliance with the specific requirements of the target platform (JavaScript or TypeScript).
 \end{itemize}
 
-\paragraph{Optimization}
+\subsubsection{Optimization}
 \begin{itemize}
 	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
 	\item Performed by: Kipper Core Compiler
 	\item Performs code optimizations, currently focused on treeshaking to eliminate unused code.
 \end{itemize}
 
-\paragraph{Target-Specific Translation}
+\subsubsection{Target-Specific Translation}
 \begin{itemize}
 \item Detailed explanation in section~\ref{sec:output-generation}
 \item Performed by: Target Translator
@@ -86,7 +86,7 @@ These definitions are created in a manner similar to other syntactical specifica
 \subsubsection{Lexer Grammar Definition}
 \label{sec:lexer-grammar-definition}
 
-In the case of the Kipper Lexer, it uses its own token definition file, which defines how characters are grouped into tokens. This file specifies the rules for identifying individual tokens while ignoring special characters that are not required for syntax analysis. Additionally, the lexer separates the matched tokens into various channels, allowing for more efficient handling and categorization during subsequent parsing steps. (See~\ref{sec:token-channels} for more detail)
+In the case of the Kipper Lexer, it uses its own token definition file, which defines how characters are grouped into tokens. This file specifies the rules for identifying individual tokens while ignoring special characters that are not required for syntax analysis. Additionally, the lexer separates the matched tokens into various channels, allowing for more efficient handling and categorization during subsequent parsing steps. (see~\ref{sec:token-channels} for more detail)
 
 For example, in Kipper, the lexer grammar includes constructs for identifying both comments and language-specific keywords. These definitions can be seen showcased below in listing~\ref{lst:kipper-lexer}.
 
@@ -135,7 +135,7 @@ Using these syntax rules, the Kipper parser can build a detailed parse tree, wit
 
 The primary task of the lexical analysis is the tokenization of the individual characters into grouped tokens which represent syntactical elements, such as identifiers, keywords, constant values, etc. Tokens serve as the building blocks for higher-level constructs in the parsing process, providing a simplified and structured representation of the raw source code.
 
-The step of tokenization is fairly straightforward as it simply follows the definitions provided in the grammar file (See~\ref{sec:lexer-grammar-definition}) and throws errors in case no associated token definition is found. Each token is assigned a specific type based on the grammar rules, ensuring that the source code adheres to the language's syntactical structure. If a character sequence does not match any defined rule, an error is raised, indicating the presence of invalid syntax.
+The step of tokenization is fairly straightforward as it simply follows the definitions provided in the grammar file (see~\ref{sec:lexer-grammar-definition}) and throws errors in case no associated token definition is found. Each token is assigned a specific type based on the grammar rules, ensuring that the source code adheres to the language's syntactical structure. If a character sequence does not match any defined rule, an error is raised, indicating the presence of invalid syntax.
 
 The lexer operates as a state machine, scanning through the input character stream and categorizing sequences based on patterns defined in the grammar. These patterns may include regular expressions to match identifiers, numerical constants, or specific language keywords. Once tokens are identified they are put into the associated channels as explained in~\ref{sec:token-channels}.
 
@@ -231,7 +231,7 @@ The~\acrshort{ast} generation result of such a tree walk process can be seen in 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=1]{./pics/AST.drawio}
-	\caption{An AST produced by the statement~\lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (See~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
+	\caption{An AST produced by the statement~\lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (see~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
 	\label{fig:implementation:ast}
 \end{figure}
 
@@ -239,7 +239,7 @@ The~\acrshort{ast} generation result of such a tree walk process can be seen in 
 
 In addition to providing a simplified abstraction of the original parse tree, individual~\acrshort{ast} nodes also handle processing for several subsequent stages. Encapsulating these steps within a single class allows semantic analysis and type analysis to be efficiently layered and properly structured. This design is a core aspect of the compiler, as it centralizes data storage and ensures that the results of one processing stage directly influence subsequent stages.
 
-For instance, if a node fails to successfully complete semantic analysis, the subsequent stages are automatically skipped. The node and any related parent structures are marked as faulty, allowing the compiler to handle errors gracefully without immediately crashing (See~\ref{sec:error-recovery} for a detailed explanation). Furthermore, the standardized and detailed structure of the~\acrshort{ast} enables easy integration with other processing steps, as it stores or references all necessary information for specific parts of a program. This is particularly important during output generation (See~\ref{sec:output-generation}), where all existing information is required to accurately generate output code which logically adheres to the original program.
+For instance, if a node fails to successfully complete semantic analysis, the subsequent stages are automatically skipped. The node and any related parent structures are marked as faulty, allowing the compiler to handle errors gracefully without immediately crashing (see~\ref{sec:error-recovery} for a detailed explanation). Furthermore, the standardized and detailed structure of the~\acrshort{ast} enables easy integration with other processing steps, as it stores or references all necessary information for specific parts of a program. This is particularly important during output generation (see~\ref{sec:output-generation}), where all existing information is required to accurately generate output code which logically adheres to the original program.
 
 \section{Semantic Analysis}
 \label{sec:semantic-analysis}
@@ -853,7 +853,7 @@ If we translate the interfaces shown above in listing~\ref{lst:implementation:in
 
 As shown in listing~\ref{lst:implementation:runtimeinterface}, the properties and methods of an interface are encapsulated within a~\lstinline|KipperType| instance, identified by the ~\lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-Notable usages for runtime type-checking include the~\lstinline|matches| operator (See section \ref{subsec:matches}) and the~\lstinline|typeof| operator (See section \ref{subsec:typeof}).
+Notable usages for runtime type-checking include the~\lstinline|matches| operator (see section \ref{subsec:matches}) and the~\lstinline|typeof| operator (see section \ref{subsec:typeof}).
 
 \subsection{Matches Operator for Interfaces}
 \label{subsec:matches}

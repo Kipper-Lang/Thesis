@@ -25,14 +25,28 @@
 \newacronym{ir}{IR}{\Gls{intermediate-representation}}
 \newglossaryentry{backus–naur-form}{
 	name={Backus–Naur Form},
-	description={Backus-Naur form is a }
+	description={A formal notation used to define the syntax of programming languages, data formats, and other structured information. It represents rules through production expressions, where symbols define how components are composed. BNF uses non-terminal symbols, terminal symbols, and recursive definitions to describe complex language structures concisely and precisely. Most programming languages have their own syntax grammar also publically available in BNF.}
 }
 \newacronym{bnf}{BNF}{\Gls{backus–naur-form}}
+\newglossaryentry{polymorphism}{
+	name={polymorphism},
+	description={A core concept in Object Oriented Programming that allows the same function, method, or operation to behave differently depending on context. It can occur through inheritance (where subclasses override parent methods), function overloading (methods with the same name but different parameters), or generic typing (writing flexible code that works with multiple data types).}
+}
 \newglossaryentry{object-oriented-programming}{
 	name={Object Oriented Programming},
-	description={}
+	description={A programming design philosophy based on objects, which encapsulate data in fields and behaviors in methods. OOP promotes concepts like inheritance, \gls{polymorphism}, encapsulation, and abstraction to model real-world entities, improve code modularity, and encourage reusability.}
 }
 \newacronym{oop}{OOP}{\Gls{object-oriented-programming}}
+\newglossaryentry{just-in-time-compilation}{
+	name={Just-in-Time compilation},
+	description={Just-in-Time compilation is a technique in which source code or bytecode is translated into machine code during program execution and immediately executed. By performing compilation at runtime, JIT compilers can apply optimisations based on information gathered during execution, such as identifying and removing redundant code.}
+}
+\newacronym{jit}{JIT}{\Gls{just-in-time-compilation}}
+\newglossaryentry{webassembly}{
+	name={WebAssembly},
+	description={WebAssembly is a binary instruction format designed for efficient code execution on web browsers. WebAssembly can be generated from C, C++, and Rust, running at near-native speed. It allows building applications with performance-intensive tasks while maintaining portability and security across platforms.}
+}
+\newacronym{wasm}{WASM}{\Gls{webassembly}}
 
 % Usage:
 % \gls{label} lowercase in text

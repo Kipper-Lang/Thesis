@@ -1,6 +1,6 @@
 \section{Preface \& Background}
 
-Before introducing the technologies and tools used in the Kipper project, it is important to note that the project existed on a smaller scale prior to the initiation of this diploma thesis and the following sections will talk about technologies that were chosen before the start of this thesis project. As such, when the project was reimagined and expanded into its current form as a diploma thesis, the development technologies were already determined and simply continued to allow building on top of the existing foundation.
+Before introducing the technologies and tools used in the Kipper project, it is important to note that the project existed on a smaller scale prior to the initiation of this diploma thesis and the following sections will talk about technologies that were chosen before the start of this thesis project. As such, when the project was re-imagined and expanded into its current form as a diploma thesis, the development technologies were already determined and simply continued to allow building on top of the existing foundation.
 
 However, to highlight the various differences and the reasons behind the original decisions for the parser, lexer and core compiler, the sections will still consider each option, talk about their viability in the context of this project and elaborate on the decisions made when the initial project was envisioned.
 
@@ -11,29 +11,106 @@ The choice of development language, or compiler programming language, is a cruci
 
 Many compilers are initially developed in a different language, often one closely related to the language being designed. Once the language takes on proper shape, the compilers are then often migrated into the newly created language, effectively becoming one of the first test programs to utilize the language directly. This approach allows the compiler to validate its own functionality—serving as a self-serving cycle where each iteration of updates also benefits the compiler itself.
 
-This is not the case here, however. As the Kipper compiler remains highly complex, it is currently written in another language. Nonetheless, the compiler could be migrated to the Kipper language in the future if the required changes are implemented.
+This is not the case here, however. As the Kipper compiler remains too complex for its own language, it is currently written in another language. Nonetheless, the compiler could be migrated to the Kipper language in the future if the required changes are implemented.
 
 \subsection{Selection criteria and weighing the options}
 
+To accurately represent the various benefits and downsides of each individual option, we are going to rank each language based on a set of criteria with individual weights which will amount to a certain total score as presented in table~\ref{tab:programming-language-criteria-weights}. Based on this score we can accurately represent the viability of each technology option presented.
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |p{4cm}|p{5cm}|p{5cm}|  }
+		\hline
+		\multicolumn{3}{|c|}{Weights for the individual criteria} \\
+		\hline
+		Criterion&Weight between 0.0-1.0&Effective maximum possible score on a scale of 0-100\\
+		\hline
+		Speed&0.4&40\\
+		Maintainability&1.0&100\\
+		Platform Support&0.5&50\\
+		Extensibility&0.4&40\\
+		Similarity to Kipper&0.8&80\\
+		\hline
+	\end{tabular}
+	\caption{Table showcasing the individual criteria and their weights}
+	\label{tab:programming-language-criteria-weights}
+\end{table}
 
 \subsection{Option - C++}
 
+C++ is widely recognized as one of the most prominent languages for low-level development and system programming, including compiler development. In addition to offering fast execution speeds, it provides flexible mechanisms like pointers for structuring essential constructs such as trees. The language utilizes~\acrshort{oop} to manage complex structures efficiently and supports templating, often also called generic type parameters, enabling versatile structures with unified behaviour and compatibility.
 
+\subsubsection{Speed}
+
+In terms of speed, C++ is mostly unrivalled, given the output to assembly code that can be directly run on the CPU without any overhead or interpreter. This means even large programs can be often compiled in seconds and huge programs with hundreds of thousands of lines can have a drastically reduced compile time compared to other languages.
+
+\subsubsection{Maintainability}
+
+In compiler development, C++ is a common choice due to the wide-spread emphasis on minimizing compilation time and efficient processing of large programs. However, the complexity of memory management and the challenges associated with developing large structures can make C++ difficult to work with, potentially leading to unexpected development issues.
+
+\subsubsection{Platform Support}
+
+Furthermore, targeting multiple environments and systems is challenging, as C++ and by extension C commonly compile directly to machine and os-dependent assembly code, which means compiling the program for each operating system and architecture individually is necessary. Otherwise without virtualisation or subsystems the program can not be executed.
+
+\subsubsection{Extensibility}
+
+Due to that design, the compiled code is mostly locked down and any extensions would have to be loaded using custom loaders or the user would have to fully re-compile the source code with the wanted changes.
+
+\subsubsection{Similarity to Kipper}
+
+While C++ aims to be more modern compared to its predecessor C, it still is largely a low-level language where programs needs to be structured with a lot of potential edge cases and faults in mind. Kipper on the other hand is a pure high-level~\ref{transpilation}-based language with interpreted dynamic targets, so concepts such as memory management, integer sizes and segmentation faults are largely alien. This means if a compiler were to be written in C++, it would have a lot of additional code and functionality taking these constructs into account that would have to be removed in a potential Kipper-based compiler.
 
 \subsection{Option - Java}
 
+Java is another commonly used~\acrshort{oop} language for building compilers and compiler components. As a matter of fact, \Gls{antlr4}, the lexer and parser generation technology, is developed solely in Java and for extended support simply provides language output targets for its lexers and parsers.
 
+\subsubsection{Speed}
+
+Speed is not a major concern when working with Java. The language and its VM are largely optimised and the~\acrshort{jit} compiler performs additional optimisations at runtime by analysing the code and the memory of the program. It may in some cases be slower, especially due to the large amount of boilerplate present in a lot of systems, but it can overall be considered fast.
+
+\subsubsection{Maintainability}
+
+Java can be considered a pure~\acrshort{oop} programming language, as all executable code is written in class methods, which can be called up and run from other parts of the program. Due to this all functionality adheres to some structure and is usually encapsulated in various classes and methods. While these features alone do not guarantee code that is easy to work with, they simplify that process and provide structures that can be easily changed or altered using inheritance or other functionality. However it often also leads to boilerplate-heavy code that is hard to read especially when programs become complex.
+
+\subsubsection{Platform Support}
+
+Java utilizes a VM in combination with a~\acrshort{jit} compiler for executing its intermediate code. This intermediate code is largely system-independent and can be run on any system that has a working Java runtime installed. As such, the responsibility of handling the individual characteristics of each operating system and architecture is left up the Java runtime, which makes compiling fairly simple and allows for a broad support of various systems.
+
+\subsubsection{Extensibility}
+
+Besides providing support for multiple platforms, the architecture of Java allows it to be an easy language to set up and extend, as its modularity means loading additional code simply means compiling it to the same standardised intermediate format. Using a class loader, this new runnable code can be then picked up at runtime and immediately executed.
+ 
+\subsubsection{Similarity to Kipper}
+
+Java is fairly similar to Kipper in its~\acrshort{oop} design paradigm, but is still generally very different. Kipper runs as JavaScript or TypeScript in an interpreted environment, where code is ran line per line. While this is similar to the~\acrshort{jit} compiler utilised by Java, Kipper can run high-level code and execute on-demand changes without compiling its code or having to generate intermediate code. Given though that structurally the two languages are very similar, migrating from a compiler written in Java to one written in Kipper would be mostly straightforward.
 
 \subsection{Option - TypeScript}
 
+TypeScript is a super-set of JavaScript, which works on the same dynamically-typed and interpreted system. As such, it is generally not preferred when it comes to implementing a compiler, since its dynamic structure and functionality don't serve a lot of use in a compiler with very specific functionality. Still, it is often used for experiments and online compilers, which may not perform as well, but can still achieve good performance.
 
+\subsubsection{Speed}
+
+In terms of speed, TypeScript can be very fast, almost as fast as~\acrshort{wasm} in some cases. Although it still generally has the same limitations as any other web language. Given that the language needs interpretation and doesn't utilise JIT compilation or a compiled format, it often can't compete with languages such as Java, C++ or C\#. Still, with its heavily optimised interpreter regular algorithms and programs can be fast, but as complexity grows it isn't as efficient as comparable languages.
+
+\subsubsection{Maintainability}
+
+\subsubsection{Platform Support}
+
+TypeScript, or its generated JavaScript counterpart, can run on any system that has a browser or a local browser-like counterpart like Node, Deno or Bun installed. However, every version of the JavaScript interpreter comes with its own limitations and even in browsers running code can cause problems across various systems. This is more noticeable with locally installed systems such as Node, Deno or Bun, which implement their own libraries and design systems that need to be accounted for. Generally it can be said though that if the correct environment is set up, the code can run on any OS or architecture without issue.
+
+\subsubsection{Extensibility}
+
+TypeScript is a very dynamic language with a lot of flexibility in terms of extending and modifying structures with ease. Even if a compiler weren't able to support modifications, hooking into the object and modifying it if needed is relatively easy. Additionally by simply providing interfaces and specific arguments that need to be implemented a compiler could allow custom classes and data to be executed.
+
+\subsubsection{Similarity to Kipper}
+
+TypeScript serves as the primary inspiration for Kipper and shares many similarities with it, despite its limitations and challenges related to type safety. This similarity arises from Kipper's design goal of maintaining compatibility with the JavaScript ecosystem and extending it in a type-safe manner. Consequently, Kipper avoids incorporating functionality or design structures that could break compatibility with existing JavaScript tools and frameworks. With this in mind, theoretically any TypeScript code could be inserted into Kipper with only certain syntax changes and type safety changes necessary.
 
 \subsection{Result}
 
 
 
-\section{Parser \& Lexer Generator}
+\section{Parser \& Lexer Technology}
 \setauthor{Luna Klatzer}
 
 
@@ -48,6 +125,9 @@ This is not the case here, however. As the Kipper compiler remains highly comple
 
 \subsection{Option - Coco}
 
+
+
+\subsection{Option - Custom Implementation}
 
 
 \subsection{Result}
