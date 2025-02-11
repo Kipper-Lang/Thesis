@@ -198,7 +198,7 @@ Similar to the hierarchical structure defined by Kipper's grammar rules, the par
 
 The construction of a parse tree begins with a designated root node representing an entire file. From this root, branching occurs through intermediate rule nodes that capture various grammatical constructs, such as statements, definitions and expressions. These intermediate nodes eventually lead to leaf nodes, which are simple lexer tokens forming the smallest syntactic components of the program, such as identifiers, keywords, operators, and literals.
 
-This hierarchical structure enables easy traversal and analysis of the program during later stages of compilation or interpretation. For instance, an arithmetic expression in a program, such as \lstinline|a + b * c|, would form a subtree where the root node corresponds to an expression rule, with child nodes representing the individual terms and operations in the correct precedence order.
+This hierarchical structure enables easy traversal and analysis of the program during later stages of compilation or interpretation. For instance, an arithmetic expression in a program, such as \lstinline|a + b * c|, would form a sub-tree where the root node corresponds to an expression rule, with child nodes representing the individual terms and operations in the correct precedence order.
 
 A simplified representation of this tree structure is shown in figure~\ref{fig:implementation:parse-tree}.
 
@@ -362,7 +362,7 @@ The implementation of this translation algorithm is presented in figure~\ref{fig
 The code generation function of a node takes the node as an argument and retrieves its semantic and type-semantic data. This information is then used to translate the node's children, which are properties defined within the semantic data, into source code. The generated code fragments are concatenated into a single string array and returned. This process is demonstrated in listing~\ref{lst:implementation:instanceofgeneration}, where the translation of an \lstinline|instanceOf| expression is shown as an example.
 
 \begin{lstlisting}[language=TypeScript,caption=The code generation function of a \lstinline|instanceOf| expression,label=lst:implementation:instanceofgeneration]
-instanceOfExpression = async (node: InstanceOfExpression): Promise<TranslatedExpression> => {
+instanceOfExpression = async (node: InstanceOfExpression): ... => {
 	const semanticData = node.getSemanticData();
 	const typeData = node.getTypeSemanticData();
 	const operand = await semanticData.operand.translateCtxAndChildren();
@@ -377,22 +377,24 @@ The code generator functions for the individual nodes are implemented in the cod
 \subsection{Target Requirements Generation}
 \label{sec:requirements}
 
-Kipper is designed to have a runtime that is as small as possible while still having all the needed functionality bundled in it. This means, that the compiler should only include functions and objects into the runtime, that are needed by the user. This aligns with our goal of keeping the compiler modular and minimal. Due to the removal of unused components in a process called ''tree-shaking'', the output code is kept small and efficient.
+Kipper is designed to have a runtime that is as small as possible while still having all the needed functionality bundled in it. This means, that the compiler should only include functions and objects into the runtime, that are needed by the user. This aligns with our goal of keeping the compiler modular and minimal. Due to the removal of unused components in a process called "tree-shaking", the output code is kept small and efficient.
 
 Kipper includes a range of built-in functions and features to support its runtime environment. These built-ins are organized and managed using a scoped approach. The global scope contains core runtime features that are always required, such as basic type handling and error reporting. Beyond the global scope, additional features are selectively included based on the specific requirements of the program being compiled.
 
 \subsubsection{Conditional features}
 
-Conditional features are runtime components that are included only when explicitly required by the program being compiled. These features can range from commonly used operations like match and slice to more specialized or program-specific utilities. Unlike essential runtime components housed in the global scope, conditional features are added selectively based on an analysis of the program's structure and functionality. The decision to include conditional features occurs during the requirements generation phase. As the compiler traverses the \acrlong{ast}, it examines each node to determine whether a specific built-in function or runtime operation is invoked. If a feature like slice is used in the source code, it is flagged as necessary and included in the consolidated requirements list. This ensures that only the relevant components are integrated into the final runtime environment.
+Conditional features are runtime components that are included only when explicitly required by the program being compiled. These features can range from commonly used operations like match and slice to more specialized or program-specific utilities. Unlike essential runtime components housed in the global scope, conditional features are added selectively based on an analysis of the program's structure and functionality. The decision to include conditional features occurs during the requirements generation phase. As the compiler traverses the \acrshort{ast}, it examines each node to determine whether a specific built-in function or runtime operation is invoked. If a feature like slice is used in the source code, it is flagged as necessary and included in the consolidated requirements list. This ensures that only the relevant components are integrated into the final runtime environment.
 
-An example of a conditional feature would be the \lstinline|slice| function as shown in listing~\ref{lst:implementation:slicefunction}. This function takes an array as input and extracts a section starting from the index the first argument provides and ending at the index the second argument provides.
+An example of a conditional feature would be the \lstinline|slice| function as shown in listing~\ref{lst:implementation:slicefunction}. 
 
 \begin{lstlisting}[language=TypeScript,caption=The Slice Operation,label=lst:implementation:slicefunction]
 var valid: str = "321";
 print(valid[1:2]); // 2
 \end{lstlisting}
 
-When the compiler encounters the slice operator, it registers the function as needed and therefore includes it into the runtime. This process can be seen in listing~\ref{lst:implementation:sliceinternal}. The compiler calls slice function in the ''BuiltInGenerator''. The ''BuiltInGenerator'' is a collection of functions that generate the code for the built in functions in the target languages. This means that each target language has to have a full set of ''BuiltInGenerators''. The generator in the example generates the required JavaScript code for the function by utilizing the built in ''slice'' function of JavaScript.
+This function takes an array as input and extracts a section starting from the index the first argument provides and ending at the index the second argument provides.
+
+When the compiler encounters the slice operator, it registers the function as needed and therefore includes it into the runtime. This process can be seen in listing~\ref{lst:implementation:sliceinternal}. The compiler calls slice function in the \lstinline|BuiltInGenerator|. The \lstinline|BuiltInGenerator| is a collection of functions that generate the code for the built in functions in the target languages. This means that each target language has to have a full set of \lstinline|BuiltInGenerators|. The generator in the example generates the required JavaScript code for the function by utilizing the built in \lstinline|slice| function of JavaScript.
 
 \begin{lstlisting}[language=TypeScript,caption=Slice in the JavaScript BuiltInGenerator,label=lst:implementation:sliceinternal]
 async slice(funcSpec: InternalFunction): Promise<Array<TranslatedCodeLine>> {
@@ -413,16 +415,16 @@ The generated "slice" function can be found in listing ~\ref{lst:implementation:
 \begin{lstlisting}[language=TypeScript,caption=Slice in the target language,label=lst:implementation:slicegenerated]
 slice: function slice<T>(objLike: T, start: number | undefined, end: number | undefined): T {
 	return objLike ? objLike.slice(start, end) : objLike;
-  },
+},
 \end{lstlisting}
 
 \subsubsection{The global scope}
 
 The global scope in programming represents the top-level execution context where variables, functions, and objects are accessible throughout the entire runtime environment unless explicitly restricted. In JavaScript, the global scope is particularly significant as it varies across runtime environments like browsers, Node.js, and Web Workers. This variability necessitates robust mechanisms for identifying and managing the global context to ensure compatibility across environments.
 
-For example, JavaScript defines several global objects, such as window in browsers, global in Node.js, and self in Web Workers. Modern JavaScript unifies these under globalThis, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support globalThis, which is why fallback mechanisms are often used.
+For example, JavaScript defines several global objects, such as window in browsers, global in Node.js, and self in Web Workers. Modern JavaScript unifies these under \lstinline|__globalScope|, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support \lstinline|__globalScope|, which is why fallback mechanisms are often used.
 
-The Kipper global scope contains all the runtime features that are required. It is important, that the global scope exists only once, therefore the programm needs to check at runtime, if the scope already exists. This can be seen in listing ~\ref{lst:implementation:globalscopelogic}. It first checks if ''\_\_globalScope'' is already defined and uses it if available. If not, it attempts to use globalThis, the modern standard JavaScript global object. If ''globalThis'' is not defined, it checks for window in browser environments, global in Node.js, or self in Web Workers. If none of these are defined, it falls back to an empty object. This ensures that the ''\_\_globalScope'' variable is always initialized, regardless of the environment, allowing consistent and safe access to the global scope.
+The Kipper global scope contains all the runtime features that are required. It is important, that the global scope exists only once, therefore the program needs to check at runtime, if the scope already exists. This can be seen in listing~\ref{lst:implementation:globalscopelogic}. It first checks if \lstinline|__globalScope| is already defined and uses it if available. If not, it attempts to use \lstinline|globalThis|, the modern standard JavaScript global object. If \lstinline|globalThis| is not defined, it checks for window in browser environments, global in Node.js, or self in Web Workers. If none of these are defined, it falls back to an empty object. This ensures that the \lstinline|__globalScope| variable is always initialized, regardless of the environment, allowing consistent and safe access to the global scope.
 
 \begin{lstlisting}[language=TypeScript,caption=Global Scope Logic,label=lst:implementation:globalscopelogic]
 var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
@@ -436,17 +438,17 @@ var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
 
 Internal functions in Kipper serve as an essential part of the runtime, yet they are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes but are not directly accessible or callable in the user's program. This ensures that the runtime environment remains clean and minimal while still delivering the required functionality.
 
-An example of an internal function would be the ''assignTypeMeta'' function, which adds metadata to a runtime type. This is useful for runtime type comparison and described in detail in chapter ~\ref{subsec:builtintypes}. This function never gets exposed to the user but is called internally when an interface gets declared.
+An example of an internal function would be the \lstinline|assignTypeMeta| function, which adds metadata to a runtime type. This is useful for runtime type comparison and described in detail in chapter ~\ref{subsec:builtintypes}. This function never gets exposed to the user but is called internally when an interface gets declared.
 
 A key characteristic of internal functions is their dynamic inclusion in the runtime environment. During the requirements generation phase, the compiler identifies whether a program's functionality depends on any internal mechanisms. If so, the corresponding internal functions are included in the runtime.
 
 \subsubsection{Requirements Generation}
 
-The requirements generation process in Kipper begins during the compilation phase. As the compiler traverses the Abstract Syntax Tree (AST), it analyzes the nodes to determine the features needed by the program. This analysis produces a set of requirements, which are then used to configure the runtime environment. This works by using feature registration. If an AST node needs a certain feature, the reference is added to the program context by using the ''this.programCtx.addInternalReference'' function. When a feature is added more once, all further additions get ignored, as the function is already available. After all the features are registeres, the target generates the source code in the required language and inserts it into the output code.
+The requirements generation process in Kipper begins during the compilation phase. As the compiler traverses the \acrshort{ast}, it analyses the nodes to determine the features needed by the program. This analysis produces a set of requirements, which are then used to configure the runtime environment. This works by using feature registration. If an AST node needs a certain feature, the reference is added to the program context by using the \lstinline|this.programCtx.addInternalReference| function. When a feature is added more once, all further additions get ignored, as the function is already available. After all the features are registered, the target generates the source code in the required language and inserts it into the output code.
 
 \subsection{Differences between the Target Languages}
 
-The implementation of a compiler or transpiler targeting multiple programming languages often requires handling the specific quirks and requirements of each target. As Kipper is a webdevelopment language, we target both TypeScript and JavaScript. Both languages share a common foundation but diverge significantly in their syntax rules, semantics, and type systems.
+The implementation of a compiler or transpiler targeting multiple programming languages often requires handling the specific quirks and requirements of each target. As Kipper is a web development language, we target both TypeScript and JavaScript. Both languages share a common foundation but diverge significantly in their syntax rules, semantics, and type systems.
 
 One of the primary challenges in supporting both JavaScript and TypeScript as target languages is their differing treatment of identifiers, reserved keywords, and type declarations. While JavaScript is dynamically typed and relatively permissive in terms of variable naming and usage, TypeScript enforces a stricter set of rules due to its static type-checking capabilities.
 
@@ -454,7 +456,7 @@ One of the primary challenges in supporting both JavaScript and TypeScript as ta
 
 Both JavaScript and TypeScript have a set of reserved keywords that cannot be used as identifiers. However, TypeScript introduces additional constraints by reserving type-related keywords, which are not present in JavaScript. For instance, class is a reserved keyword in both languages and cannot be used as a variable name. In contrast, TypeScript also reserves names like let, number, and other type names, making them invalid as variable or function names.
 
-Kipper handles these reserved keywords by checking for them at compile time. The compiler compares against a hardcoded list of keywords and in case it finds one, it throws an ''ReservedIdentifierOverwriteError''. This list of keywords contains both the reserved words of JavaScript and TypeScript, as this minimizes redundancy and complexity. In addition to that, it also forces the developer to use sensible variable names, as JavaScript is quite leaneant with it's reserved keywords. listing~\ref{lst:implementation:reservedkeywords} illustrates this.
+Kipper handles these reserved keywords by checking for them at compile time. The compiler compares against a hard-coded list of keywords and in case it finds one, it throws an \lstinline|ReservedIdentifierOverwriteError|. This list of keywords contains both the reserved words of JavaScript and TypeScript, as this minimizes redundancy and complexity. In addition to that, it also forces the developer to use sensible variable names, as JavaScript is quite lenient with it's reserved keywords. listing~\ref{lst:implementation:reservedkeywords} illustrates this.
 
 \begin{lstlisting}[language=TypeScript,caption=Reserved Keywords in TS and JS,label=lst:implementation:reservedkeywords]
 // Invalid in TypeScript
@@ -467,7 +469,8 @@ var number = 10;  // No error
 \end{lstlisting}
 
 \subsubsection{Type Annotations}
-TypeScript introduces type annotations as part of its static type system. This means that while generating the TypeScript output, Kipper has to append type information in variable assignments, functions and lambdas. This works by overriding the JavaScript implementation of the code generator function and converting the AST-internal type of the node to a TypeScript type. Listing ~\ref{lst:implementation:differencecodegeneratorfunctions} shows the difference between the JavaScript code generator function and the TypeScript code generator function for variable assignments. In the codeblock that generates TypeScript, there is an additional bit of code after the storage and the identifier, that inserts the type of the object. The function declaration and lambdas work similarly.
+
+TypeScript introduces type annotations as part of its static type system. This means that while generating the TypeScript output, Kipper has to append type information in variable assignments, functions and lambdas. This works by overriding the JavaScript implementation of the code generator function and converting the AST-internal type of the node to a TypeScript type. Listing ~\ref{lst:implementation:differencecodegeneratorfunctions} shows the difference between the JavaScript code generator function and the TypeScript code generator function for variable assignments. In the code block that generates TypeScript, there is an additional bit of code after the storage and the identifier, that inserts the type of the object. The function declaration and lambdas work similarly.
 
 \begin{lstlisting}[language=TypeScript,caption=Difference in code generator functions,label=lst:implementation:differencecodegeneratorfunctions]
 // JavaScript
@@ -491,25 +494,32 @@ return [
 \end{lstlisting}
 
 \subsection{Stylistic Choices}
+
 The syntax of Kipper is specifically designed to ease the transition of existing TypeScript and JavaScript developers to Kipper. Therefore it was important, to keep the output as similar to these languages as possible. We achieved this by adhering to the following principles.
 
 \subsubsection{Human readable output}
-The primary goal of Kipper's output generation is to produce code that mirrors human-written TS or JS as closely as possible. To achieve this, Kipper avoids unnecessary abstractions or layers that could obscure the intent of the code. For instance, variable names and function identifiers are preserved during transpilation without introducing machine-generated names or hashing schemes. This contrasts with languages like CoffeeScript, where the output, while functional, often requires familiarity with the transpiler's conventions to interpret effectively.
+
+The primary goal of Kipper's output generation is to produce code that mirrors human-written TS or JS as closely as possible. To achieve this, Kipper avoids unnecessary abstractions or layers that could obscure the intent of the code. For instance, variable names and function identifiers are preserved during \gls{transpilation} without introducing machine-generated names or hashing schemes. This contrasts with languages like CoffeeScript, where the output, while functional, often requires familiarity with the transpiler's conventions to interpret effectively.
 
 \subsubsection{No Code Compression}
-Kipper explicitly avoids code compression techniques such as minification or inlining that can hinder readability. While compression is useful in production environments to reduce payload size, it is opposed to the goals of Kipper, as it negativly impacts code readability.
+
+Kipper explicitly avoids code compression techniques such as minification or inlining that can hinder readability. While compression is useful in production environments to reduce payload size, it is opposed to the goals of Kipper, as it negatively impacts code readability.
 
 \subsubsection{Standardized Style Format}
+
 Kipper enforces a standardized style format for its output to ensure consistency and predictability. It uses two spaces for block-level indentation to maintain clarity and avoid confusion with tab-based formatting. Braces are explicitly used for block delimiters, and semicolons terminate statements, adhering to common TypeScript/JavaScript conventions.
 
 \subsubsection{Scope Visibility}
-A critical aspect of Kipper's design is the clear representation of scopes in the generated output. Kipper employs explicit declarations such as let, const, and function to demarcate variable and function scopes. Indentation and brace placement further enhance the visual hierarchy, making it easy to identify nested scopes and understand their boundaries. This approach contrasts with languages like Python, where indentation alone determines scope, or languages like Lua, where scope visibility may rely on implicit conventions.
+
+A critical aspect of Kipper's design is the clear representation of scopes in the generated output. Kipper employs explicit declaration keywords such as \lstinline|let|, \lstinline|const|, and \lstinline|function| to discriminate variable and function scopes. Indentation and brace placement further enhance the visual hierarchy, making it easy to identify nested scopes and understand their boundaries. This approach contrasts with languages like Python, where indentation alone determines scope, or languages like Lua, where scope visibility may rely on implicit conventions.
 
 \subsubsection{Editable Code}
+
 One of Kipper's unique selling points is that its transpiled output is not just readable but also editable. Developers can treat the generated TS/JS code as if it were written manually, enabling seamless integration with existing projects. By making the output editable, Kipper empowers developers to tailor the transpiled code to their specific needs without relying solely on the original Kipper source.
 
 \subsubsection{Comparison with other languages}
-CoffeeScript aimed to simplify JavaScript syntax but often produced output that was hard to debug due to its reliance on non-standard conventions. Kipper avoids these pitfalls by aligning its syntax and output with established TypeScript/JavaScript practices. While TypeScript generates clean and maintainable JavaScript, it requires a compilation step that may introduce additional complexity. Kipper simplifies this process by directly transpiling to both TypeScript and JavaScript, offering flexibility without sacrificing readability. Babel's output is highly optimized for compatibility but can be dense and difficult to modify. Kipper prioritizes maintainability over optimization, ensuring that the output remains approachable for developers.
+
+CoffeeScript aimed to simplify JavaScript syntax but often produced output that was hard to debug due to its reliance on non-standard conventions. Kipper avoids these pitfalls by aligning its syntax and output with established TypeScript/JavaScript practices. While TypeScript generates clean and maintainable JavaScript, it requires a compilation step that may introduce additional complexity. Kipper simplifies this process by direct \gls{transpilation} to both TypeScript and JavaScript, offering flexibility without sacrificing readability. Babel's output is highly optimized for compatibility but can be dense and difficult to modify. Kipper prioritizes maintainability over optimization, ensuring that the output remains approachable for developers.
 
 \section{Integrated Runtime}
 \label{sec:integrated-runtime}
