@@ -94,18 +94,28 @@
 \newpage
 \pagenumbering{Roman}
 \setcounter{page}{\value{RPages}}
-%\setlength{\glsdescwidth}{0.8\linewidth}
+
 \glsnogroupskiptrue
 \printnoidxglossary[type=\acronymtype,title=Acronyms,toctitle=Acronyms,style=long,sort=word]
 \printnoidxglossary[title=Glossary,toctitle=Glossary,style=long,sort=word]
-\spacing{1}{
+
+\begin{spacing}{1}
 \bibliographystyle{IEEEtran}
 \bibliography{bib}
-}
+\end{spacing}
+
 \listoffigures
 \listoftables
 \lstlistoflistings
 \appendix
-\addchap{Appendix}
-\input{./chapters/appendix}
+
+\begin{spacing}{1}
+\addchap{Appendix A}\label{chapter:appendix_a}
+\end{spacing}
+\input{./chapters/appendix/a}
+
+\begin{spacing}{1}
+\addchap{Appendix B}\label{chapter:appendix_b}
+\end{spacing}
+\input{./chapters/appendix/b}
 \end{document}

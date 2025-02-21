@@ -1,34 +1,45 @@
-\section{Potential Features}
-\label{sec:future}
+\section{Potential Future Features}
 \setauthor{Lorenz Holzbauer}
 
 Currently, Kipper primarily serves web developers by offering integration with the TypeScript (TS) and JavaScript (JS) ecosystems. However, Kipper remains in the early stages of development as a modern programming language, and several features common in other languages have yet to be implemented. The following sections will discuss these features and explore potential experimental functionality.
 
 \subsection{WebAssembly Support}
-%https://webassembly.org/
-%https://wasmer.io/
+\setauthor{Lorenz Holzbauer}
 
-WebAssembly is an open standard that enables high-performance, portable code execution across diverse environments, including browsers, servers, and embedded systems. Adding WebAssembly as a compilation target for Kipper provides a potential avenue for enhancing performance and allows Kipper to function as a standalone server application. Emerging technologies such as Wasmer demonstrate that WebAssembly could also support cloud-based container environments while occupying only a fraction of the size of traditional containers.
+WebAssembly is an open standard that enables high-performance, portable code execution across various environments, including browsers, servers, and embedded systems~\cite{webassembly}. Incorporating WebAssembly as a compilation target for Kipper presents a potential opportunity to enhance performance and enable Kipper programs to function as a standalone server application. Emerging technologies such as Wasmer suggest that WebAssembly could also support cloud-based container environments while requiring significantly less storage than traditional containers~\cite{wasmer}.
 
-Implementing WebAssembly as a target for Kipper presents several challenges. Unlike TypeScript and JavaScript, which are dynamically typed and compatible with Kipper’s runtime model, WebAssembly requires a more structured type system and memory management approach. This necessitates that the compiler handle low-level memory management, including garbage collection. Additionally, a compatibility layer with a runtime would need to be developed to manage Kipper’s dynamic data requirements.
+However, implementing WebAssembly as a target for Kipper introduces several challenges. Unlike TypeScript and JavaScript, which are dynamically typed and align with Kipper’s runtime model, WebAssembly necessitates a more structured type system and explicit memory management. This requires the compiler to handle low-level memory management, including garbage collection. Additionally, a compatibility layer would need to be developed to accommodate Kipper’s dynamic data requirements within WebAssembly’s constraints.
 
-Given these challenges, it is unlikely that WebAssembly support will be included in Kipper in the near future.
+Given these challenges, it is unlikely that WebAssembly support will be integrated into Kipper in the near future.
 
-\subsection{IDE Support}
+\subsection{IDE and Code Editor Language Plugins}
+\setauthor{Lorenz Holzbauer}
 
-IDE support is an important factor in fostering developer adoption and productivity. Providing tooling within popular IDEs can position Kipper as a viable option for developers working on TypeScript (TS) and JavaScript (JS) projects. Effective IDE integration can contribute to code quality and the overall development process.
+Kipper-specific language plugins are a critical factor in promoting developer adoption and enhancing productivity. Providing tooling within widely used IDEs and editors can establish Kipper as a viable option for developers working on TypeScript (TS) and JavaScript (JS) projects. Effective integration contributes to improved code quality and a more streamlined development process.
 
-A key requirement for Kipper IDE support is syntax highlighting. Highlighting keywords, data types, and structures specific to Kipper can improve code readability and reduce cognitive load for developers. This feature is available in the web editor of Kipper. IntelliSense and autocompletion are also significant components, enabling IDEs to provide context-aware suggestions for code completion, parameter hints, and documentation pop-ups, similar to the functionality common in TS and JS environments.
+A fundamental requirement for such integration is syntax highlighting. Highlighting keywords, data types, and structures specific to Kipper would significantly improve code readability and reduces cognitive load for developers. This feature is as a matter of fact already available in the online compiler on the Kipper project website (See \nameref{chapter:appendix_b} for info on the Kipper documentation and website). 
 
-Static analysis tools can assist in maintaining code quality. Integrating a Kipper-specific linter within IDEs allows developers to receive feedback on potential errors, best practices, and stylistic consistency during development.
+Additionally, context-aware code hints and auto-completion are essential components of such plugins, enabling IDEs to provide suggestions for code completion, parameter hints, and documentation pop-ups, similar to the functionality commonly found in most modern development environments. Furthermore, combined with static analysis these tools play a key role in maintaining code quality. Integrating a Kipper-specific linter within IDEs would allow developers to receive real-time feedback on potential errors, adherence to best practices, and stylistic consistency during development.
 
-Initial development efforts may focus on Visual Studio Code due to its widespread use and extensibility. However, consideration for additional IDEs, such as JetBrains products including WebStorm and IntelliJ IDEA, can help accommodate different developer preferences and workflows. Broader IDE compatibility may increase accessibility and support diverse development environments.
+Initial development efforts may prioritize Visual Studio Code due to its widespread adoption and extensibility. However, expanding support to additional IDEs, such as JetBrains products, including WebStorm and IntelliJ IDEA, would accommodate different developer preferences and workflows. Broader IDE compatibility could enhance accessibility and support a more diverse range of development environments.
+
+Given that integration into code editors and IDEs is relatively straightforward and can be implemented atop the existing Kipper API, such support is expected in future releases, provided that the planned development of Kipper proceeds as anticipated.
 
 \section{Integration with other languages}
 \setauthor{Luna Klatzer}
 
-\section{Project Result}
+Kipper is not intended to function as a standalone language but is designed to integrate into modern web and server-side environments. By enabling developers to import and export generated modules in their preferred language—either JavaScript or TypeScript—the Kipper compiler allows for gradual adoption without necessitating a complete system overhaul or exclusive reliance on Kipper-generated code. This process also works the other way around, enabling libraries and existing code bases to be imported and utilised within Kipper projects. This would be supported through external module imports and a compatibility layer that adapts imports to Kipper’s runtime features and type safety standards.
+
+Due to its complexity, this functionality was not included in the scope of this paper but could be incrementally implemented once Kipper’s core feature set is finalised and stabilised. By integrating import wrappers and code loaders into the Kipper compiler—capable of verifying the existence and integrity of external variables, functions, interfaces and classes—the compiler could enable seamless interoperability without compromising safety or disabling essential functionality to achieve direct one-to-one compatibility.
+
+\section{Project Result \& Moving forward}
 \setauthor{Luna Klatzer}
+
+As of the time of writing, Kipper has met the initially defined objectives of this thesis but has not yet achieved a stable feature set or reached a v1.0 release (see \nameref{chapter:appendix_a} for further details). However, with the functionality outlined in this paper now implemented, the project will advance by refining and expanding upon the existing features to develop a language suitable for various scenarios and capable of bidirectional integration with its target environments.
+
+While this thesis does not serve merely as a proof of concept, Kipper remains a closed-off project at this stage, lacking proper support for additional environments and much of the functionality expected from a fully developed modern programming language. However, the language will continue to be developed and extended with the long-term goal of establishing itself as a reliable programming language.
+
+Furthermore, as an open-source project focused on all-round type safety and leveraging both \gls{transpilation} and the dynamic nature of an interpreter runtime, Kipper will continue to evolve and expand its feature set over the coming years, hoping to build support and grow as a project that can be utilised by a variety of developers.
 
 %%% Local Variables:
 %%% mode: LaTeX

@@ -27,7 +27,7 @@ id = resp.id; // Assigns a string even though that was not intended
 		\end{lstlisting}
 	}
 	\item{
-		Implicit conversions, such as treating "null" or "undefined" as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
+		Implicit conversions, such as treating \lstinline|null| or \lstinline|undefined| as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
 
 		\begin{lstlisting}[language=JavaScript,caption=Broad ability to perform "invalid" operations despite clear error case,label=lst:background:problematicflexibility]
 let discountRate = cart.appliedDiscount; // Assuming it is actually "applied_discount" not "appliedDiscount" so it returns "undefined"
@@ -37,7 +37,7 @@ return price * (1 - discountRate); // -> yields NaN (Not A Number)
 	}
 \end{itemize}
 
-Such flexibility complicates debugging, as issues may only surface during runtime. This increases the risk of critical bugs making it into production and requires developers to rely heavily on additional tooling or rigorous testing to mitigate the risks inherent in dynamic typing.
+Such flexibility complicates testing and error correction, as issues may only surface during runtime. This increases the risk of critical bugs making it into production and requires developers to rely heavily on additional tooling or rigorous testing to mitigate the risks inherent in dynamic typing.
 
 \subsubsection{Runtime-Bound Error Handling \& Catching}
 
@@ -313,3 +313,7 @@ As we have already mentioned, JavaScript is a language that can under no circums
 
 The above approach is exactly the aim of Kipper—a language that implements a custom runtime type system, which is later transpiled into JavaScript or TypeScript. By incorporating an additional runtime and non-standard syntax, Kipper enables runtime type checks. This approach is particularly advantageous, as it allows the system to extend beyond JavaScript standards, introducing structures tailored to the requirements of modern programs. Accordingly, developers can rely on Kipper to enhance code security and ensure that no dynamic structures remain unchecked or bypass the type system due to edge cases.
 
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../thesis"
+%%% End:
