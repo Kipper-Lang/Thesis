@@ -1,4 +1,5 @@
 \section{Preface \& Background}
+\label{sec:technology-preface-and-background}
 
 Before introducing the technologies and tools used in the Kipper project, it is important to note that the project existed on a smaller scale prior to the initiation of this diploma thesis and the following sections will talk about technologies that were chosen before the start of this thesis project. As such, when the project was re-imagined and expanded into its current form as a diploma thesis, the development technologies were already determined and simply continued to allow building on top of the existing foundation. (See \nameref{chapter:appendix_a} for more info on the foundation existing prior to this thesis)
 
@@ -6,6 +7,7 @@ However, to highlight the various differences and the reasons behind the origina
 
 \section{Development Language}
 \setauthor{Luna Klatzer}
+\label{sec:development-language}
 
 The choice of development language, or compiler programming language, is a crucial initial decision when starting a project of this nature. This decision significantly impacts factors such as distribution, accessibility, and cross-platform integration. The selected language sets the foundational conditions for the entire project and influences the ability to effectively utilize the language being created.
 
@@ -14,6 +16,7 @@ Many compilers are initially developed in a different language, often one closel
 This is not the case here, however. As the Kipper compiler remains too complex for its own language, it is currently written in another language. Nonetheless, the compiler could be migrated to the Kipper language in the future if the required changes are implemented.
 
 \subsection{Selection criteria and weighing the options}
+\label{sec:development-language-selection-criteria}
 
 To accurately represent the various benefits and downsides of each individual option, we are going to rank each language based on a set of criteria with individual weights which will amount to a certain total score as presented in table~\ref{tab:programming-language-criteria-weights}. Based on this score we can accurately represent the viability of each technology option presented.
 
@@ -32,17 +35,18 @@ To accurately represent the various benefits and downsides of each individual op
 		Similarity to Kipper&0.8&80\\
 		\hline
 	\end{tabular}
-	\caption{Table showcasing the individual criteria and their weights}
+	\caption{Table showcasing the individual criteria for the programming language and their weights}
 	\label{tab:programming-language-criteria-weights}
 \end{table}
 
 \subsection{Option - C++}
+\label{sec:programming-language-option-c++}
 
 C++ is widely recognized as one of the most prominent languages for low-level development and system programming, including compiler development. In addition to offering fast execution speeds, it provides flexible mechanisms like pointers for structuring essential constructs such as trees. The language utilizes~\acrshort{oop} to manage complex structures efficiently and supports templating, often also called generic type parameters, enabling versatile structures with unified behaviour and compatibility.
 
 \subsubsection{Speed}
 
-In terms of speed, C++ is mostly unrivalled, given the output to assembly code that can be directly run on the CPU without any overhead or interpreter. This means even large programs can be often compiled in seconds and huge programs with hundreds of thousands of lines can have a drastically reduced compile time compared to other languages.
+In terms of speed, C++ is mostly unrivalled, given the output to assembly code that can be directly run on the CPU without any overhead or interpreter. This means even large programs can be largely compiled in seconds and programs with hundreds of thousands of lines can have a drastically reduced compile time compared to other languages.
 
 \subsubsection{Maintainability}
 
@@ -54,15 +58,16 @@ Furthermore, targeting multiple environments and systems is challenging, as C++ 
 
 \subsubsection{Extensibility}
 
-Due to that design, the compiled code is mostly locked down and any extensions would have to be loaded using custom loaders or the user would have to fully re-compile the source code with the wanted changes.
+Due to the design of C++, the compiled code is largely locked down and any extensions to the compiler would have to be loaded using custom loaders or the user would have to fully re-compile the source code with the wanted changes.
 
 \subsubsection{Similarity to Kipper}
 
-While C++ aims to be more modern compared to its predecessor C, it still is largely a low-level language where programs needs to be structured with a lot of potential edge cases and faults in mind. Kipper on the other hand is a pure high-level~\ref{transpilation}-based language with interpreted dynamic targets, so concepts such as memory management, integer sizes and segmentation faults are largely alien. This means if a compiler were to be written in C++, it would have a lot of additional code and functionality taking these constructs into account that would have to be removed in a potential Kipper-based compiler.
+While C++ aims to be more modern compared to its predecessor C, it still is largely a low-level language where programs needs to be structured with a lot of potential edge cases and faults in mind. Kipper on the other hand is a pure high-level \gls{transpilation}-based language with interpreted dynamic targets, so concepts such as memory management, integer sizes and segmentation faults are largely alien. This means if a compiler were to be written in C++, it would require a lot of additional code taking these C++ concepts into account that would have to be removed or heavily altered in a potential succeeding Kipper-based compiler.
 
 \subsection{Option - Java}
+\label{sec:programming-language-option-java}
 
-Java is another commonly used~\acrshort{oop} language for building compilers and compiler components. As a matter of fact, \Gls{antlr4}, the lexer and parser generation technology, is developed solely in Java and for extended support simply provides language output targets for its lexers and parsers.
+Java is another commonly used~\acrshort{oop} language for building compilers and compiler components. As a matter of fact, \Gls{antlr4}, the lexer and parser generation technology, is developed solely in Java and for extended support simply provides output targets for its lexers and parsers used within other languages.
 
 \subsubsection{Speed}
 
@@ -78,15 +83,16 @@ Java utilizes a VM in combination with a~\acrshort{jit} compiler for executing i
 
 \subsubsection{Extensibility}
 
-Besides providing support for multiple platforms, the architecture of Java allows it to be an easy language to set up and extend, as its modularity means loading additional code simply means compiling it to the same standardised intermediate format. Using a class loader, this new runnable code can be then picked up at runtime and immediately executed.
- 
+Besides providing support for multiple platforms, the architecture of Java allows it to be an easy language to set up and extend, as its modularity means loading additional code simply means compiling it to the same standardised intermediate format. Using a class loader, this new runnable code can be then picked up at runtime and immediately executed. Additionally, the source code classes can be referenced and used within subsequent implementations that extend the original compiler functionality.
+
 \subsubsection{Similarity to Kipper}
 
 Java is fairly similar to Kipper in its~\acrshort{oop} design paradigm, but is still generally very different. Kipper runs as JavaScript or TypeScript in an interpreted environment, where code is ran line per line. While this is similar to the~\acrshort{jit} compiler utilised by Java, Kipper can run high-level code and execute on-demand changes without compiling its code or having to generate intermediate code. Given though that structurally the two languages are very similar, migrating from a compiler written in Java to one written in Kipper would be mostly straightforward.
 
 \subsection{Option - TypeScript}
+\label{sec:programming-language-option-typescript}
 
-TypeScript is a super-set of JavaScript, which works on the same dynamically-typed and interpreted system. As such, it is generally not preferred when it comes to implementing a compiler, since its dynamic structure and functionality don't serve a lot of use in a compiler with very specific functionality. Still, it is often used for experiments and online compilers, which may not perform as well, but can still achieve good performance.
+TypeScript is a super-set of JavaScript, which works on the same dynamically-typed and interpreted system and is during runtime de-facto the same language. As such, it is generally not preferred when it comes to implementing a compiler, since its dynamic structure and functionality don't serve a lot of use in a compiler with very specific functionality and limit performance. Still, it is often used for experiments and online compilers, which may not perform as well, but can still achieve good performance.
 
 \subsubsection{Speed}
 
@@ -94,13 +100,15 @@ In terms of speed, TypeScript can be very fast, almost as fast as~\acrshort{wasm
 
 \subsubsection{Maintainability}
 
+In terms of maintainability TypeScript is generally regarded as maintainable, due to its simplified interpreter structure and detailed compiler errors, but also as problematic due to its common problems that are caused by its own compile-time only types and limitations in performing proper runtime checks or accounting runtime values into a given program. Great care must be put how specific operations are performed and how dynamic data is handled, as errors can easily occur due to oversight or negligence in appropriate type checks.
+
 \subsubsection{Platform Support}
 
-TypeScript, or its generated JavaScript counterpart, can run on any system that has a browser or a local browser-like counterpart like Node, Deno or Bun installed. However, every version of the JavaScript interpreter comes with its own limitations and even in browsers running code can cause problems across various systems. This is more noticeable with locally installed systems such as Node, Deno or Bun, which implement their own libraries and design systems that need to be accounted for. Generally it can be said though that if the correct environment is set up, the code can run on any OS or architecture without issue.
+TypeScript, or its generated JavaScript counterpart, can run on any system that has a browser or a local browser-like counterpart like \Gls{nodejs}, \Gls{deno} or \Gls{bun} installed. However, every version of the JavaScript interpreprogramming-language-criteria-weightster comes with its own limitations and even in browsers running code can cause problems across various systems. This is more noticeable with locally installed systems such as \Gls{nodejs}, \Gls{deno} or \Gls{bun}, which implement their own libraries and design systems that need to be accounted for. Generally it can be said though that if the correct environment is set up, the code can run on any OS or architecture without issue. In the case of a standard browser, this often becomes even more simple, as browsers try to largely implement the same standards and concepts so that websites and their JavaScript code can run with identical results.
 
 \subsubsection{Extensibility}
 
-TypeScript is a very dynamic language with a lot of flexibility in terms of extending and modifying structures with ease. Even if a compiler weren't able to support modifications, hooking into the object and modifying it if needed is relatively easy. Additionally by simply providing interfaces and specific arguments that need to be implemented a compiler could allow custom classes and data to be executed.
+TypeScript is a very dynamic language with a lot of flexibility in terms of extending and modifying structures with ease. Even if a compiler weren't able to support modifications, hooking into the object and modifying it if needed is relatively easy. Additionally by simply providing interfaces and specific arguments that need to be implemented a compiler could allow custom classes and data to be executed. Furthermore, referencing the original classes and objects is fairly simple and like Java can be used for subsequent implementations and custom versions of the compiler.
 
 \subsubsection{Similarity to Kipper}
 
@@ -108,29 +116,99 @@ TypeScript serves as the primary inspiration for Kipper and shares many similari
 
 \subsection{Result}
 
+Based on the analysis performed on each of the options listed in sections~\ref{sec:programming-language-option-c++},~\ref{sec:programming-language-option-java} and~\ref{sec:programming-language-option-typescript}, the following results were determined as presented in table~\ref{tab:programming-language-results}.
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |p{2cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.2cm}|  }
+		\hline
+		\multicolumn{7}{|c|}{Result values for the criteria selected in~\ref{sec:development-language-selection-criteria}} \\
+		\hline
+		Language&Speed&Maintain- ability&Platform Support&Extensi- bility&Similarity to Kipper&Result\\
+		\hline
+		C++&40&50&20&10&30&150\\
+		Java&35&80&40&30&55&240\\
+		TypeScript&25&70&50&40&70&255\\
+		\hline
+	\end{tabular}
+	\caption{Table showcasing the individual criteria and the scores each language scored}
+	\label{tab:programming-language-results}
+\end{table}
+
+As presented in the table~\ref{tab:programming-language-results}, C++ is the least adequate with 150 points scored, Java is largely satisfactory in second place with its 240 points scored and TypeScript is the most suitable with 255 points in total. While TypeScript did not score as well as the other two in the "Speed" criterion, it was mostly first place or close behind Java in all other criteria. This result supports the decision presented in section~\ref{sec:technology-preface-and-background}.
 
 \section{Parser \& Lexer Technology}
 \setauthor{Luna Klatzer}
 
+The choice of parser and lexer technology, alongside the development language, is a critical factor in the efficiency, extensibility, and maintainability of a programming language. Parsing is inherently complex and can contribute significantly to compilation time. While many language compilers implement custom parsers from scratch to optimise efficiency and minimise execution time, employing parser and lexer generation technology can offer notable advantages.
 
+Using a parser and lexer generator provides greater flexibility, allowing modifications to the language grammar with minimal effort. Additionally, these tools often support multiple languages and compilation targets, enhancing adaptability if the language evolves or expands to additional platforms in the future.
 
 \subsection{Selection criteria and weighing the options}
+\label{sec:parser-and-lexer-technology-selection-criteria}
 
+To accurately represent the various benefits and downsides of each individual option, we are going to rank each technology based on a set of criteria with individual weights which will amount to a certain total score as presented in table~\ref{tab:parser-and-lexer-technology-selection-criteria}. Based on this score we can accurately represent the viability of each parser \& lexer generator option presented.
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |p{4cm}|p{5cm}|p{5cm}|  }
+		\hline
+		\multicolumn{3}{|c|}{Weights for the individual criteria} \\
+		\hline
+		Criterion&Weight between 0.0-1.0&Effective maximum possible score on a scale of 0-100\\
+		\hline
+		Speed&0.6&60\\
+		Integration&1&100\\
+		Maintainability&0.8&80\\
+		\hline
+	\end{tabular}
+	\caption{Table showcasing the individual criteria for the parser \& lexer technology and their weights}
+	\label{tab:parser-and-lexer-technology-selection-criteria}
+\end{table}
 
 \subsection{Option - Antlr4}
 
+\Gls{antlr4} is one of the most widely used lexer and parser generators, offering a comprehensive set of tools and multiple output targets, including a target for native TypeScript. It processes Antlr-specific grammar files and, based on the defined tokens and syntax rules, generates both a lexer and a parser, which are individually executable. Using either a listener or a visitor approach, the resulting parse tree can be traversed and transformed into an \acrshort{ast} for subsequent compilation~\cite{antlr}.
 
+Although \Gls{antlr4} provides extensive tooling and allows for the extraction of detailed metadata from source code, its generated lexer and parser are generally not considered highly performant compared to the alternatives. Parsing can take a significant amount of time, particularly for large programs. While \Gls{antlr4} employs various optimisation techniques—such as improving performance over time as the parser "warms up" and refines its internal connections—the generic design and modularity introduce overhead that hinders performance optimisations commonly found in other parsing technologies.
 
-\subsection{Option - Coco}
+Additionally, \Gls{antlr4} generates detailed objects and multiple context objects for each token and tree node, leading to high memory consumption. However, in most modern use cases, this is not a major concern.
+
+\subsection{Option - Coco/R}
+
+Coco/R is a compiler generator that, based on a grammar file, produces a scanner (lexer) and parser capable of validating the syntactic integrity of a file while also performing semantic and type analysis. Unlike a pure lexer and parser generator, Coco/R integrates aspects of semantic analysis into its processing, thereby optimising performance by preemptively conducting checks that do not require complex context-based analysis~\cite{coco}~\cite{coco-manual}.
+
+By instantiating the scanner and parser within a compiler class, Coco/R-generated classes can be used in a manner similar to \Gls{antlr4}. However, for generating an \acrshort{ast}, Coco/R grammars can be directly configured to construct a tree and build individual custom nodes, similar to the process of generating a parse tree. Using the generated \acrshort{ast}, subsequent processing and translation can be performed in a manner nearly identical to \Gls{antlr4}~\cite{coco-ast}.
+
+Unlike \Gls{antlr4}, however, Coco/R does not provide an explicit target for TypeScript. Supporting TypeScript would require either implementing a custom target or translating the generated C\# or Java code into \acrshort{wasm}, which could then be executed within a TypeScript context. Both approaches would require significant development effort but could likely surpass \Gls{antlr4} in performance.
+
+\subsection{Option - GNU Bison}
 
 
 
 \subsection{Option - Custom Implementation}
 
 
+
 \subsection{Result}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ |p{3.2cm}|p{2.8cm}|p{2.8cm}|p{2.8cm}|p{1.6cm}|  }
+		\hline
+		\multicolumn{5}{|c|}{Result values for the criteria selected in~\ref{sec:parser-and-lexer-technology-selection-criteria}} \\
+		\hline
+		Language&Speed&Integration&Maintainability&Result\\
+		\hline
+		Antlr4&&&&\\
+		Coco/R&&&&\\
+		GNU Bison&&&&\\
+		Custom Implementation&&&&\\
+		\hline
+	\end{tabular}
+	\caption{Table showcasing the individual criteria and the scores each technology scored}
+	\label{tab:parser-and-lexer-technology-results}
+\end{table}
 
 %%% Local Variables:
 %%% mode: LaTeX

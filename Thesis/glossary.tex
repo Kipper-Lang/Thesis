@@ -6,7 +6,7 @@
 }
 \newglossaryentry{antlr4}{
 	name={Antlr4},
-	description={The fourth version of the ANTLR project, which enables the generation of a lexer, parser and related tools through the use of a grammar file that defines the language's structure. See~\cite{antlr} for more information.}
+	description={The fourth version of the ANTLR project, which enables the generation of a lexer, parser and related tools through the use of a grammar file that defines the language's structure~\cite{antlr}.}
 }
 \newglossaryentry{abstract-syntax-tree}{
 	name={Abstract Syntax Tree},
@@ -47,6 +47,18 @@
 	description={WebAssembly is a binary instruction format designed for efficient code execution on web browsers. WebAssembly can be generated from C, C++, and Rust, running at near-native speed. It allows building applications with performance-intensive tasks while maintaining portability and security across platforms.}
 }
 \newacronym{wasm}{WASM}{\Gls{webassembly}}
+\newglossaryentry{nodejs}{
+	name={Node.js},
+	description={Node.js is a cross-platform JavaScript runtime that is based on the V8 JavaScript engine and allows the local execution of code on a desktop or server without the need of a browser. It provides various system APIs and libraries to interact with the system underneith unlike standard browser-based JavaScript engines which are locked-in in their browser environment~\cite{nodejs}.}
+}
+\newglossaryentry{deno}{
+	name={Deno},
+	description={Deno is a cross-platform JavaScript runtime and package manager that is based on the V8 JavaScript engine and allows the local execution of code on a desktop or server without the need of a browser. It is often perceived as an alternative to \Gls{nodejs} and has many similar features, but provides its own unique system APIs, libraries and package management system~\cite{deno}.}
+}
+\newglossaryentry{bun}{
+	name={Bun},
+	description={Bun is a cross-platform JavaScript runtime that is based on the WebKit JavaScriptCore engine and allows the local execution of code on a desktop or server without the need of a browser. It is a drop-in replacement for \Gls{nodejs} and is implemented in the Zig programming language aiming to improve performance and efficiency compared to its \Gls{nodejs} counterpart~\cite{bun}.}
+}
 
 % Usage:
 % \gls{label} lowercase in text
