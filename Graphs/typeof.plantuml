@@ -1,0 +1,29 @@
+@startuml
+!pragma useVerticalIf on
+start
+
+if (typeof value == "undefined") then (yes)
+    :__kipper.builtIn.undefined;
+elseif (typeof value == "string") then (yes)
+    :__kipper.builtIn.str;
+elseif (typeof value == "object") then (yes)
+    if (value == null) then (yes)
+        :__kipper.builtIn.null;
+    elseif (Array.isArray(value)) then (yes)
+        if ("__kipType" in value) then (yes)
+            :value.__kipType;
+        else (no)
+            :__kipper.builtIn.Array;
+        endif
+    else (no)
+        :Get prototype of value;
+        if (prototype exists && prototype.constructor != Object) then (yes)
+            :prototype.constructor;
+        else (no)
+            :__kipper.builtIn.obj;
+        endif
+    endif
+endif
+
+stop
+@enduml

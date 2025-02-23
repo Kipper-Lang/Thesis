@@ -885,31 +885,16 @@ typeof("Hello, World!"); // "__kipper.builtIn.str"
 
 The  \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the  \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies  \lstinline|null| as  \lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in listing~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
+At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
 
-\begin{lstlisting}[language=Typescript,caption=Logical implementation of the typeof operator in TypeScript, label=lst:implementation:typeofimplementation]
-typeOf: (value) => {
-    const prim = typeof value;
-    switch (prim) {
-        case 'undefined':
-            return __kipper.builtIn.undefined;
-        case 'string':
-        return __kipper.builtIn.str;
-        ...
-        case 'object': {
-            if (value === null) return __kipper.builtIn.null;
-            if (Array.isArray(value)) {
-                return '__kipType' in value ? value.__kipType : __kipper.builtIn.Array;
-            }
-            const prot = Object.getPrototypeOf(value);
-            if (prot && prot.constructor !== Object) {
-                return prot.constructor;
-            }
-            return __kipper.builtIn.obj;
-        }
-    }
-}
-\end{lstlisting}
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\stackunder{\includegraphics[scale=0.25]{./pics/typeOfImplementation}}{}
+	\caption{Logical implementation of the typeof operator in TypeScript}
+	\label{fig:implementation:typeofimplementation}
+\end{figure}
+
 
 Although linguistically quite similar, the \lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called \lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
 

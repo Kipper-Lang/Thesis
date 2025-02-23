@@ -1,0 +1,32 @@
+@startuml
+start
+
+repeat
+    :Get next field from the pattern;
+    :Extract field name and field type;
+
+    if (Field is missing in the value?) then (yes)
+        :Return false;
+        stop
+    endif
+
+    :Get corresponding field value;
+    :Determine the field's actual type;
+
+    if (Field is a primitive type and type does not match?) then (yes)
+        :Return false;
+        stop
+    endif
+
+    if (Field is not a primitive type?) then (yes)
+        if (Field does not structurally match expected type?) then (yes)
+            :Return false;
+            stop
+        endif
+    endif
+
+repeat while (More fields?)
+
+:All checks passed, return true;
+stop
+@enduml
