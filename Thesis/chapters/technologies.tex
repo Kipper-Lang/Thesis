@@ -1,9 +1,11 @@
-\section{Preface \& Background}
-\label{sec:technology-preface-and-background}
+\section{Background}
+\label{sec:technology-background}
 
-Before introducing the technologies and tools used in the Kipper project, it is important to note that the project existed on a smaller scale prior to the initiation of this diploma thesis and the following sections will talk about technologies that were chosen before the start of this thesis project. As such, when the project was re-imagined and expanded into its current form as a diploma thesis, the development technologies were already determined and simply continued to allow building on top of the existing foundation. (See \nameref{chapter:appendix_a} for more info on the foundation existing prior to this thesis)
+Before introducing the technologies and tools used in the Kipper project, it is important to note that the project existed on a smaller scale prior to the initiation of this diploma thesis. As such, the following sections will discuss technologies—TypeScript and \Gls{antlr4}—that were chosen before the start of this thesis project. 
 
-However, to highlight the various differences and the reasons behind the original decisions for the parser, lexer and core compiler, the sections will still consider each option, talk about their viability in the context of this project and elaborate on the decisions made when the initial project was envisioned.
+Consequently, when the project was re-envisioned and expanded into its current form as part of this diploma thesis, the development technologies had already been determined and were simply continued to build upon the existing foundation (see \nameref{chapter:appendix_a} for further details on the project's foundation prior to this thesis).
+
+Nevertheless, to highlight the various alternatives and the reasons behind the original decisions for the parser, lexer, and core compiler, the following sections will still examine each option, assess their viability within the context of this project, and elaborate on the choices made when the initial project was conceived.
 
 \section{Development Language}
 \setauthor{Luna Klatzer}
@@ -135,7 +137,9 @@ Based on the analysis performed on each of the options listed in sections~\ref{s
 	\label{tab:programming-language-results}
 \end{table}
 
-As presented in the table~\ref{tab:programming-language-results}, C++ is the least adequate with 150 points scored, Java is largely satisfactory in second place with its 240 points scored and TypeScript is the most suitable with 255 points in total. While TypeScript did not score as well as the other two in the "Speed" criterion, it was mostly first place or close behind Java in all other criteria. This result supports the decision presented in section~\ref{sec:technology-preface-and-background}.
+As presented in the table~\ref{tab:programming-language-results}, C++ is the least adequate with 150 points scored, Java is largely satisfactory in second place with its 240 points scored and TypeScript is the most suitable with 255 points in total. While TypeScript did not score as well as the other two in the "Speed" criterion, it was mostly first place or close behind Java in all other criteria. 
+
+This result supports the pre-existing decision presented in section~\ref{sec:technology-background}.
 
 \section{Parser \& Lexer Technology}
 \setauthor{Luna Klatzer}
@@ -167,30 +171,44 @@ To accurately represent the various benefits and downsides of each individual op
 \end{table}
 
 \subsection{Option - Antlr4}
+\label{sec:parser-technology-option-antlr4}
 
-\Gls{antlr4} is one of the most widely used lexer and parser generators, offering a comprehensive set of tools and multiple output targets, including a target for native TypeScript. It processes Antlr-specific grammar files and, based on the defined tokens and syntax rules, generates both a lexer and a parser, which are individually executable. Using either a listener or a visitor approach, the resulting parse tree can be traversed and transformed into an \acrshort{ast} for subsequent compilation~\cite{antlr}.
+\Gls{antlr4} is one of the most widely used lexer and parser generators employing a top-down LL(*) parsing process, offering a comprehensive set of tools and multiple output targets, including a target for native TypeScript. It processes Antlr-specific grammar files and, based on the defined tokens and syntax rules, generates both a lexer and a parser, which are individually executable. Using either a listener or a visitor approach, the resulting parse tree can be traversed and transformed into an \acrshort{ast} for subsequent compilation~\cite{antlr}.
 
 Although \Gls{antlr4} provides extensive tooling and allows for the extraction of detailed metadata from source code, its generated lexer and parser are generally not considered highly performant compared to the alternatives. Parsing can take a significant amount of time, particularly for large programs. While \Gls{antlr4} employs various optimisation techniques—such as improving performance over time as the parser "warms up" and refines its internal connections—the generic design and modularity introduce overhead that hinders performance optimisations commonly found in other parsing technologies.
 
 Additionally, \Gls{antlr4} generates detailed objects and multiple context objects for each token and tree node, leading to high memory consumption. However, in most modern use cases, this is not a major concern.
 
 \subsection{Option - Coco/R}
+\label{sec:parser-technology-option-coco}
 
-Coco/R is a compiler generator that, based on a grammar file, produces a scanner (lexer) and parser capable of validating the syntactic integrity of a file while also performing semantic and type analysis. Unlike a pure lexer and parser generator, Coco/R integrates aspects of semantic analysis into its processing, thereby optimising performance by preemptively conducting checks that do not require complex context-based analysis~\cite{coco}~\cite{coco-manual}.
+Coco/R is a compiler generator that, based on a grammar file, produces a scanner (lexer) and parser employing top-down LL(*) parsing capable of validating the syntactic integrity of a file while also performing semantic and type analysis. Unlike a pure lexer and parser generator, Coco/R integrates aspects of semantic analysis into its processing, thereby optimising performance by preemptively conducting checks that do not require complex context-based analysis~\cite{coco}~\cite{coco-manual}.
 
 By instantiating the scanner and parser within a compiler class, Coco/R-generated classes can be used in a manner similar to \Gls{antlr4}. However, for generating an \acrshort{ast}, Coco/R grammars can be directly configured to construct a tree and build individual custom nodes, similar to the process of generating a parse tree. Using the generated \acrshort{ast}, subsequent processing and translation can be performed in a manner nearly identical to \Gls{antlr4}~\cite{coco-ast}.
 
 Unlike \Gls{antlr4}, however, Coco/R does not provide an explicit target for TypeScript. Supporting TypeScript would require either implementing a custom target or translating the generated C\# or Java code into \acrshort{wasm}, which could then be executed within a TypeScript context. Both approaches would require significant development effort but could likely surpass \Gls{antlr4} in performance.
 
 \subsection{Option - GNU Bison}
+\label{sec:parser-technology-option-bison}
 
+GNU Bison is a parser generator that employs a bottom-up LR parsing algorithm to validate the syntactic structure of an input token stream~\cite{bison}. Unlike \Gls{antlr4} or Coco/R, Bison primarily generates parsers for C and C++, with an experimental Java target also available. This focus on lower-level languages provides performance advantages, as Bison is highly efficient~\cite{bison-manual}.
 
+Bison processes a grammar definition file and generates a parser that integrates with a lexer, typically implemented using Flex~\cite{flex}. While it offers strong performance, it lacks a native TypeScript target. Integrating Bison with a TypeScript-based project would require running the generated C/C++ code via \acrshort{wasm} like in the case of Coco/R, adding complexity and overhead due to the additional process layer. Important to also mention is that its tooling and extensibility are less modern compared to \Gls{antlr4} and the tool is heavily based on traditional compilers.
+
+Despite these challenges, Bison is a good choice for performance-critical applications where an LR parser is preferred and cross-language execution is acceptable.
 
 \subsection{Option - Custom Implementation}
+\label{sec:parser-technology-option-custom}
 
+A custom implementation provides full control over the lexer, parser, and subsequent processing, making it a suitable option for projects with specific requirements or performance constraints. By manually designing a lexer and parser in TypeScript, both speed and memory usage can be optimised while avoiding the overhead associated with general-purpose parser generators.
 
+The primary advantage of a custom parser is its flexibility. Unlike for example \Gls{antlr4} or Bison, it can be precisely tailored to the needs of the project, reducing unnecessary complexity. However, this approach demands significant development effort, including manual error handling and debugging, which can be complex and time-consuming.
+
+Additionally, developing a lexer and parser requires a deep understanding of parsing algorithms and careful handling to prevent ambiguity errors and incorrect results. In many cases, a custom implementation may ultimately be slower and less flexible than using a parser generator, as the latter benefits from years of optimisation and widespread use in compiler design, which is hard to compete with without extensive knowledge.
 
 \subsection{Result}
+
+Based on the analysis performed on each of the options listed in sections~\ref{sec:parser-technology-option-antlr4},~\ref{sec:parser-technology-option-coco},~\ref{sec:parser-technology-option-bison} and~\ref{sec:parser-technology-option-custom}, the following results were determined as presented in table~\ref{tab:parser-and-lexer-technology-results}.
 
 \begin{table}[H]
 	\centering
@@ -198,17 +216,25 @@ Unlike \Gls{antlr4}, however, Coco/R does not provide an explicit target for Typ
 		\hline
 		\multicolumn{5}{|c|}{Result values for the criteria selected in~\ref{sec:parser-and-lexer-technology-selection-criteria}} \\
 		\hline
-		Language&Speed&Integration&Maintainability&Result\\
+		Technology&Speed&Integration&Maintainability&Result\\
 		\hline
-		Antlr4&&&&\\
-		Coco/R&&&&\\
-		GNU Bison&&&&\\
-		Custom Implementation&&&&\\
+		Antlr4&35&90&70&195\\
+		Coco/R&50&40&50&140\\
+		GNU Bison&50&40&40&130\\
+		Custom&25&100&20&145\\
 		\hline
 	\end{tabular}
 	\caption{Table showcasing the individual criteria and the scores each technology scored}
 	\label{tab:parser-and-lexer-technology-results}
 \end{table}
+
+As presented in Table~\ref{tab:parser-and-lexer-technology-results}, Bison is the least suitable option, scoring 130 points, followed by Coco/R with 140 points. A custom implementation ranks second-best with 145 points, while \Gls{antlr4} emerges as the most suitable choice with 195 points.
+
+Despite their performance and capabilities, both Coco/R and Bison present significant drawbacks, primarily due to their poor integration within the target environment and the additional development effort required for full utilisation. 
+
+Furthermore, while a custom parser implementation offers advantages in flexibility and control, it would likely under-perform compared to other options and demand substantial effort to maintain and develop further.
+
+This result supports the pre-existing decision presented in section~\ref{sec:technology-background}.
 
 %%% Local Variables:
 %%% mode: LaTeX
