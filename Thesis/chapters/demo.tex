@@ -1,9 +1,82 @@
+\section{Example Program}
+
+Listing \ref{lst:demo:isprime} demonstrates the computation of the prime factors of a given number using Kipper. This program serves as a simple but effective showcase of Kipper's syntax and runtime behavior. The program is given a number, determines the prime factors and prints the result.
+
+\begin{lstlisting}[language=Typescript,caption=A basic programs that determines the prime factors of an integer, label=lst:demo:isprime]
+def primeFactors(n: num) -> void {
+	while (n % 2 == 0) {
+		print("2");
+		n /= 2;
+	}
+	
+	for (var i: num = 3; i * i <= n; i += 2) {
+		while (n % i == 0) {
+			print(f"{i}");
+			n /= i;
+		}
+	}
+	
+	if (n > 2) {
+		print(f"{n}");
+	}
+}
+
+primeFactors(18);
+\end{lstlisting}
+
+\section{Working example using CLI}
+\setauthor{Lorenz Holzbauer}
+Kipper provides a command-line interface (CLI) that allows users to compile and execute programs directly from the terminal. To run the above example using the CLI, the following steps are required:
+
+\begin{enumerate}
+	\item Install the Kipper CLI globally using npm:
+	\begin{lstlisting}[language=Bash,caption=Installing the Kipper CLI globally]
+		npm install -g @kipper/cli
+	\end{lstlisting}
+	
+	\item Save the Kipper source code in a file, e.g., \texttt{prime.kip}.
+	
+	\item Compile and execute a Kipper file
+	\begin{lstlisting}[language=Bash,caption=The Kipper run command]
+		kipper run prime.kip
+	\end{lstlisting}
+\end{enumerate}
+
+After execution, the prime factors of the given number are printed to the console.
+
+
 \section{Working example in the web}
 \setauthor{Lorenz Holzbauer}
+Kipper can also be run in the browser using the \texttt{@kipper/web} package. Listing \ref{lst:demo:kipperbrowser} demonstrates how to include Kipper in an HTML file and execute the same prime factorization program.
+
+\begin{lstlisting}[language=HTML,caption=Running Kipper in the browser, label=lst:demo:kipperbrowser]
+<!DOCTYPE html>
+<head>
+	<title>Kipper Demo</title>
+	<script src="https://cdn.jsdelivr.net/npm/@kipper/web@latest
+	/kipper-standalone.min.js"></script>
+</head>
+<body>
+	<script type="module">
+		const logger = new Kipper.KipperLogger((level, msg) => {
+			console.log(`[${Kipper.getLogLevelString(level)}] ${msg}`);
+		});
+		
+		const compiler = new Kipper.KipperCompiler(logger, {});
+		
+		const code = ``; // Replace with prime.kip
+		
+		compiler.compile(code, { target: new KipperJS.TargetJS() }).then((result) => {
+			const jsCode = result.write();
+			eval(jsCode);
+		});
+	</script>
+</body>
+\end{lstlisting}
+
+When opened in a browser, this file will execute the compiled JavaScript version of the prime factorization program, displaying the results in the browser console.
 
 \section{Working example using Node.js}
 \setauthor{Lorenz Holzbauer}
 
-\section{Working example using CLI}
-\setauthor{Lorenz Holzbauer}
 
