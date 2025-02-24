@@ -1,11 +1,133 @@
+\setauthor{Lorenz Holzbauer}
+
 \section{Compiler API}
-\setauthor{Luna Klatzer}
+\label{sec:compiler_api}
+
+The Kipper Compiler API provides the necessary functionality to compile Kipper source code into JavaScript or TypeScript. The main entry points into the API are the \lstinline|KipperCompiler| class and the \lstinline|KipperProgramContext| class.
+
+\subsection{Initializing the Compiler}
+\label{subsec:compiler_init}
+
+To compile Kipper code, an instance of \lstinline|KipperCompiler| must be created. The compiler requires a logger instance and an optional configuration object.
+
+\begin{lstlisting}[language=Typescript, caption=Initializing the Kipper Compiler, label=lst:compiler_initialization]
+const logger = new Kipper.KipperLogger((level, msg) => {
+	console.log(`[${Kipper.getLogLevelString(level)}] ${msg}`);
+});
+
+const compiler = new Kipper.KipperCompiler(logger, {});
+\end{lstlisting}
+
+The logger instance provides error reporting functionality, making it an essential part of the compilation process.
+
+\subsection{Compiling Kipper Code}
+\label{subsec:compiling}
+
+Once the compiler is initialized, it can be used to transpile Kipper code into JavaScript or TypeScript. The \lstinline|compile| method takes the source code as a string and a configuration object specifying the compilation target.
+
+\begin{lstlisting}[language=Typescript, caption=Compiling Kipper Code to JavaScript, label=lst:compile_example]
+const result = await compiler.compile(
+	`print("Hello world!");`,
+	{ target: new KipperJS.TargetJS() }
+);
+const jsCode = result.write();
+
+// Execute the compiled JavaScript
+eval(jsCode);
+\end{lstlisting}
+
+The compilation result is an object containing the generated JavaScript or TypeScript code, which can be executed or written to a file.
+
+\subsection{Compilation Options}
+\label{subsec:compilation_options}
+
+The \lstinline|compile| method accepts a configuration object that allows customization of the compilation process. The most important options are:
+
+\begin{itemize}
+	\item \lstinline|target|: Specifies the output language. Available targets are \lstinline|TargetJS| for JavaScript and \lstinline|TargetTS| for TypeScript.
+	\item \lstinline|filename|: Specifies the filename of the generated code
+	\item \lstinline|optimisationOptions|: Currently
+	\lstinline|optimiseInternals| and \lstinline|optimiseBuiltIns| are available. They can be enabled by setting them to \lstinline|true|
+\end{itemize}
 
 \section{Target API}
-\setauthor{Luna Klatzer}
+\label{sec:target_api}
 
-\section{Shell CLI}
-\setauthor{Luna Klatzer}
+The Kipper compiler supports multiple compilation targets, allowing the transpilation of Kipper code into different languages. Developers can extend Kipper by implementing custom targets.
+
+\subsection{Using Predefined Targets}
+\label{subsec:using_targets}
+
+Kipper provides predefined targets for JavaScript and TypeScript. These can be used as follows:
+
+\begin{lstlisting}[language=Typescript, caption=Using Compilation Targets, label=lst:using_targets]
+const jsTarget = new KipperJS.TargetJS();
+const tsTarget = new KipperJS.TargetTS();
+\end{lstlisting}
+
+\subsection{Creating Custom Targets}
+\label{subsec:custom_targets}
+
+To create a custom target, a new class must extend \lstinline|KipperTarget| and implement the \lstinline|transpile| method.
+
+\begin{lstlisting}[language=Typescript, caption=Creating a Custom Compilation Target, label=lst:custom_target]
+class CustomTarget extends Kipper.KipperTarget {
+	transpile(ast) {
+		// Custom transpilation logic
+		return "// Transpiled code";
+	}
+}
+\end{lstlisting}
+
+This allows for custom language backends beyond JavaScript and TypeScript.
+
+\section{CLI Interface}
+\label{sec:cli_interface}
+
+The Kipper CLI provides a command-line interface for compiling Kipper code. The CLI is available via the \lstinline|@kipper/cli| package.
+
+\subsection{Installing the CLI}
+\label{subsec:cli_installation}
+
+To install the Kipper CLI, use the following command:
+
+\begin{lstlisting}[language=bash, caption=Installing Kipper CLI, label=lst:cli_install]
+npm install @kipper/cli
+\end{lstlisting}
+
+This installs Kipper in the current NPM project. To install Kipper globally, use the \lstinline|-g| flag. This may require superuser privileges, depending on the installation location.
+
+\subsection{Compiling a File}
+\label{subsec:cli_compile}
+
+To compile a Kipper source file, use the \lstinline|kipper compile| command:
+
+\begin{lstlisting}[language=bash, caption=Compiling a Kipper File, label=lst:cli_compile]
+kipper compile source.kip --target js
+\end{lstlisting}
+
+This command transpiles \lstinline|source.kip| to JavaScript. It is possible to specify the option \lstinline|--target=ts| to switch to the TypeScript target. When no target option is specified, the default target is JavaScript.
+
+\subsection{Running a Kipper Program}
+
+To run a Kipper source file, use the \lstinline|kipper run| command:
+
+\begin{lstlisting}[language=bash, caption=Running a Kipper File, label=lst:cli_run]
+	kipper run source.kip
+\end{lstlisting}
+
+This command transpiles to the specified target and then executes the code.
+
+\subsection{Creating a New Project}
+\label{subsec:cli_new_project}
+
+To create a new Kipper project, use:
+
+\begin{lstlisting}[language=bash, caption=Creating a New Kipper Project, label=lst:cli_new_project]
+kipper new my_project
+\end{lstlisting}
+
+This generates a new project with the necessary configuration files.
 
 %%% Local Variables:
 %%% mode: LaTeX

@@ -1,0 +1,37 @@
+@startuml
+start
+skinparam dpi 300
+
+repeat
+    :Get next method from the pattern;
+    :Extract method name, return type, and parameters;
+
+    if (Method is missing in the value?) then (yes)
+        :Return false;
+        stop
+    endif
+
+    :Get corresponding method from the value;
+    if (Return type does not match expected type?) then (yes)
+        :Return false;
+        stop
+    endif
+
+    if (Number of parameters does not match?) then (yes)
+        :Return false;
+        stop
+    endif
+
+    repeat
+        :Get next parameter;
+        if (Parameter type does not match expected type?) then (yes)
+            :Return false;
+            stop
+        endif
+    repeat while (More parameters?)
+
+repeat while (More methods?)
+
+:All checks passed, return true;
+stop
+@enduml

@@ -784,23 +784,19 @@ Structural comparisons are implemented using the \lstinline|matches| operator as
 
 \begin{lstlisting}[language=Typescript,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
 interface Y {
-	v: bool;
 	t(gr: str): num;
 }
 
 interface X {
 	y: Y;
-	z: num;
 }
 
 var x: X = {
 	y: {
-		v: true,
 		t: (gr: str): num -> {
 			return 0;
 		}
 	},
-	z: 5
 };
 
 var res: bool = x matches X; // -> true
@@ -810,66 +806,26 @@ As can be seen in listing~\ref{lst:implementation:matchesoperator}, the matches 
 
 Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being present in the type it should check against. The order of properties does not matter. When the name is found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitives.
 
-This property match algorithm is implemented as given in listing~\ref{lst:implementation:matchesproperty}.
+This property match algorithm is implemented as given in figure~\ref{fig:implementation:matchesproperty}.
 
-\begin{lstlisting}[language=Typescript,caption=Matches operator property comparison,label=lst:implementation:matchesproperty]
-for (const field of pattern.fields) {
-  const fieldName = field.name;
-  const fieldType = field.type;
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\stackunder{\includegraphics[scale=0.20]{./pics/matches_fields}}{}
+	\caption{Matches operator property comparison}
+	\label{fig:implementation:matchesproperty}
+\end{figure}
 
-  if (!(fieldName in value)) {
-    return false;
-  }
-
-  const fieldValue = value[fieldName];
-  const isSameType = __kipper.typeOf(fieldValue) === field.type;
-
-  if (primTypes.includes(field.type.name) && !isSameType) {
-    return false;
-  }
-
-  if (!primTypes.includes(fieldType.name)) {
-    if (!__kipper.matches(fieldValue, fieldType)) {
-      return false;
-    }
-  }
-}
-\end{lstlisting}
 
 After checking the properties, the matches expression iterates over the methods. It first searches for the method name in the target type. If found, it compares the return type. Then each argument is compared by name. As the methods signatures need to be exactly the same, the amount of parameters is compared as well.
 
-\begin{lstlisting}[language=Typescript,caption=Matches operator method comparison,label=lst:implementation:matchesmethod]
-for (const field of pattern.methods) {
-  const fieldName = field.name;
-  const fieldReturnType = field.returnType;
-  const parameters = field.parameters;
-
-  if (!(fieldName in value)) {
-    return false;
-  }
-
-  const fieldValue = value[fieldName];
-  const isSameType = fieldReturnType === fieldValue.__kipType.genericArgs.R;
-
-  if (!isSameType) {
-    return false;
-  }
-
-  const methodParameters = fieldValue.__kipType.genericArgs.T;
-
-  if (parameters.length !== methodParameters.length) {
-    return false;
-  }
-
-  let count = 0;
-  for (let param of parameters) {
-    if (param.type.name !== methodParameters[count].name) {
-      return false;
-    }
-    count++;
-  }
-}
-\end{lstlisting}
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\stackunder{\includegraphics[scale=0.18]{./pics/matches_methods}}{}
+	\caption{Matches operator method comparison}
+	\label{fig:implementation:matchesmethod}
+\end{figure}
 
 When none of these conditions are false, the input object matches the input type and they can be seen as compatible.
 
@@ -885,31 +841,16 @@ typeof("Hello, World!"); // "__kipper.builtIn.str"
 
 The  \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the  \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies  \lstinline|null| as  \lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in listing~\ref{lst:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
+At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
 
-\begin{lstlisting}[language=Typescript,caption=Logical implementation of the typeof operator in TypeScript, label=lst:implementation:typeofimplementation]
-typeOf: (value) => {
-    const prim = typeof value;
-    switch (prim) {
-        case 'undefined':
-            return __kipper.builtIn.undefined;
-        case 'string':
-        return __kipper.builtIn.str;
-        ...
-        case 'object': {
-            if (value === null) return __kipper.builtIn.null;
-            if (Array.isArray(value)) {
-                return '__kipType' in value ? value.__kipType : __kipper.builtIn.Array;
-            }
-            const prot = Object.getPrototypeOf(value);
-            if (prot && prot.constructor !== Object) {
-                return prot.constructor;
-            }
-            return __kipper.builtIn.obj;
-        }
-    }
-}
-\end{lstlisting}
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\stackunder{\includegraphics[scale=0.25]{./pics/typeOfImplementation}}{}
+	\caption{Logical implementation of the typeof operator in TypeScript}
+	\label{fig:implementation:typeofimplementation}
+\end{figure}
+
 
 Although linguistically quite similar, the \lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called \lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
 
