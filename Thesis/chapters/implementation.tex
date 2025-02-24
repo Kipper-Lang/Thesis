@@ -810,66 +810,26 @@ As can be seen in listing~\ref{lst:implementation:matchesoperator}, the matches 
 
 Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being present in the type it should check against. The order of properties does not matter. When the name is found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitives.
 
-This property match algorithm is implemented as given in listing~\ref{lst:implementation:matchesproperty}.
+This property match algorithm is implemented as given in figure~\ref{fig:implementation:matchesproperty}.
 
-\begin{lstlisting}[language=Typescript,caption=Matches operator property comparison,label=lst:implementation:matchesproperty]
-for (const field of pattern.fields) {
-  const fieldName = field.name;
-  const fieldType = field.type;
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\stackunder{\includegraphics[scale=0.20]{./pics/matches_fields}}{}
+	\caption{Matches operator property comparison}
+	\label{fig:implementation:matchesproperty}
+\end{figure}
 
-  if (!(fieldName in value)) {
-    return false;
-  }
-
-  const fieldValue = value[fieldName];
-  const isSameType = __kipper.typeOf(fieldValue) === field.type;
-
-  if (primTypes.includes(field.type.name) && !isSameType) {
-    return false;
-  }
-
-  if (!primTypes.includes(fieldType.name)) {
-    if (!__kipper.matches(fieldValue, fieldType)) {
-      return false;
-    }
-  }
-}
-\end{lstlisting}
 
 After checking the properties, the matches expression iterates over the methods. It first searches for the method name in the target type. If found, it compares the return type. Then each argument is compared by name. As the methods signatures need to be exactly the same, the amount of parameters is compared as well.
 
-\begin{lstlisting}[language=Typescript,caption=Matches operator method comparison,label=lst:implementation:matchesmethod]
-for (const field of pattern.methods) {
-  const fieldName = field.name;
-  const fieldReturnType = field.returnType;
-  const parameters = field.parameters;
-
-  if (!(fieldName in value)) {
-    return false;
-  }
-
-  const fieldValue = value[fieldName];
-  const isSameType = fieldReturnType === fieldValue.__kipType.genericArgs.R;
-
-  if (!isSameType) {
-    return false;
-  }
-
-  const methodParameters = fieldValue.__kipType.genericArgs.T;
-
-  if (parameters.length !== methodParameters.length) {
-    return false;
-  }
-
-  let count = 0;
-  for (let param of parameters) {
-    if (param.type.name !== methodParameters[count].name) {
-      return false;
-    }
-    count++;
-  }
-}
-\end{lstlisting}
+\begin{figure}[h!]
+	\centering
+	\def\stackalignment{r}
+	\stackunder{\includegraphics[scale=0.18]{./pics/matches_methods}}{}
+	\caption{Matches operator method comparison}
+	\label{fig:implementation:matchesmethod}
+\end{figure}
 
 When none of these conditions are false, the input object matches the input type and they can be seen as compatible.
 

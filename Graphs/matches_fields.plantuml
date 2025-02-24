@@ -1,5 +1,6 @@
 @startuml
 start
+skinparam dpi 300
 
 repeat
     :Get next field from the pattern;

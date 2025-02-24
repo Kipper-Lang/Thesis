@@ -1,6 +1,7 @@
 @startuml
 !pragma useVerticalIf on
 start
+skinparam dpi 300
 
 if (typeof value == "undefined") then (yes)
     :__kipper.builtIn.undefined;
