@@ -802,13 +802,13 @@ var x: X = {
 var res: bool = x matches X; // -> true
 \end{lstlisting}
 
-As can be seen in listing~\ref{lst:implementation:matchesoperator}, the matches operator can compare interfaces by properties and methods. It takes two arguments, an object and a type which it should match. Properties are compared recursively and methods are compared by name, arguments and return type.
+As demonstrated in listing~\ref{lst:implementation:matchesoperator}, the matches operator enables interface comparison based on properties and methods. It accepts two arguments: an object and a target type to match against. Properties are compared recursively, while methods are compared by name, arguments, and return type.
 
-Comparison works by iterating over the methods and properties. When iterating over the properties, it checks for the property's name being present in the type it should check against. The order of properties does not matter. When the name is found, it checks for type equality. This checking is done using the aforementioned runtime types and nominal type comparison. In case a non-primitive is detected as the properties type, the matches function will be recursively executed on non-primitives.
+The comparison process involves iterating over both methods and properties. When examining properties, the algorithm verifies the presence of each property name within the target type, disregarding the order of properties. Once a matching name is found, type equality is checked using the previously discussed runtime types and nominal type comparison. If a property is of a non-primitive type, the matches function is recursively applied to ensure structural compatibility.
 
-This property match algorithm is implemented as given in figure~\ref{fig:implementation:matchesproperty}.
+This property matching algorithm is implemented as illustrated in figure~\ref{fig:implementation:matchesproperty}.
 
-\begin{figure}[h!]
+\begin{figure}[tb]
 	\centering
 	\def\stackalignment{r}
 	\stackunder{\includegraphics[scale=0.20]{./pics/matches_fields}}{}
@@ -816,10 +816,7 @@ This property match algorithm is implemented as given in figure~\ref{fig:impleme
 	\label{fig:implementation:matchesproperty}
 \end{figure}
 
-
-After checking the properties, the matches expression iterates over the methods. It first searches for the method name in the target type. If found, it compares the return type. Then each argument is compared by name. As the methods signatures need to be exactly the same, the amount of parameters is compared as well.
-
-\begin{figure}[h!]
+\begin{figure}[tb]
 	\centering
 	\def\stackalignment{r}
 	\stackunder{\includegraphics[scale=0.18]{./pics/matches_methods}}{}
@@ -827,7 +824,9 @@ After checking the properties, the matches expression iterates over the methods.
 	\label{fig:implementation:matchesmethod}
 \end{figure}
 
-When none of these conditions are false, the input object matches the input type and they can be seen as compatible.
+After verifying the properties, the matches expression iterates over the methods, as illustrated in figure~\ref{fig:implementation:matchesmethod}. The process begins by searching for the method name within the target type. If a match is found, the return type is compared. Subsequently, each argument is examined by name, ensuring that the method signatures are identical. Additionally, the number of parameters is compared to enforce exact correspondence.
+
+If none of these conditions evaluate to false, the input object is deemed compatible with the input type.
 
 \subsection{Typeof Operator}
 \label{subsec:typeof}
@@ -843,7 +842,7 @@ The  \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScri
 
 At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
 
-\begin{figure}[h!]
+\begin{figure}[tb]
 	\centering
 	\def\stackalignment{r}
 	\stackunder{\includegraphics[scale=0.25]{./pics/typeOfImplementation}}{}
@@ -851,8 +850,7 @@ At runtime, the provided object is checked for it's type using the target langua
 	\label{fig:implementation:typeofimplementation}
 \end{figure}
 
-
-Although linguistically quite similar, the \lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called \lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
+Although syntactically quite similar, the \lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called \lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
 
 \begin{lstlisting}[language=Typescript,caption=Specifying the type based on a reference variable, label=lst:implementation:typeoftypespecifier]
 var t: num = 3;
