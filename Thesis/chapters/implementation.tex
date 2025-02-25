@@ -561,20 +561,20 @@ Structural type systems compare types based on their structure. This means that 
 Listing~\ref{lst:implementation:ocamlstructuraltyping} demonstrates a function that requires a \lstinline|speak| method returning a \lstinline|string|. Both the \lstinline|dog| and \lstinline|cat| objects satisfy this requirement, and as a result, they are treated as the same type. Most importantly, these compatibility checks occur at compile time, as OCaml is a statically typed language.
 
 \begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
-	let make_speak (obj : < speak : string >) =
-	obj#speak
+let make_speak (obj : < speak : string >) =
+obj#speak
 
-	let dog = object
-	method speak = "Woof!"
-	end
+let dog = object
+method speak = "Woof!"
+end
 
-	let cat = object
-	method speak = "Meow!"
-	end
+let cat = object
+method speak = "Meow!"
+end
 
-	let () =
-	print_endline (make_speak dog);
-	print_endline (make_speak cat);
+let () =
+print_endline (make_speak dog);
+print_endline (make_speak cat);
 \end{lstlisting}
 
 Structural typing enhances flexibility by promoting code reuse and eliminating the need for explicit inheritance hierarchies. This approach allows for greater modularity and adaptability in software design, as types are determined based on their capabilities rather than their declared names.
@@ -631,20 +631,20 @@ For user-defined classes, the compiler relies on the prototype as a discriminato
 In practice, all user-defined and built-in types inherit from a basic \lstinline|KipperType| class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing~\ref{lst:implementation:runtimetypestructure}.
 
 \begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
-	class KipperType {
-		constructor(name, fields, methods, baseType = undefined, customComparer = undefined) {
-			this.name = name;
-			this.fields = fields;
-			this.methods = methods;
-			this.baseType = baseType;
-			this.customComparer = customComparer;
-		}
-
-		accepts(obj) {
-			if (this === obj) return true;
-			return obj instanceof KipperType && this.customComparer ? this.customComparer(this, obj) : false;
-		}
+class KipperType {
+	constructor(name, fields, methods, baseType = undefined, customComparer = undefined) {
+		this.name = name;
+		this.fields = fields;
+		this.methods = methods;
+		this.baseType = baseType;
+		this.customComparer = customComparer;
 	}
+
+	accepts(obj) {
+		if (this === obj) return true;
+		return obj instanceof KipperType && this.customComparer ? this.customComparer(this, obj) : false;
+	}
+}
 \end{lstlisting}
 
 As already mentioned types primarily rely on identifier checks to differentiate themselves from other types. Given though that there are slight differences in how types operate, they generally define themselves with what they are compatible using a comparator function. This comparator is already predefined for all built-ins in the runtime library and any user structures build on top of the existing rules established in the library.
@@ -661,14 +661,14 @@ Built-in runtime types form the core of Kipper’s type system and serve as buil
 As demonstrated in listing~\ref{lst:implementation:builtinruntimetypes}, the fundamental built-in types such as \lstinline|any|, \lstinline|undefined|, and \lstinline|str| are implemented during runtime. These types are instantiated as instances of the \lstinline|KipperType| class, which provides essential metadata and comparison logic.
 
 \begin{lstlisting}[language=TypeScript,caption=Examples for the built-in runtime types,label=lst:implementation:builtinruntimetypes]
-	const __type_any =
-	new KipperType("any", undefined, undefined);
+const __type_any =
+new KipperType("any", undefined, undefined);
 
-	const __type_undefined =
-	new KipperType("undefined", undefined, undefined, undefined, (a, b) => a.name === b.name);
+const __type_undefined =
+new KipperType("undefined", undefined, undefined, undefined, (a, b) => a.name === b.name);
 
-	const __type_str =
-	new KipperType("str", undefined, undefined, undefined, (a, b) => a.name === b.name);
+const __type_str =
+new KipperType("str", undefined, undefined, undefined, (a, b) => a.name === b.name);
 \end{lstlisting}
 
 In addition to the core primitive types—such as \lstinline|bool|, \lstinline|str|, \lstinline|num|, Kipper also includes built-in implementations for generic types such as \lstinline|Array<T>| and \lstinline|Func<T..., R>|. These generic types define their parameters, which typically default to \lstinline|any|, as demonstrated in listing~\ref{lst:implementation:genericbuiltintypes}.
