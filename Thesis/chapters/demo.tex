@@ -1,23 +1,25 @@
+This chapter explores various sample use cases for Kipper to showcase its capabilities and demonstrate the environments in which it can be utilized. To keep things concise and focused, the examples provided will cover simple scenarios. More complex applications are beyond the scope of this paper, but can be explored in further documentation (see \nameref{chapter:appendix_b} for further details).
+
 \section{Example Program}
 
-Listing \ref{lst:demo:isprime} demonstrates the computation of the prime factors of a given number using Kipper. This program serves as a simple but effective showcase of Kipper's syntax and runtime behavior. The program is given a number, determines the prime factors and prints the result.
+Listing \ref{lst:demo:isprime} demonstrates the computation of the prime factors of a given number using Kipper. The program is given a number, determines the prime factors and prints the result.
 
-\begin{lstlisting}[language=Typescript,caption=A basic programs that determines the prime factors of an integer, label=lst:demo:isprime]
+\begin{lstlisting}[language=Kipper,caption=A basic programs that determines the prime factors of an integer, label=lst:demo:isprime]
 def primeFactors(n: num) -> void {
 	while (n % 2 == 0) {
-		print("2");
+		print(2);
 		n /= 2;
 	}
 	
 	for (var i: num = 3; i * i <= n; i += 2) {
 		while (n % i == 0) {
-			print(f"{i}");
+			print(i);
 			n /= i;
 		}
 	}
 	
 	if (n > 2) {
-		print(f"{n}");
+		print(n);
 	}
 }
 
@@ -26,27 +28,20 @@ primeFactors(18);
 
 \section{Working example using CLI}
 \setauthor{Lorenz Holzbauer}
+
 Kipper provides a command-line interface (CLI) that allows users to compile and execute programs directly from the terminal. To run the above example using the CLI, the following steps are required:
 
 \begin{enumerate}
-	\item Install the Kipper CLI globally using npm:
-	\begin{lstlisting}[language=Bash,caption=Installing the Kipper CLI globally]
-		npm install -g @kipper/cli
-	\end{lstlisting}
-	
+	\item Install the Kipper CLI globally using npm: \lstinline|npm install -g @kipper/cli|
 	\item Save the Kipper source code in a file, e.g., \texttt{prime.kip}.
-	
-	\item Compile and execute a Kipper file
-	\begin{lstlisting}[language=Bash,caption=The Kipper run command]
-		kipper run prime.kip
-	\end{lstlisting}
+	\item Compile and execute a Kipper file: \lstinline|kipper run prime.kip|
 \end{enumerate}
 
 After execution, the prime factors of the given number are printed to the console.
 
-
 \section{Working example in the web}
 \setauthor{Lorenz Holzbauer}
+
 Kipper can also be run in the browser using the \texttt{@kipper/web} package. Listing \ref{lst:demo:kipperbrowser} demonstrates how to include Kipper in an HTML file and execute the same prime factorization program.
 
 \begin{lstlisting}[language=HTML,caption=Running Kipper in the browser, label=lst:demo:kipperbrowser]
@@ -64,9 +59,12 @@ Kipper can also be run in the browser using the \texttt{@kipper/web} package. Li
 		
 		const compiler = new Kipper.KipperCompiler(logger, {});
 		
-		const code = ``; // Replace with prime.kip
+		const code = ''; // Replace with prime.kip
 		
-		compiler.compile(code, { target: new KipperJS.TargetJS() }).then((result) => {
+		compiler.compile(
+			code, 
+			{ target: new KipperJS.TargetJS() }
+		).then((result) => {
 			const jsCode = result.write();
 			eval(jsCode);
 		});
