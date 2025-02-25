@@ -1,5 +1,9 @@
 \setauthor{Lorenz Holzbauer}
 
+This chapter explores the various ways to interact with the Kipper compiler and its systems through the exposed Kipper API. Since the compiler serves as the core of the project, utilizing the language effectively requires setting up the compiler and integrating it properly for specific use cases.
+
+The API provides all the essential functionality needed to compile and \gls{transpile} Kipper code, enabling developers to integrate it into their workflows. Additionally, the API exposes core interfaces, classes, and types that allow users to extend and modify the compiler’s behaviour. This means developers can inherit from existing components or introduce custom modifications to tailor the compilation process to their needs.
+
 \section{Compiler API}
 \label{sec:compiler_api}
 
@@ -23,7 +27,7 @@ The logger instance provides error reporting functionality, making it an essenti
 \subsection{Compiling Kipper Code}
 \label{subsec:compiling}
 
-Once the compiler is initialized, it can be used to transpile Kipper code into JavaScript or TypeScript. The \lstinline|compile| method takes the source code as a string and a configuration object specifying the compilation target.
+Once the compiler is initialized, it can be used to \gls{transpile} Kipper code into JavaScript or TypeScript. The \lstinline|compile| method takes the source code as a string and a configuration object specifying the compilation target.
 
 \begin{lstlisting}[language=Typescript, caption=Compiling Kipper Code to JavaScript, label=lst:compile_example]
 const result = await compiler.compile(
@@ -53,7 +57,7 @@ The \lstinline|compile| method accepts a configuration object that allows custom
 \section{Target API}
 \label{sec:target_api}
 
-The Kipper compiler supports multiple compilation targets, allowing the transpilation of Kipper code into different languages. Developers can extend Kipper by implementing custom targets.
+The Kipper compiler supports multiple compilation targets, allowing the \gls{transpilation} of Kipper code into different languages. Developers can extend Kipper by implementing custom targets.
 
 \subsection{Using Predefined Targets}
 \label{subsec:using_targets}
@@ -91,7 +95,7 @@ The Kipper CLI provides a command-line interface for compiling Kipper code. The 
 
 To install the Kipper CLI, use the following command:
 
-\begin{lstlisting}[language=bash, caption=Installing Kipper CLI, label=lst:cli_install]
+\begin{lstlisting}[caption=Installing Kipper CLI, label=lst:cli_install]
 npm install @kipper/cli
 \end{lstlisting}
 
@@ -102,28 +106,28 @@ This installs Kipper in the current NPM project. To install Kipper globally, use
 
 To compile a Kipper source file, use the \lstinline|kipper compile| command:
 
-\begin{lstlisting}[language=bash, caption=Compiling a Kipper File, label=lst:cli_compile]
+\begin{lstlisting}[caption=Compiling a Kipper file, label=lst:cli_compile]
 kipper compile source.kip --target js
 \end{lstlisting}
 
-This command transpiles \lstinline|source.kip| to JavaScript. It is possible to specify the option \lstinline|--target=ts| to switch to the TypeScript target. When no target option is specified, the default target is JavaScript.
+This command \gls{transpile}s \lstinline|source.kip| to JavaScript. It is possible to specify the option \lstinline|--target=ts| to switch to the TypeScript target. When no target option is specified, the default target is JavaScript.
 
 \subsection{Running a Kipper Program}
 
 To run a Kipper source file, use the \lstinline|kipper run| command:
 
-\begin{lstlisting}[language=bash, caption=Running a Kipper File, label=lst:cli_run]
-	kipper run source.kip
+\begin{lstlisting}[caption=Running a Kipper file, label=lst:cli_run]
+kipper run source.kip
 \end{lstlisting}
 
-This command transpiles to the specified target and then executes the code.
+This command \gls{transpile}s to the specified target and then executes the code.
 
 \subsection{Creating a New Project}
 \label{subsec:cli_new_project}
 
 To create a new Kipper project, use:
 
-\begin{lstlisting}[language=bash, caption=Creating a New Kipper Project, label=lst:cli_new_project]
+\begin{lstlisting}[caption=Creating a new Kipper project with a default file setup and config file, label=lst:cli_new_project]
 kipper new my_project
 \end{lstlisting}
 
