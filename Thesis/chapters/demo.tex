@@ -5,7 +5,7 @@ This chapter explores various sample use cases for Kipper to showcase its capabi
 \section{Example Program}
 \setauthor{Lorenz Holzbauer}
 
-Listing \ref{lst:demo:isprime} demonstrates the computation of the prime factors of a given number using Kipper. The program is given a number, determines the prime factors and prints the result.
+Listing~\ref{lst:demo:isprime} demonstrates the computation of the prime factors of a given number using Kipper. The program is given a number, determines the prime factors and prints the result.
 
 \begin{lstlisting}[language=Kipper,caption=A basic programs that determines the prime factors of an integer, label=lst:demo:isprime]
 def primeFactors(n: num) -> void {
@@ -29,18 +29,20 @@ def primeFactors(n: num) -> void {
 primeFactors(18);
 \end{lstlisting}
 
+The given example in listing~\ref{lst:demo:isprime} will be used as the sample code in the following chapters.
+
 \section{Working example using CLI}
 \setauthor{Lorenz Holzbauer}
 
-Kipper provides a command-line interface (CLI) that allows users to compile and execute programs directly from the terminal. To run the above example using the CLI, the following steps are required:
+As previously explained in section~\ref{sec:cli}, Kipper provides a command line interface (CLI) that allows users to compile and execute programs directly from the terminal. To run the above example using the CLI, the following steps are required:
 
 \begin{enumerate}
-	\item Install the Kipper CLI globally using npm: \lstinline|npm install -g @kipper/cli|
-	\item Save the Kipper source code in a file, e.g., \texttt{prime.kip}.
+	\item Install the Kipper CLI globally using the JavaScript package manager npm: \lstinline|npm install -g @kipper/cli|
+	\item Save the Kipper source code in a file, e.g. \texttt{prime.kip}.
 	\item Compile and execute a Kipper file: \lstinline|kipper run prime.kip|
 \end{enumerate}
 
-After execution, the prime factors of the given number are printed to the console.
+After execution, the prime factors of the provided number should be printed to the console.
 
 \section{Working example in the web}
 \setauthor{Lorenz Holzbauer}
@@ -80,8 +82,6 @@ When opened in a browser, this file will execute the compiled JavaScript version
 \section{Working example using Node.js}
 \setauthor{Lorenz Holzbauer}
 
-
-
 Kipper can also be utilized within a Node.js environment. The following steps outline how to run a Kipper program using Node.js:
 
 \begin{enumerate}
@@ -99,14 +99,12 @@ import * as kipperJS from "@kipper/target-js";
 
 const path = "prime.kip";
 fs.readFile(path, "utf8" as BufferEncoding).then(async (fileContent: string) => {
-
 	const logger = new kipper.KipperLogger((level, msg) => {
 		console.log(`[${level}] ${msg}`);
 	});
 	const compiler = new kipper.KipperCompiler(logger);
 	
 	let result = await compiler.compile(fileContent, {
-
 		target: new kipperJS.TargetJS(),
 	});
 	let jsCode = result.write();
@@ -116,4 +114,3 @@ fs.readFile(path, "utf8" as BufferEncoding).then(async (fileContent: string) => 
 \end{lstlisting}
 
 Executing this script will transpile the Kipper code to JavaScript and run it within Node.js, printing the prime factors to the console.
-

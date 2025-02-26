@@ -64,13 +64,11 @@
 
 \renewcommand{\lstlistlistingname}{List of Listings}
 \lstset{
-morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,group,by,into,yield,async,await,@,None,self,as,elif,with}
+morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,group,by,into,yield,async,await,@,None,self,as,elif,with,import}
 }
 \lstdefinelanguage{JavaScript}{
-	morekeywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, extends, constructor, var, let, const, super, null, undefined, async},
+	morekeywords={import, typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, extends, constructor, var, let, const, super, null, undefined, async, as, from, throw, implements, this},
 	keywordstyle=\color{blue}\bfseries,
-	morekeywords=[2]{class, export, boolean, throw, implements, import, this},
-	keywordstyle=[2]\color{darkgray}\bfseries,
 	sensitive=true,
 	morecomment=[l]{//},           % Line comments
 	morecomment=[s]{/*}{*/},       % Block comments
@@ -87,10 +85,8 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	framextopmargin=6pt
 }
 \lstdefinelanguage{TypeScript}{
-	morekeywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, let, const, super, null, undefined, number, string, boolean, object, any, bigint, symbol, async},
+	morekeywords={import, typeof, type, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, let, const, super, null, undefined, number, string, boolean, object, any, bigint, symbol, async, as, from},
 	keywordstyle=\color{blue}\bfseries,
-	morekeywords=[2]{class, export, boolean, throw, implements, import, this},
-	keywordstyle=[2]\color{darkgray}\bfseries,
 	sensitive=true,
 	morecomment=[l]{//},           % Line comments
 	morecomment=[s]{/*}{*/},       % Block comments
@@ -107,10 +103,8 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	framextopmargin=6pt
 }
 \lstdefinelanguage{Kipper}{
-	morekeywords={typeof, new, true, false, catch, def, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, const, super, null, undefined, num, str, bool, obj, type, any, Array, Func, T, R, cast, force, try, as},
+	morekeywords={typeof, new, true, false, catch, def, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, const, super, null, undefined, num, str, bool, obj, type, any, Array, Func, T, R, cast, force, try, as, throw},
 	keywordstyle=\color{blue}\bfseries,
-	morekeywords=[2]{class, export, boolean, throw, implements, import, this},
-	keywordstyle=[2]\color{darkgray}\bfseries,
 	sensitive=true,
 	morecomment=[l]{//},           % Line comments
 	morecomment=[s]{/*}{*/},       % Block comments
@@ -151,6 +145,24 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 \lstdefinelanguage{Antlr4}{
 	morekeywords={grammar,parser,lexer,options,returns,locals,throws,catch,finally,
 		import,tokens,channel,skip,fragment,protected,public,private},
+	sensitive=true,
+	morestring=[b]{"}, % Strings enclosed in double quotes
+	morestring=[b]{'}, % Strings enclosed in single quotes
+	morecomment=[l]{//}, % Line comments
+	morecomment=[s]{/*}{*/}, % Block comments
+	keywordstyle=\color{blue}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray}\itshape,
+	stringstyle=\color{green!50!black},
+	identifierstyle=\color{black},
+	basicstyle=\ttfamily\normalsize,
+	captionpos=b,
+	frame=single,
+	framesep=4pt,
+	framerule=0.5pt,
+	framextopmargin=6pt
+}
+\lstdefinelanguage{Shell}{
 	sensitive=true,
 	morestring=[b]{"}, % Strings enclosed in double quotes
 	morestring=[b]{'}, % Strings enclosed in single quotes
