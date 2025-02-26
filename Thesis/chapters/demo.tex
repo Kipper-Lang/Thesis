@@ -65,7 +65,6 @@ Kipper can also be run in the browser using the \texttt{@kipper/web} package. Li
 		const compiler = new Kipper.KipperCompiler(logger, {});
 		
 		const code = ''; // Replace with prime.kip
-		
 		compiler.compile(
 			code, 
 			{ target: new KipperJS.TargetJS() }
@@ -82,15 +81,17 @@ When opened in a browser, this file will execute the compiled JavaScript version
 \section{Working example using Node.js}
 \setauthor{Lorenz Holzbauer}
 
-Kipper can also be utilized within a Node.js environment. The following steps outline how to run a Kipper program using Node.js:
+Kipper can also be utilized and run within a \Gls{nodejs} JavaScript environment.
+
+ The following steps outline how to run a Kipper program using \Gls{nodejs}:
 
 \begin{enumerate}
-	\item Install the Kipper runtime package via npm: \lstinline|npm install @kipper/core|
-	\item Save the Kipper source code in a file, e.g., \texttt{prime.kip}.
+	\item Install the Kipper runtime package via a package manager like npm: \lstinline|npm install @kipper/core|
+	\item Save the Kipper source code in a file, e.g. \texttt{prime.kip}.
 	\item Use a simple Node.js script to compile and execute the Kipper code.
 \end{enumerate}
 
-Listing \ref{lst:demo:kippernode} demonstrates how to execute Kipper code within a Node.js environment.
+Executing a Kipper program within \Gls{nodejs} works similarly to the browser, but requires imports from the various Kipper packages. As demonstrated in listing~\ref{lst:demo:kippernode}, the compiler can be simply imported from \lstinline|@kipper/core| and then run with the read file.
 
 \begin{lstlisting}[language=JavaScript,caption=Executing Kipper code in Node.js, label=lst:demo:kippernode]
 import { promises as fs } from "fs";
@@ -98,7 +99,7 @@ import * as kipper from "@kipper/core";
 import * as kipperJS from "@kipper/target-js";
 
 const path = "prime.kip";
-fs.readFile(path, "utf8" as BufferEncoding).then(async (fileContent: string) => {
+fs.readFile(path, "utf8").then(async (fileContent) => {
 	const logger = new kipper.KipperLogger((level, msg) => {
 		console.log(`[${level}] ${msg}`);
 	});
