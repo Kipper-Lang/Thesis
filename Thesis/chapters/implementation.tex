@@ -259,7 +259,7 @@ For instance, if a node fails to successfully complete semantic analysis, the su
 
 The functionality of error recovery is integral to most modern compilers, as it allows the compiler to report multiple errors in a single compilation pass. Basic compilers often operate on an immediate fail-safe principle: upon encountering an error, the compilation process halts immediately to prevent the compiler from making incorrect assumptions about the program. While this approach ensures the integrity of the compilation process, it introduces a significant drawback. For large and complex programs, developers may need to repeatedly correct errors and recompile to uncover additional issues, leading to unnecessary delays and inefficiencies during the development process.
 
-Given these issues, Kipper has implements its own error recovery algorithm into the semantic analysis which is able to recover from errors in given contexts and continue operation in following expressions or statements, which aren't associated with the original error.
+sGiven these issues, Kipper has implements its own error recovery algorithm into the semantic analysis which is able to recover from errors in given contexts and continue operation in following expressions or statements, which are not associated with the original error.
 
 \subsection{Error recovery algorithm}
 
@@ -619,7 +619,7 @@ As previously discussed (see section~\ref{sec:type-system}), the Kipper programm
 
 This approach allows Kipper to support untyped values, similar to TypeScript’s \lstinline|any| type, which is often encountered in web requests or dynamically generated content. However, Kipper ensures that such values can be compared against well-defined types—such as primitives, arrays, functions, classes, and interfaces—eliminating ambiguities that could lead to runtime errors.
 
-To implement this functionality, all user-defined interfaces are converted into runtime types during code generation. These runtime types store the necessary metadata to perform type checks, forming the basis for strict type safety in operations such as type casts, matches, and \lstinline|typeof| evaluations. These runtime-defined interfaces work alongside built-in types such as \lstinline|num|, \lstinline|str|, and \lstinline|obj|, allowing the compiler to insert necessary checks and references to ensure complete type safety at runtime.
+To implement this functionality, all user-defined interfaces are converted into runtime types during code generation. These runtime types store the necessary metadata to perform type checks, forming the basis for strict type safety in operations such as type casts, \lstinline|matches|, and \lstinline|typeof| evaluations. These runtime-defined interfaces work alongside built-in types such as \lstinline|num|, \lstinline|str|, and \lstinline|obj|, allowing the compiler to insert necessary checks and references to ensure complete type safety at runtime.
 
 With the exception of interfaces, classes, and generics, type identity is primarily determined by name. In these cases, type equality checks are performed using nominal typing, where the name acts as a unique identifier within the given scope (e.g., \lstinline|num| is only assignable to \lstinline|num|). For more complex structures, additional attributes—such as member properties or generic parameters—are also considered in the type-checking process.
 
