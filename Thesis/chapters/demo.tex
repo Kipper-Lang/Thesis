@@ -81,3 +81,39 @@ When opened in a browser, this file will execute the compiled JavaScript version
 \setauthor{Lorenz Holzbauer}
 
 
+
+Kipper can also be utilized within a Node.js environment. The following steps outline how to run a Kipper program using Node.js:
+
+\begin{enumerate}
+	\item Install the Kipper runtime package via npm: \lstinline|npm install @kipper/core|
+	\item Save the Kipper source code in a file, e.g., \texttt{prime.kip}.
+	\item Use a simple Node.js script to compile and execute the Kipper code.
+\end{enumerate}
+
+Listing \ref{lst:demo:kippernode} demonstrates how to execute Kipper code within a Node.js environment.
+
+\begin{lstlisting}[language=JavaScript,caption=Executing Kipper code in Node.js, label=lst:demo:kippernode]
+import { promises as fs } from "fs";
+import * as kipper from "@kipper/core";
+import * as kipperJS from "@kipper/target-js";
+
+const path = "prime.kip";
+fs.readFile(path, "utf8" as BufferEncoding).then(async (fileContent: string) => {
+
+	const logger = new kipper.KipperLogger((level, msg) => {
+		console.log(`[${level}] ${msg}`);
+	});
+	const compiler = new kipper.KipperCompiler(logger);
+	
+	let result = await compiler.compile(fileContent, {
+
+		target: new kipperJS.TargetJS(),
+	});
+	let jsCode = result.write();
+	
+	eval(jsCode);
+});
+\end{lstlisting}
+
+Executing this script will transpile the Kipper code to JavaScript and run it within Node.js, printing the prime factors to the console.
+
