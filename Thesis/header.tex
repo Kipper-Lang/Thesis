@@ -87,7 +87,7 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	framextopmargin=6pt
 }
 \lstdefinelanguage{TypeScript}{
-	morekeywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, let, const, super, null, undefined, number, string, boolean, object, bigint, symbol, async},
+	morekeywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, let, const, super, null, undefined, number, string, boolean, object, any, bigint, symbol, async},
 	keywordstyle=\color{blue}\bfseries,
 	morekeywords=[2]{class, export, boolean, throw, implements, import, this},
 	keywordstyle=[2]\color{darkgray}\bfseries,
@@ -107,7 +107,7 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	framextopmargin=6pt
 }
 \lstdefinelanguage{Kipper}{
-	morekeywords={typeof, new, true, false, catch, def, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, let, const, super, null, undefined, num, str, bool, obj},
+	morekeywords={typeof, new, true, false, catch, def, return, null, switch, var, if, in, while, do, else, case, break, void, module, \$, export, for, this, class, interface, enum, extends, implements, constructor, var, const, super, null, undefined, num, str, bool, obj, type, any, Array, Func},
 	keywordstyle=\color{blue}\bfseries,
 	morekeywords=[2]{class, export, boolean, throw, implements, import, this},
 	keywordstyle=[2]\color{darkgray}\bfseries,
@@ -169,7 +169,7 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	framextopmargin=6pt
 }
 \lstset{
-	language=TypeScript,
+	language=Kipper,
 	numbers=left,
 	numberstyle=\scriptsize,
 	showspaces=false,
@@ -183,17 +183,16 @@ morekeywords={base,var,in,out,dynamic,from,where,select,orderby,function,\$,grou
 	commentstyle=\color{greencomments},
 	keywordstyle=\color{bluekeywords}\bfseries,
 	stringstyle=\color{redstrings},
-	style=lststyle,
 	xleftmargin=17pt,
 	framexleftmargin=17pt,
 	framexrightmargin=5pt,
 	framexbottommargin=4pt,
-	basicstyle=\ttfamily\normalsize,
 	captionpos=b,
 	frame=single,
 	framesep=4pt,
 	framerule=0.5pt,
-	framextopmargin=6pt
+	framextopmargin=6pt,
+	style=lststyle,
 }
 
 \usepackage{caption}

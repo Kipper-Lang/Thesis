@@ -1,3 +1,7 @@
+\setauthor{Luna Klatzer}
+
+This chapter will discuss the implementation of the Kipper compiler, detailing its various components, language features, and the thought process behind their development. It will also include comparisons with other languages and provide background information on the design choices made during implementation.
+
 \section{Compiler}
 \label{sec:compiler}
 \setauthor{Luna Klatzer}
@@ -581,7 +585,7 @@ Structural typing enhances flexibility by promoting code reuse and eliminating t
 
 \subsubsection{Duck Typed Systems - Duck Typing}
 
-Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck, and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the \lstinline|duck| and the \lstinline|person| have the same methods and properties, henceforth they are of the same type. The \lstinline|dog| object on the other hand does not implement the \lstinline|quack|function, which equates to not being a \lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
+Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the \lstinline|duck| and the \lstinline|person| have the same methods and properties, henceforth they are of the same type. The \lstinline|dog| object on the other hand does not implement the \lstinline|quack|function, which equates to not being a \lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
 
 \begin{lstlisting}[language=Typescript,caption=Example of duck typing in TypeScript,label=lst:implementation:javascriptducktyping]
 interface Duck {
@@ -728,6 +732,7 @@ class KipperIndexError extends KipperError {
 \end{lstlisting}
 
 \subsection{Runtime Generation for Interfaces}
+\label{sec:runtime-interfaces}
 
 Unlike TypeScript, in Kipper all interfaces possess a runtime counterpart, which stores all the required information to verify type compatibility during runtime. This process is managed by the Kipper code generator, which adds custom type instances to the compiled code that represent the structures of the user-defined interfaces with all its methods and properties including their respective types.
 
@@ -788,10 +793,10 @@ const __intf_Person = new __kipper.Type(
 
 As shown in listing~\ref{lst:implementation:runtimeinterface-car} and listing~\ref{lst:implementation:runtimeinterface-person}, the properties and methods of an interface are encapsulated within a \lstinline|KipperType| instance, identified by the  \lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-Notable usages for runtime type-checking include the \lstinline|matches| operator (see section \ref{sec:matches}) and the \lstinline|typeof| operator (see section \ref{sec:typeof}).
+Notable usages for runtime type-checking include the \lstinline|matches| operator (see section \ref{sec:matches-operator}) and the \lstinline|typeof| operator (see section \ref{sec:typeof}).
 
 \subsection{Matches Operator for Interfaces}
-\label{sec:matches}
+\label{sec:matches-operator}
 
 There are multiple approaches for comparing objects at runtime. One method is comparison by reference, which is implemented using the \lstinline|instanceof| operator. This method determines that an object is an instance of a class if there is a reference to that class, leveraging JavaScript's prototype system.
 
@@ -799,7 +804,7 @@ Another approach is comparison by structure, where two objects are considered eq
 
 Structural comparisons are implemented using the \lstinline|matches| operator as given in listing~\ref{lst:implementation:matchesoperator}.
 
-\begin{lstlisting}[language=Typescript,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
+\begin{lstlisting}[language=Kipper,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
 interface Y {
 	t(gr: str): num;
 }
@@ -829,7 +834,7 @@ This property matching algorithm is implemented as illustrated in figure~\ref{fi
 	\centering
 	\def\stackalignment{r}
 	\stackunder{\includegraphics[scale=0.20]{./pics/matches_fields}}{}
-	\caption{Matches operator property comparison}
+	\caption{Matches operator property comparison.}
 	\label{fig:implementation:matchesproperty}
 \end{figure}
 
@@ -837,7 +842,7 @@ This property matching algorithm is implemented as illustrated in figure~\ref{fi
 	\centering
 	\def\stackalignment{r}
 	\stackunder{\includegraphics[scale=0.18]{./pics/matches_methods}}{}
-	\caption{Matches operator method comparison}
+	\caption{Matches operator method comparison.}
 	\label{fig:implementation:matchesmethod}
 \end{figure}
 
@@ -848,28 +853,28 @@ If none of these conditions evaluate to false, the input object is deemed compat
 \subsection{Typeof Operator}
 \label{sec:typeof}
 
-In the Kipper programming language, the \lstinline|typeof| operator is used to get the type of an object at runtime. This operator can be used to check if a variable or expression is of a particular type, such as a string, number, boolean, etc. Most commonly, it is used to check for null and undefined objects, to avoid type errors when an object is of unknown type. The returned type object can be compared by reference to check for type equality. As can bee seen in listing~\ref{lst:implementation:typeofoperator}, the parantheses are optional. We decided to allow both syntax styles, due to our goal of being similar to TypeScript and JavaScript, which both implement it the same way.
+In the Kipper programming language, the \lstinline|typeof| operator is used to obtain the type of an object at runtime. This operator can be used to check whether a variable or expression is of a particular type, such as a string, number, boolean, etc. It is most commonly used to check for \lstinline|null| and \lstinline|undefined| objects, in order to avoid type errors when the type of an object is unknown. The returned type object can be compared by reference to check for type equality. As shown in listing~\ref{lst:implementation:typeofoperator}, the parentheses are optional. Both syntax styles are supported to align with Kipper's design goal of being similar to TypeScript and JavaScript, which implement it in the same way.
 
-\begin{lstlisting}[language=Typescript,caption=Typeof operator used to determine the type of an input expression,label=lst:implementation:typeofoperator]
+\begin{lstlisting}[language=Kipper,caption=Typeof operator used to determine the type of an input expression,label=lst:implementation:typeofoperator]
 typeof 49; // "__kipper.builtIn.num"
 typeof("Hello, World!"); // "__kipper.builtIn.str"
 \end{lstlisting}
 
-The  \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where the  \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies  \lstinline|null| as  \lstinline|__kipper.builtIn.null|.
+The \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies \lstinline|null| as \lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for it's type using the target languages type features. A part of this process can be seen in figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can either be null, an array, a class or an object, for example one that implements an interface.
+At runtime, the provided object is checked for its type using the target language's type features. A part of this process can be seen in figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can in JavaScript either be \lstinline|null|, an array, a class, or an object, such as one that implements an interface.
 
 \begin{figure}[tb]
 	\centering
 	\def\stackalignment{r}
 	\stackunder{\includegraphics[scale=0.25]{./pics/typeOfImplementation}}{}
-	\caption{Logical implementation of the typeof operator in TypeScript}
+	\caption{Logical implementation of the \lstinline|typeof| operator in the target JavaScript/TypeScript environment.}
 	\label{fig:implementation:typeofimplementation}
 \end{figure}
 
-Although syntactically quite similar, the \lstinline|typeof| operator in the type declaration of a variable works fundamentally different~\ref{lst:implementation:typeoftypespecifier}. It is called \lstinline|TypeOfTypeSpecifier| and it evaluates the type of a variable at compile time.
+Although syntactically similar, the \lstinline|typeof| operator in the type declaration of a variable operates fundamentally differently, as demonstrated in listing~\ref{lst:implementation:typeoftypespecifier}. This operator is referred to as \lstinline|TypeOfTypeSpecifier| and evaluates the type of a variable at compile time.
 
-\begin{lstlisting}[language=Typescript,caption=Specifying the type based on a reference variable, label=lst:implementation:typeoftypespecifier]
+\begin{lstlisting}[language=Kipper,caption=Specifying the type based on a reference variable, label=lst:implementation:typeoftypespecifier]
 var t: num = 3;
 var count: typeof(t) = 4;
 \end{lstlisting}

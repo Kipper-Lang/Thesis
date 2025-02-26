@@ -1,18 +1,173 @@
-\section{Kipper Primitives}
+\setauthor{Luna Klatzer}
+
+The type system is a fundamental aspect of the Kipper language. Together with its runtime counterpart (see section~\ref{sec:integrated-runtime} for more details), it provides the various type safety features envisioned for this thesis. The type system also represents the most significant difference between the underlying JavaScript and TypeScript environments, which Kipper compiles to. Unlike these languages, Kipper does not adhere to their inherent limitations but instead extends and enhances them, addressing certain edge cases and providing a more complete and robust type system.
+
+\section{Primitives}
 \label{sec:kipper-primitives}
 \setauthor{Luna Klatzer}
 
-\section{Kipper Generics}
+The foundation of the type system consists of primitive values, which are predefined by the language and encapsulate fundamental type concepts such as numbers, strings, and objects. These primitives represent the most abstract and basic form of values, meaning they are inherently incompatible with one another since they do not share a common parent type that would enable implicit conversion or compatibility. The only exception to this rule is the \lstinline|any| type which diverges from this behaviour and represents any potential value (see section \ref{sec:kipper-any} for more details).
+
+This distinction is crucial because Kipper allows types to extend other types, thereby narrowing their definition. For example, interfaces refine the broad object type by imposing specific constraints on objects. By enforcing strict type boundaries at the primitive level, Kipper ensures that more complex structures built upon these primitives maintain clear and predictable type behaviour.
+
+\subsection{Null Type \lstinline|null|}
+
+In Kipper, the \lstinline|null| type is a distinct type used to explicitly indicate the absence of a value. Unlike many other languages where \lstinline|null| is treated as a special value assignable to an \lstinline|obj| type, Kipper enforces a stricter separation. This design choice prevents implicit nullability in objects, ensuring that an object type does not inherently allow \lstinline|null| as a valid assignment unless explicitly stated.
+
+This approach aligns with Kipper’s design philosophy of strict type safety, where developers must explicitly define whether a variable can hold \lstinline|null|. If nullability is required, it must be explicitly included in the type definition using union types. By enforcing this distinction, Kipper eliminates potential runtime errors caused by unintended \lstinline|null| values, reducing the risk of null reference exceptions.
+
+\subsection{Undefined Type \lstinline|undefined|}
+
+The \lstinline|undefined| type in Kipper, like \lstinline|null|, is a distinct type that can only be assigned to its direct value, \lstinline|undefined|. It serves as a way to mark the absence or non-existence of a value. This behaviour is inherited from JavaScript, where \lstinline|undefined| often indicates an uninitialized variable or a missing function parameter.
+
+Kipper does not enforce a strict distinction between when to use \lstinline|null| versus \lstinline|undefined| for indicating missing values. Instead, it leaves this choice up to the developer, allowing for flexibility depending on the specific use case. However, since both \lstinline|null| and \lstinline|undefined| are treated as separate types, developers must explicitly account for them when handling potential missing values, reinforcing strict type safety.
+
+\subsection{String Type \lstinline|str|}
+
+The \lstinline|str| type in Kipper is the standard string type, capable of containing any UTF-16 character, as dictated by the underlying JavaScript specification~\cite{string-mdn}. Each character in a string is represented by a UTF-16 code unit, which means it can store up to 65,536 different characters directly. Additionally, Kipper allows the use of surrogate pairs—two combined code units—to represent characters beyond the \gls{basic-multilingual-plane} (BMP), such as various emoji and less common Unicode symbols.
+
+Because Kipper builds on JavaScript’s string handling, string operations such as indexing, slicing, and concatenation follow familiar rules. However, developers must be mindful of multi-code-unit characters, as certain operations (like accessing a string by index) may return only part of a surrogate pair rather than the full intended character.
+
+\subsection{Number Type \lstinline|num|}
+
+The \lstinline|num| type in Kipper is the standard numeric type and operates in the same manner as the regular JavaScript \lstinline|number| type. It can store any value, but its accuracy may decrease beyond the range of \(-2^{53} - 1\) and \(2^{53} - 1\). Unlike JavaScript, however, Kipper does not support the \lstinline|bigint| type for numbers outside this range.
+
+To specify a number, hexadecimal, octal, binary, and standard base-10 representations may be used.
+
+\subsection{Boolean Type \lstinline|bool|}
+
+The \lstinline|bool| type is a standard boolean type with only two possible values: \lstinline|true| and \lstinline|false|. Unlike in other languages, it is not directly compatible with numbers and cannot be used to represent \lstinline|0| or \lstinline|1|.
+
+\subsection{Object Type \lstinline|obj|}
+
+The \lstinline|obj| type is a primitive type in Kipper. Unlike many other languages, this type simply expects any object and does not require specific properties or methods to be present. It is also the parent type of any interface (see~\ref{sec:kipper-interfaces} for more details on interfaces) and class (see~\ref{sec:kipper-classes} for more details on classes). However, since the \lstinline|obj| type does not define any child members, it is practically unusable unless cast to a specific interface or class type, as the compiler will not permit unsafe member access.
+
+\subsection{Void Type \lstinline|void|}
+
+The \lstinline|void| type is a specific feature unique to Kipper. Unlike JavaScript or TypeScript, this type acts as an alias for \lstinline|undefined| and carries the special type information that the function marked with \lstinline|void| does not return a value. This distinction is important, as \lstinline|undefined| is technically a returnable value. To enforce that a function does not return a value, it must be explicitly marked as returning \lstinline|void|.
+
+\subsection{Meta-Type Type \lstinline|type|}
+
+The meta-type \lstinline|type| is unique to Kipper and represents the runtime type, which can be obtained using \lstinline|typeof| or referenced by a type name in an expression. This type allows types to be treated like values and compared with one another, enabling two \lstinline|typeof| results to be compared (see section \ref{sec:integrated-runtime} for more info on the semantic of a runtime type).
+
+\section{Generics}
 \label{sec:kipper-generics}
 \setauthor{Luna Klatzer}
 
-\section{Kipper Interfaces}
+Generics are a special type in Kipper, as they are parameterised and can take on various forms that do not necessarily have to be compatible with one another. Due to their complexity, Kipper, as of the time of writing, only supports built-in types as generics. Neither classes nor interfaces can have generic parameters, unlike in TypeScript or C\#.
+
+The two supported generic types are \lstinline|Array<T>| (see~\ref{sec:array-type}) and \lstinline|Func<T..., R>| (see~\ref{sec:func-type}). Both are represented as generics during runtime and retain the specified generic arguments (see~\ref{sec:builtintypes} for more information on generics at runtime).
+
+\subsection{Array Type \lstinline|Array<T>|}
+\label{sec:array-type}
+
+The \lstinline|Array<T>| type is the generic type representation of an array, or more accurately, a dynamic list. This list can have any length and may contain any member values, provided they satisfy the given \lstinline|T| argument. Arrays have unique type-checking requirements, as both the type and the generic type must match and be compatible. The length, however, does not matter and is ignored, unlike in some other languages.
+
+\subsection{Function Type \lstinline|Func<T..., R>|}
+\label{sec:func-type}
+
+The \lstinline|Func<T..., R>| type is the generic type representation of a function or lambda, which can have \lstinline|n| numbers of \lstinline|T| arguments and must have a return type \lstinline|R|. Similar to TypeScript, the parameter declaration has no limit on the number of parameters and can realistically support any number of parameters.
+
+As with the \lstinline|Array<T>| type, functions also have similar type-checking requirements, with the additional condition that the number of parameters must match, alongside the parameter types and return type being compatible.
+
+\section{Interfaces}
 \label{sec:kipper-interfaces}
 \setauthor{Luna Klatzer}
 
-\section{Kipper Classes}
+Interfaces are one of the most important features in Kipper, as they are essential for runtime type checks, type matching (see section~\ref{sec:matches-operator} for more information), and typing of dynamic data. This is particularly important for input or dynamic data, which is produced outside a controlled environment and must be type-checked.
+
+As described in section~\ref{sec:runtime-interfaces}, interfaces also have a runtime counterpart, unlike TypeScript, which stores important type information and allows type checks during both compile time and runtime.
+
+Defining an interface only requires a name and the required properties and methods that the envisioned object should contain. An example of this is demonstrated in listing~\ref{lst:type-system:interface}.
+
+\begin{lstlisting}[language=Kipper,caption=The definition of a simple interface with a method and properties,label=lst:type-system:interface]
+interface Intf {
+	foo(bar: num): num;
+	x: num;
+	y: str;
+}
+\end{lstlisting}
+
+Besides explicit interface definitions, any constant object automatically receives an anonymous implicit interface type, which allows for further type checking and assignments to interface types. Using duck typing—a concept where the so-called "Duck Test" is performed, i.e. "if it quacks like a duck and walks like a duck, then it must be a duck"—the interfaces can then be compared and matched with one another to check whether they are compatible.
+
+In this context, compatibility simply means that if the expected type \lstinline|A| is a subset of or identical to incoming type \lstinline|B|, then \lstinline|B| is assignable to \lstinline|A|. Direction is key here, as it does not work the other way around. A value being assigned to a specific type must implement all members of that type to be considered assignable. In our example, this would mean that \lstinline|B| is being assigned to \lstinline|A|, and therefore \lstinline|B| must at least have all the requirements of type \lstinline|A|, but anything beyond that doesn't matter and is ignored.
+
+\begin{lstlisting}[language=Kipper,caption=Demonstration of duck typing within Kipper,label=lst:type-system:duck-typing]
+interface A {
+	foo(bar: num): num;
+	x: num;
+	y: str;
+}
+
+var a: A = {
+	foo: (bar: num): num -> bar * 2,
+	x: 1,
+	y: "2",
+	z: true
+};
+\end{lstlisting}
+
+The example shown in listing~\ref{lst:type-system:duck-typing} demonstrates this behaviour, as the example object defines all the required members of interface \lstinline|A|, but additionally defines properties unknown to \lstinline|A|. Thus despite the type being different, the example object passes the "Duck Test" and is compatible with type \lstinline|A|.
+
+\section{Classes}
 \label{sec:kipper-classes}
 \setauthor{Luna Klatzer}
+
+Classes in Kipper are encapsulated structures used to define objects, containing both properties and methods. Unlike interfaces, which act as blueprints, classes can have implemented functionality and can be instantiated using the \lstinline|new| keyword. A class may have a constructor that takes parameters, which must be provided for instantiation, and it can execute specific logic during object creation.
+
+Class properties in Kipper are always public and can be modified both internally by methods and externally by other code. They hold no value upon instantiation and must be defined in the constructor to properly store a value. Similarly, class methods are also always public and can be called by other internal methods or by external code invoking the specific method on the instance object.
+
+Defining a class only requires a name and can otherwise remain empty. Any properties, methods, and the constructor are optional, and by default, a class can simply be instantiated by calling \lstinline|new ...()| with \lstinline|...| being the name of the class. 
+
+\begin{lstlisting}[language=Kipper,caption=The definition of a simple class with a constructor\, methods and properties,label=lst:type-system:class]
+class Cls {
+	x: num;
+	y: str;
+	
+	constructor(x: num, y: str) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	foo(): void {
+		print(f"Hello from {this.y}!");
+	}
+	
+	bar(): num {
+		return this.x * 2;
+	}
+}
+\end{lstlisting}
+
+As illustrated in listing~\ref{lst:type-system:class}, a typical class contains a number of properties and methods, as well as constructor initialization parameters that define the properties of the class. Other statements can also be included in the constructor, such as writing output to the console or calling functions.
+
+Furthermore, initializing the class demonstrated in listing~\ref{lst:type-system:class}, can be done using \lstinline|new Cls(..., ...)|. Accessing properties or methods follows the standard dot-notation used in most programming languages, allowing direct referencing of the desired property or method as shown in listing~\ref{lst:type-system:class-member-accessing}. In this way, a class instance behaves like any other object in Kipper.
+
+\begin{lstlisting}[language=Kipper,caption=Accessing the members of a Kipper class,label=lst:type-system:class-member-accessing]
+var cls: Cls = new Cls(1, "my class");
+cls.foo(); // -> "Hello from my class"
+print(cls.bar()); // -> 2
+\end{lstlisting}
+
+\section{Any Type \lstinline|any|}
+\label{sec:kipper-any}
+\setauthor{Luna Klatzer}
+
+The \lstinline|any| type is a special type in Kipper, primarily used to define dynamic data whose type cannot be determined at compile time but only at runtime. It is mainly intended for handling dynamic data received from web requests or APIs, such as the browser DOM or the \Gls{nodejs} library API, which often return this type due to the absence of type information or restrictions.
+
+Since the \lstinline|any| type is compatible with all other types, it is only assignable to itself and cannot be directly used with specific types without narrowing through type casts, such as \lstinline|cast as|, \lstinline|force as|, or \lstinline|try as| (see section~\ref{sec:type-casts} for more information). However, once the \lstinline|any| type is narrowed, it can be used like any other value without inherent limitations.
+
+\section{Null Type Union \lstinline|T?|}
+\setauthor{Luna Klatzer}
+
+
+\section{Undefined Type Union \lstinline|T??|}
+\setauthor{Luna Klatzer}
+
+
+\section{Narrowing Type Casts}
+\setauthor{Luna Klatzer}
+
 
 %%% Local Variables:
 %%% mode: LaTeX
