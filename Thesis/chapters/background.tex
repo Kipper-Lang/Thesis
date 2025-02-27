@@ -15,27 +15,29 @@ For instance:
 
 \begin{itemize}
 	\item{
-		A variable intended to store a number can unexpectedly hold a string due to developer oversight or API misuse, as can be seen in listing~\ref{lst:background:uncheckedvariabletypes}.
-
-		\begin{lstlisting}[language=JavaScript,caption=Unchecked variable assignments due to missing type definitions,label=lst:background:uncheckedvariabletypes]
+		A variable intended to store a number can unexpectedly hold a string due to developer oversight or API misuse, as demonstrated in Listing~\ref{lst:background:uncheckedvariabletypes}.
+	}
+\end{itemize}
+\begin{lstlisting}[language=JavaScript,caption=Unchecked variable assignments due to missing type definitions,label=lst:background:uncheckedvariabletypes]
 let id; // Variable allowing any value
 
 ...
 
 let resp = resp.json(); // Object: { id: "1234", ... }
 id = resp.id; // Assigns a string even though that was not intended
-		\end{lstlisting}
-	}
-	\item{
-		Implicit conversions, such as treating \lstinline|null| or \lstinline|undefined| as valid inputs in arithmetic operations, often yield confusing results, as can be seen in listing~\ref{lst:background:problematicflexibility}.
+\end{lstlisting}
 
-		\begin{lstlisting}[language=JavaScript,caption=Broad ability to perform "invalid" operations despite clear error case,label=lst:background:problematicflexibility]
+\begin{itemize}
+	\item{
+		Implicit conversions, such as treating \lstinline|null| or \lstinline|undefined| as valid inputs in arithmetic operations, often yield confusing results, as presented in Listing~\ref{lst:background:problematicflexibility}.
+	}
+\end{itemize}
+\begin{lstlisting}[language=JavaScript,caption=Broad ability to perform "invalid" operations despite clear error case,label=lst:background:problematicflexibility]
 let discountRate = cart.appliedDiscount; // Assuming it is actually "applied_discount" not "appliedDiscount" so it returns "undefined"
 
 return price * (1 - discountRate); // -> yields NaN (Not A Number)
-		\end{lstlisting}
-	}
-\end{itemize}
+\end{lstlisting}
+
 
 Such flexibility complicates testing and error correction, as issues may only surface during runtime. This increases the risk of critical bugs making it into production and requires developers to rely heavily on additional tooling or rigorous testing to mitigate the risks inherent in dynamic typing.
 
@@ -49,9 +51,10 @@ Examples include:
 
 \begin{itemize}
     \item{
-		Accessing a missing property, which returns "undefined", and later receiving an error due to "undefined" not being an object, as demonstrated in listing~\ref{lst:background:missingpropertyerror}.
-
-		\begin{lstlisting}[language=JavaScript,caption=Accessing a missing property returns undefined which later causes an error,label=lst:background:missingpropertyerror]
+		Accessing a missing property, which returns "undefined", and later receiving an error due to "undefined" not being an object, as demonstrated in Listing~\ref{lst:background:missingpropertyerror}.
+	}
+\end{itemize}
+\begin{lstlisting}[language=JavaScript,caption=Accessing a missing property returns undefined which later causes an error,label=lst:background:missingpropertyerror]
 // Assuming this is some kind of API response that incorrectly returned some data
 let user = {
 	name: "Alice"
@@ -64,12 +67,13 @@ const userAddress =  user.address; // Undefined property ("address" does not exi
 ...
 
 let shippingCost = getShippingCost(address.city); // -> TypeError: Cannot read property "city" of undefined
-		\end{lstlisting}
-	}
+\end{lstlisting}
+\begin{itemize}
 	\item{
-		Misaligned function arguments, such as passing an object where a string was expected, going unnoticed until execution, as illustrated in listing~\ref{lst:background:misalignedargs}.
-
-		\begin{lstlisting}[language=JavaScript,caption=Misaligned function arguments going unnoticed,label=lst:background:misalignedargs]
+		Misaligned function arguments, such as passing an object where a string was expected, going unnoticed until execution, as illustrated in Listing~\ref{lst:background:misalignedargs}.
+	}
+\end{itemize}
+\begin{lstlisting}[language=JavaScript,caption=Misaligned function arguments going unnoticed,label=lst:background:misalignedargs]
 function greet(name) {
 	console.log("Hello, " + name + "!");
 }
@@ -79,9 +83,8 @@ function greet(name) {
 let user = { firstName: "Alice" };
 
 greet(user); // Unintended behavior: "Hello, [object Object]!"
-		\end{lstlisting}
-	}
-\end{itemize}
+\end{lstlisting}
+
 
 \subsubsection{Modern approaches}
 
@@ -107,7 +110,6 @@ While in principle this maintains the status quo and provides the developer with
 class SuperClass {
 	name: string = "Super class";
 }
-
 class MiddleClass extends SuperClass {
 	superField: SuperClass = new SuperClass();
 
@@ -115,7 +117,6 @@ class MiddleClass extends SuperClass {
 		super();
 	}
 }
-
 class LowerClass extends MiddleClass {
 	classField: MiddleClass = new MiddleClass();
 
@@ -131,15 +132,19 @@ const c2 = <LowerClass>new MiddleClass(); // Unchecked cast
 console.log(c2.classField.superField.name); // Runtime Error! "c2.classField.superField" does not actually exist
 \end{lstlisting}
 
-In listing~\ref{lst:background:uncheckedcompilecasts}, we have a simple example of an inheritance structure, where we access the properties of a child that is itself also another object. Due to the nature of TypeScript operations such as casts are mostly unchecked and usually work on the base of trusting the developer to know what they are doing. That means that in the example given above, the compiler does not realise that the operation the developer is performing is invalid and will result in a failure at runtime (can not access property "name", c1.superField is undefined). Furthermore, given that JavaScript only reports on such errors when a property of an undefined value is accessed, the undefined variable may go unused for a while before it is the cause of any problem. This leads to volatile code that can in many cases not be guaranteed to work unless the developer actively pays attention to such errors and makes sure that their code does not unintentionally force unchecked casts or other similar untyped operations.
+In Listing~\ref{lst:background:uncheckedcompilecasts}, we have a simple example of an inheritance structure, where we access the properties of a child that is itself also another object. Due to the nature of TypeScript operations such as casts are mostly unchecked and usually work on the base of trusting the developer to know what they are doing. That means that in the example given above, the compiler does not realise that the operation the developer is performing is invalid and will result in a failure at runtime (can not access property "name", c1.superField is undefined). Furthermore, given that JavaScript only reports on such errors when a property of an undefined value is accessed, the undefined variable may go unused for a while before it is the cause of any problem. This leads to volatile code that can in many cases not be guaranteed to work unless the developer actively pays attention to such errors and makes sure that their code does not unintentionally force unchecked casts or other similar untyped operations.
 
 \subsubsection{Ambiguous dynamic data}
 
 A similar issue occurs when dealing with dynamic or untyped data, which does not report on its structure and as such is handled as if it were a JavaScript value, where all type checks and security measures are disabled. This for one makes sense given the goal of ensuring compatibility with the underlying language, but it also creates another major problem where errors regarding any-typed values can completely go undetected. Consequently, if we were to receive data from a client or server we can not ensure that the data we received is fully valid or corresponds to the expected pattern. This is a problem that does not have a workaround or a solution in TypeScript.
 
-An example of such a situation is given in listing~\ref{lst:background:ambigdata}:
+An example of such a situation is given in Listing~\ref{lst:background:ambigdata}.
 
-\begin{lstlisting}[language=TypeScript,caption=Ambiguous dynamic data in TypeScript,label=lst:background:ambigdata]
+For the most part, developers are expected to simply watch out for such cases and implement their own security measures. There are potential libraries which can be utilised to add runtime checks, but such solutions require an entirely new layer of abstraction which must be managed manually by a developer. This additional boilerplate code also increases the complexity of a program and has to be actively maintained to keep working.
+
+Good examples of technologies that provide runtime object schema matching are "Zod"~\cite{zod} and "joi"~\cite{joi}. Both are fairly popular and actively used by API developers who need to develop secure endpoints and ensure accurate request data. While they are a good approach to fixing the problem, they still create their own difficulties due to their inherent limitations of adding another layer of abstraction that needs to be managed.
+
+\begin{lstlisting}[language=TypeScript,caption=Runtime issues caused due to ambiguous dynamic data in TypeScript,label=lst:background:ambigdata]
 interface Data {
 	x: number;
 	y: string;
@@ -149,7 +154,7 @@ interface Data {
 }
 
 function receiveUserReq(): object {
-	// ...
+	...
 	return {
 		x: "1",
 		y: "2",
@@ -157,13 +162,9 @@ function receiveUserReq(): object {
 	}
 }
 
-var data = <Data>receiveUserReq(); // Unsafe casting with unknown data
-console.log(data.z.z1); // No Runtime Error! But returns "undefined"
+var data = <Data>receiveUserReq(); // Unsafe cast with unknown data
+console.log(data.z.z1); // No Error! But returns "undefined"
 \end{lstlisting}
-
-For the most part, developers are expected to simply watch out for such cases and implement their own security measures. There are potential libraries which can be utilised to add runtime checks, but such solutions require an entirely new layer of abstraction which must be managed manually by a developer. This additional boilerplate code also increases the complexity of a program and has to be actively maintained to keep working.
-
-Good examples of technologies that provide runtime object schema matching are "Zod"~\cite{zod} and "joi"~\cite{joi}. Both are fairly popular and actively used by API developers who need to develop secure endpoints and ensure accurate request data. While they are a good approach to fixing the problem, they still create their own difficulties. We will examine these later in the implementation section, where we will more thoroughly compare Kipper's approach to other tools.
 
 \section{Examples of runtime type checking in other languages}
 \setauthor{Lorenz Holzbauer}
@@ -176,7 +177,7 @@ One of Java’s key runtime type features is its use of 	reflection, which allow
 
 \subsubsection{Runtime Type Checking}
 
-Java enforces strict runtime type checking to ensure the correctness of operations involving polymorphism and casting. The JVM performs type checks before executing certain operations, preventing unsafe conversions. An example of this is listing~\ref{lst:background:runtimetypechecksjava}. In this example, the~\lstinline|instanceof| operator ensures that the object is of type~\lstinline|Dog| before performing a downcast. This prevents a~\lstinline|ClassCastException|, which would otherwise occur if the object were of an incompatible type.
+Java enforces strict runtime type checking to ensure the correctness of operations involving polymorphism and casting. The JVM performs type checks before executing certain operations, preventing unsafe conversions. An example of this is Listing~\ref{lst:background:runtimetypechecksjava}. In this example, the~\lstinline|instanceof| operator ensures that the object is of type~\lstinline|Dog| before performing a downcast. This prevents a~\lstinline|ClassCastException|, which would otherwise occur if the object were of an incompatible type.
 
 
 \begin{lstlisting}[language=Java,caption=Runtime typechecks in Java,label=lst:background:runtimetypechecksjava]
@@ -205,9 +206,9 @@ public class TypeCheckExample {
 
 \subsubsection{Reflection}
 
-Java provides a rich set of reflection APIs that allow the program to examine and manipulate class structures at runtime. The~\lstinline|java.lang.reflect| package enables dynamic method invocation, field modification, and even dynamic class loading. In listing~\ref{lst:background:javareflection}, the Java reflection API allows to retrieve method names and invoke them dynamically. This is particularly useful in frameworks and tools that require runtime type information, such as dependency injection frameworks and dynamic proxies.
+Java provides a rich set of reflection APIs that allow the program to examine and manipulate class structures at runtime. The~\lstinline|java.lang.reflect| package enables dynamic method invocation, field modification, and even dynamic class loading. In Listing~\ref{lst:background:javareflection}, the Java reflection API allows to retrieve method names and invoke them dynamically. This is particularly useful in frameworks and tools that require runtime type information, such as dependency injection frameworks and dynamic proxies.
 
-\begin{lstlisting}[language=Java,caption=Reflection in Java,label=lst:background:javareflection]
+\begin{lstlisting}[float,language=Java,caption=Reflection in Java,label=lst:background:javareflection]
 import java.lang.reflect.Method;
 
 class ExampleClass {
@@ -241,7 +242,7 @@ Rust’s type system is centered around ownership, borrowing, and lifetimes, ens
 
 Rust does not depend on runtime type checking as Java or JavaScript do. Instead, it enforces type safety at compile time. Nevertheless, Rust provides runtime tools for handling dynamically typed values, notably the~\lstinline|Any| trait from the~\lstinline|std::any| module. This trait enables type inspection and downcasting at runtime, functioning similarly to Java's~\lstinline|instanceof| operator.
 
-In listing~\ref{lst:background:runtimetypecheckrust}, the~\lstinline|Any| trait is employed to examine and downcast a trait object to a specific concrete type. The~\lstinline|is::()| method checks whether a value belongs to a certain type, while~\lstinline|downcast_ref::()| provides a safe way to obtain a reference to the underlying type.
+In Listing~\ref{lst:background:runtimetypecheckrust}, the~\lstinline|Any| trait is employed to examine and downcast a trait object to a specific concrete type. The~\lstinline|is::()| method checks whether a value belongs to a certain type, while~\lstinline|downcast_ref::()| provides a safe way to obtain a reference to the underlying type.
 
 
 \begin{lstlisting}[language=Rust,caption=Runtime type checking in Rust,label=lst:background:runtimetypecheckrust]
@@ -272,7 +273,7 @@ While the~\lstinline|Any| trait enables some level of runtime type checking, its
 
 Rust’s trait system allows for polymorphism without runtime type checking. However, when dynamic dispatch is required, Rust provides trait objects, which enable runtime method resolution similar to Java’s virtual method table (vtable) approach. Unlike Java’s reflection-based system, Rust’s trait objects still enforce strict type constraints at compile time while allowing method calls to be dynamically resolved at runtime.
 
-In listing~\ref{lst:background:rusttraitobjects}, a trait~\lstinline|Animal| is defined, and trait objects (~\lstinline|&dyn Animal|) are used to allow polymorphism. This enables different implementations to be stored in the same collection and accessed dynamically.
+In Listing~\ref{lst:background:rusttraitobjects}, a trait~\lstinline|Animal| is defined, and trait objects (~\lstinline|&dyn Animal|) are used to allow polymorphism. This enables different implementations to be stored in the same collection and accessed dynamically.
 
 \begin{lstlisting}[language=Rust,caption=Trait objects and dynamic dispatch in Rust,label=lst:background:rusttraitobjects]
 trait Animal {

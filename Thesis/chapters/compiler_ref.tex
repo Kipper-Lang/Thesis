@@ -94,7 +94,7 @@ const tsTarget = new kipperTS.TargetTS();
 \subsection{Creating Custom Targets}
 \label{subsec:custom_targets}
 
-To create a custom target, a new class must extend \lstinline|KipperCompileTarget| and implement the three required classes for translation. As demonstrated in listing~\ref{lst:custom_target}, the three classes \lstinline|CustomTargetSemanticAnalyser|, \lstinline|CustomTargetCodeGenerator|, and \lstinline|CustomTargetBuiltInGenerator| each define the various functionality required for translating a program. These classes are grouped within the target class \lstinline|CustomTarget|, which can then be passed to a compilation.
+To create a custom target, a new class must extend \lstinline|KipperCompileTarget| and implement the three required classes for translation. As demonstrated in Listing~\ref{lst:custom_target}, the three classes \lstinline|CustomTargetSemanticAnalyser|, \lstinline|CustomTargetCodeGenerator|, and \lstinline|CustomTargetBuiltInGenerator| each define the various functionality required for translating a program. These classes are grouped within the target class \lstinline|CustomTarget|, which can then be passed to a compilation.
 
 \begin{lstlisting}[language=Typescript, caption=Creating a Custom Compilation Target, label=lst:custom_target]
 import { KipperCompileTarget, KipperTargetBuiltInGenerator, TranslatedExpression } from "@kipper/core";

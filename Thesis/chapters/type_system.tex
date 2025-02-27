@@ -1,12 +1,12 @@
 \setauthor{Luna Klatzer}
 
-The type system is a fundamental aspect of the Kipper language. Together with its runtime counterpart (see section~\ref{sec:integrated-runtime} for more details), it provides the various type safety features envisioned for this thesis. The type system also represents the most significant difference between the underlying JavaScript and TypeScript environments, which Kipper compiles to. Unlike these languages, Kipper does not adhere to their inherent limitations but instead extends and enhances them, addressing certain edge cases and providing a more complete and robust type system.
+The type system is a fundamental aspect of the Kipper language. Together with its runtime counterpart (see Section~\ref{sec:integrated-runtime} for more details), it provides the various type safety features envisioned for this thesis. The type system also represents the most significant difference between the underlying JavaScript and TypeScript environments, which Kipper compiles to. Unlike these languages, Kipper does not adhere to their inherent limitations but instead extends and enhances them, addressing certain edge cases and providing a more complete and robust type system.
 
 \section{Primitives}
 \label{sec:kipper-primitives}
 \setauthor{Luna Klatzer}
 
-The foundation of the type system consists of primitive values, which are predefined by the language and encapsulate fundamental type concepts such as numbers, strings, and objects. These primitives represent the most abstract and basic form of values, meaning they are inherently incompatible with one another since they do not share a common parent type that would enable implicit conversion or compatibility. The only exception to this rule is the \lstinline|any| type which diverges from this behaviour and represents any potential value (see section \ref{sec:kipper-any} for more details).
+The foundation of the type system consists of primitive values, which are predefined by the language and encapsulate fundamental type concepts such as numbers, strings, and objects. These primitives represent the most abstract and basic form of values, meaning they are inherently incompatible with one another since they do not share a common parent type that would enable implicit conversion or compatibility. The only exception to this rule is the \lstinline|any| type which diverges from this behaviour and represents any potential value (see Section~\ref{sec:kipper-any} for more details).
 
 This distinction is crucial because Kipper allows types to extend other types, thereby narrowing their definition. For example, interfaces refine the broad object type by imposing specific constraints on objects. By enforcing strict type boundaries at the primitive level, Kipper ensures that more complex structures built upon these primitives maintain clear and predictable type behaviour.
 
@@ -40,7 +40,7 @@ The \lstinline|bool| type is a standard boolean type with only two possible valu
 
 \subsection{Object Type}
 
-The \lstinline|obj| type is a primitive type in Kipper. Unlike many other languages, this type simply expects any object and does not require specific properties or methods to be present. It is also the parent type of any interface (see~\ref{sec:kipper-interfaces} for more details on interfaces) and class (see~\ref{sec:kipper-classes} for more details on classes). However, since the \lstinline|obj| type does not define any child members, it is practically unusable unless cast to a specific interface or class type, as the compiler will not permit unsafe member access.
+The \lstinline|obj| type is a primitive type in Kipper. Unlike many other languages, this type simply expects any object and does not require specific properties or methods to be present. It is also the parent type of any interface (see Section~\ref{sec:kipper-interfaces} for more details on interfaces) and class (see Section~\ref{sec:kipper-classes} for more details on classes). However, since the \lstinline|obj| type does not define any child members, it is practically unusable unless cast to a specific interface or class type, as the compiler will not permit unsafe member access.
 
 \subsection{Void Type}
 
@@ -48,7 +48,7 @@ The \lstinline|void| type is a specific feature unique to Kipper. Unlike JavaScr
 
 \subsection{Meta-Type Type}
 
-The meta-type \lstinline|type| is unique to Kipper and represents the runtime type, which can be obtained using \lstinline|typeof| or referenced by a type name in an expression. This type allows types to be treated like values and compared with one another, enabling two \lstinline|typeof| results to be compared (see section \ref{sec:integrated-runtime} for more info on the semantic of a runtime type).
+The meta-type \lstinline|type| is unique to Kipper and represents the runtime type, which can be obtained using \lstinline|typeof| or referenced by a type name in an expression. This type allows types to be treated like values and compared with one another, enabling two \lstinline|typeof| results to be compared (see Section~\ref{sec:integrated-runtime} for more info on the semantic of a runtime type).
 
 \section{Generics}
 \label{sec:kipper-generics}
@@ -56,7 +56,7 @@ The meta-type \lstinline|type| is unique to Kipper and represents the runtime ty
 
 Generics are a special type in Kipper, as they are parameterised and can take on various forms that do not necessarily have to be compatible with one another. Due to their complexity, Kipper, as of the time of writing, only supports built-in types as generics. Neither classes nor interfaces can have generic parameters, unlike in TypeScript or C\#.
 
-The two supported generic types are \lstinline|Array<T>| (see~\ref{sec:array-type}) and \lstinline|Func<T..., R>| (see~\ref{sec:func-type}). Both are represented as generics during runtime and retain the specified generic arguments (see~\ref{sec:builtintypes} for more information on generics at runtime).
+The two supported generic types are \lstinline|Array<T>| (see Section~\ref{sec:array-type}) and \lstinline|Func<T..., R>| (see Section~\ref{sec:func-type}). Both are represented as generics during runtime and retain the specified generic arguments (see Section~\ref{sec:builtintypes} for more information on generics at runtime).
 
 \subsection{Array Type}
 \label{sec:array-type}
@@ -74,11 +74,11 @@ As with the \lstinline|Array<T>| type, functions also have similar type-checking
 \label{sec:kipper-interfaces}
 \setauthor{Luna Klatzer}
 
-Interfaces are one of the most important features in Kipper, as they are essential for runtime type checks, type matching (see section~\ref{sec:matches-operator} for more information), and typing of dynamic data. This is particularly important for input or dynamic data, which is produced outside a controlled environment and must be type-checked.
+Interfaces are one of the most important features in Kipper, as they are essential for runtime type checks, type matching (see Section~\ref{sec:matches-operator} for more information), and typing of dynamic data. This is particularly important for input or dynamic data, which is produced outside a controlled environment and must be type-checked.
 
-As described in section~\ref{sec:runtime-interfaces}, interfaces also have a runtime counterpart, unlike TypeScript, which stores important type information and allows type checks during both compile time and runtime.
+As described in Section~\ref{sec:runtime-interfaces}, interfaces also have a runtime counterpart, unlike TypeScript, which stores important type information and allows type checks during both compile time and runtime.
 
-Defining an interface only requires a name and the required properties and methods that the envisioned object should contain. An example of this is demonstrated in listing~\ref{lst:type-system:interface}.
+Defining an interface only requires a name and the required properties and methods that the envisioned object should contain. An example of this is demonstrated in Listing~\ref{lst:type-system:interface}.
 
 \begin{lstlisting}[language=Kipper,caption=The definition of a simple interface with a method and properties,label=lst:type-system:interface]
 interface Intf {
@@ -107,7 +107,7 @@ var a: A = {
 };
 \end{lstlisting}
 
-The example shown in listing~\ref{lst:type-system:duck-typing} demonstrates this behaviour, as the example object defines all the required members of interface \lstinline|A|, but additionally defines properties unknown to \lstinline|A|. Thus despite the type being different, the example object passes the "Duck Test" and is compatible with type \lstinline|A|.
+The example shown in Listing~\ref{lst:type-system:duck-typing} demonstrates this behaviour, as the example object defines all the required members of interface \lstinline|A|, but additionally defines properties unknown to \lstinline|A|. Thus despite the type being different, the example object passes the "Duck Test" and is compatible with type \lstinline|A|.
 
 \section{Classes}
 \label{sec:kipper-classes}
@@ -139,9 +139,9 @@ class Cls {
 }
 \end{lstlisting}
 
-As illustrated in listing~\ref{lst:type-system:class}, a typical class contains a number of properties and methods, as well as constructor initialization parameters that define the properties of the class. Other statements can also be included in the constructor, such as writing output to the console or calling functions.
+As illustrated in Listing~\ref{lst:type-system:class}, a typical class contains a number of properties and methods, as well as constructor initialization parameters that define the properties of the class. Other statements can also be included in the constructor, such as writing output to the console or calling functions.
 
-Furthermore, initializing the class demonstrated in listing~\ref{lst:type-system:class}, can be done using \lstinline|new Cls(..., ...)|. Accessing properties or methods follows the standard dot-notation used in most programming languages, allowing direct referencing of the desired property or method as shown in listing~\ref{lst:type-system:class-member-accessing}. In this way, a class instance behaves like any other object in Kipper.
+Furthermore, initializing the class demonstrated in Listing~\ref{lst:type-system:class}, can be done using \lstinline|new Cls(..., ...)|. Accessing properties or methods follows the standard dot-notation used in most programming languages, allowing direct referencing of the desired property or method as shown in Listing~\ref{lst:type-system:class-member-accessing}. In this way, a class instance behaves like any other object in Kipper.
 
 \begin{lstlisting}[language=Kipper,caption=Accessing the members of a Kipper class,label=lst:type-system:class-member-accessing]
 var cls: Cls = new Cls(1, "my class");
@@ -155,13 +155,13 @@ print(cls.bar()); // -> 2
 
 The \lstinline|any| type is a special type in Kipper, primarily used to define dynamic data whose type cannot be determined at compile time but only at runtime. It is mainly intended for handling dynamic data received from web requests or APIs, such as the browser DOM or the \Gls{nodejs} library API, which often return this type due to the absence of type information or restrictions.
 
-Since the \lstinline|any| type is compatible with all other types, it is only assignable to itself and cannot be directly used with specific types without narrowing through type casts, such as \lstinline|cast as|, \lstinline|force as|, or \lstinline|try as| (see section~\ref{sec:type-casts} for more information). However, once the \lstinline|any| type is narrowed, it can be used like any other value without inherent limitations.
+Since the \lstinline|any| type is compatible with all other types, it is only assignable to itself and cannot be directly used with specific types without narrowing through type casts, such as \lstinline|cast as|, \lstinline|force as|, or \lstinline|try as| (see Section~\ref{sec:type-casts} for more information). However, once the \lstinline|any| type is narrowed, it can be used like any other value without inherent limitations.
 
 \section{Null Type Union}
 \setauthor{Luna Klatzer}
 \label{sec:null-type-union}
 
-The null-type union operator \lstinline|T?|, commonly referred to as the null-able operator, applies to the provided type \lstinline|T| by creating a union with the \lstinline|null| type, indicating that a value may be either \lstinline|T| or \lstinline|null|. This operator allows types to be easily marked as potentially missing, which is particularly important for cast operations such as \lstinline|try as T| (see~\ref{sec:type-casts}).
+The null-type union operator \lstinline|T?|, commonly referred to as the null-able operator, applies to the provided type \lstinline|T| by creating a union with the \lstinline|null| type, indicating that a value may be either \lstinline|T| or \lstinline|null|. This operator allows types to be easily marked as potentially missing, which is particularly important for cast operations such as \lstinline|try as T| (see Section~\ref{sec:type-casts}).
 
 \section{Undefined Type Union}
 \setauthor{Luna Klatzer}
@@ -176,10 +176,11 @@ Similar to the \lstinline|T?| operator, Kipper implements the \lstinline|T??| op
 Casts are an essential component of the Kipper type system and form a core aspect of the language. They can be performed at both compile time and runtime, with runtime-bound type checks ensuring all-round type safety. By using these casts, both values known at compile time and those resolved only at runtime can be appropriately handled within a program. This approach ensures that type checking remains in-tact while preventing potential edge cases or the circumvention of type safety mechanisms.
 
 \subsection{Compile-time Cast}
+\label{sec:compile-time-cast}
 
 The compile-time cast operator \lstinline|cast as| is the standard cast operation in Kipper, functioning similarly to TypeScript and other statically typed languages. It allows one type to be cast to another under the supervision of the compiler, which will produce an error if the cast is invalid or impossible. While some languages, such as C\#, perform runtime checks to ensure cast safety, Kipper does not, as it enforces stricter compile-time type safety and does not allow potentially unsafe casts using \lstinline|cast as|. For cases where compatibility cannot be determined at compile time, the \lstinline|force as| and \lstinline|try as| operators can be used instead.
 
-As demonstrated in listing~\ref{lst:type-system:safe-cast-as}, the \lstinline|cast as| operator can perform type narrowing as long as the compiler is aware of the fact that the provided types are compatible. 
+As demonstrated in Listing~\ref{lst:type-system:safe-cast-as}, the \lstinline|cast as| operator can perform type narrowing as long as the compiler is aware of the fact that the provided types are compatible.
 
 \begin{lstlisting}[language=Kipper,caption=Correctly casting an object to an interface using the \lstinline|cast as| operator,label=lst:type-system:safe-cast-as]
 interface Input {
@@ -199,7 +200,7 @@ var input: Input = {
 fun(input);
 \end{lstlisting}
 
-In case the cast is unsafe or ambiguous, the compiler will throw an error as is the case as presented in listing~\ref{lst:type-system:unsafe-cast-as}.
+In case the cast is unsafe or ambiguous, the compiler will throw an error as is the case as presented in Listing~\ref{lst:type-system:unsafe-cast-as}.
 
 \begin{lstlisting}[language=Kipper,caption=Incorrectly casting an object to an interface using the \lstinline|cast as| operator,label=lst:type-system:unsafe-cast-as]
 interface Input {
@@ -218,12 +219,13 @@ fun(input);
 \end{lstlisting}
 
 \subsection{Runtime Force Cast}
+\label{sec:runtime-force-cast}
 
-The runtime cast operator \lstinline|force as| is one of the two available runtime casting mechanisms in Kipper, utilizing runtime type information and the matching functionality embedded in the runtime system. Unlike the \lstinline|matches| operator (see~\ref{sec:matches-operator} for more details), \lstinline|force as| performs a comprehensive type check across all supported types to determine compatibility. This includes not only interfaces but also primitive types and classes, ensuring that all relevant type constraints are enforced at runtime.
+The runtime cast operator \lstinline|force as| is one of the two available runtime casting mechanisms in Kipper, utilizing runtime type information and the matching functionality embedded in the runtime system. Unlike the \lstinline|matches| operator (see Section~\ref{sec:matches-operator} for more details), \lstinline|force as| performs a comprehensive type check across all supported types to determine compatibility. This includes not only interfaces but also primitive types and classes, ensuring that all relevant type constraints are enforced at runtime.
 
 If the cast is invalid at runtime, an error is thrown, causing the program to fail at that location. However, this guarantees that the compiler can assert the return type of the cast operation will always be of type \lstinline|T|, as an invalid cast would terminate execution, preventing the operation from being performed with an incorrect type.
 
-As demonstrated in listing~\ref{lst:type-system:safe-force-as}, the \lstinline|forc as| operator can perform type narrowing as long as the compiler is aware of the fact that the provided types are compatible. 
+As demonstrated in Listing~\ref{lst:type-system:safe-force-as}, the \lstinline|forc as| operator can perform type narrowing as long as the compiler is aware of the fact that the provided types are compatible.
 
 \begin{lstlisting}[language=Kipper,caption=Correctly casting an object to an interface using the \lstinline|force as| operator,label=lst:type-system:safe-force-as]
 interface Input {
@@ -243,7 +245,7 @@ var input: Input = {
 fun(input);
 \end{lstlisting}
 
-In case the cast is unsafe or ambiguous, the compiler will throw an error as is the case as presented in listing~\ref{lst:type-system:unsafe-force-as}.
+In case the cast is unsafe or ambiguous, the compiler will throw an error as is the case as presented in Listing~\ref{lst:type-system:unsafe-force-as}.
 
 \begin{lstlisting}[language=Kipper,caption=Incorrectly casting an object to an interface using the \lstinline|force as| operator resulting in a runtime error,label=lst:type-system:unsafe-force-as]
 interface Input {
@@ -262,10 +264,11 @@ fun(input);
 \end{lstlisting}
 
 \subsection{Runtime Try Cast}
+\label{sec:runtime-try-cast}
 
 The runtime cast operator \lstinline|try as| is the second of the two runtime cast operators in Kipper, enabling conditional casting by returning \lstinline|null| if the cast is invalid. This differs from \lstinline|force as|, as it requires the developer to handle the potentially null return type \lstinline|T?|. By employing a conditional statement, the return value can be verified and appropriately processed, allowing the developer to account for both possible outcomes of the cast operation.
 
-As shown in listing~\ref{lst:type-system:handling-try-cast}, the return value of \lstinline|try as| must be assigned to a variable that supports both \lstinline|T| and \lstinline|null| using the previously mentioned \lstinline|T?| null type union operator (see~\ref{sec:null-type-union}). By utilising an if-statement, both outcomes can be handled: in one case, the program simply ends, while in the other, the program proceeds to prints out the cast value.
+As shown in Listing~\ref{lst:type-system:handling-try-cast}, the return value of \lstinline|try as| must be assigned to a variable that supports both \lstinline|T| and \lstinline|null| using the previously mentioned \lstinline|T?| null type union operator (see Section~\ref{sec:null-type-union}). By utilising an if-statement, both outcomes can be handled: in one case, the program simply ends, while in the other, the program proceeds to prints out the cast value.
 
 \begin{lstlisting}[language=Kipper,caption=Casting an \lstinline|any| type value using the \lstinline|try as| cast operator and handling both possible outcomes,label=lst:type-system:handling-try-cast]
 var data: any = 2;

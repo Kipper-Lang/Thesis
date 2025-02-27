@@ -29,12 +29,12 @@ def primeFactors(n: num) -> void {
 primeFactors(18);
 \end{lstlisting}
 
-The given example in listing~\ref{lst:demo:isprime} will be used as the sample code in the following chapters.
+The given example in Listing~\ref{lst:demo:isprime} will be used as the sample code in the following chapters.
 
 \section{Working example using CLI}
 \setauthor{Lorenz Holzbauer}
 
-As previously explained in section~\ref{sec:cli}, Kipper provides a command line interface (CLI) that allows users to compile and execute programs directly from the terminal. To run the above example using the CLI, the following steps are required:
+As previously explained in Section~\ref{sec:cli}, Kipper provides a command line interface (CLI) that allows users to compile and execute programs directly from the terminal. To run the above example using the CLI, the following steps are required:
 
 \begin{enumerate}
 	\item Install the Kipper CLI globally using the JavaScript package manager npm: \lstinline|npm install -g @kipper/cli|
@@ -47,7 +47,7 @@ After execution, the prime factors of the provided number should be printed to t
 \section{Working example in the web}
 \setauthor{Lorenz Holzbauer}
 
-Kipper can also be run in the browser using the \texttt{@kipper/web} package. Listing \ref{lst:demo:kipperbrowser} demonstrates how to include Kipper in an HTML file and execute the same prime factorization program.
+Kipper can also be run in the browser using the \texttt{@kipper/web} package. Listing~\ref{lst:demo:kipperbrowser} demonstrates how to include Kipper in an HTML file and execute the same prime factorization program.
 
 \begin{lstlisting}[language=HTML,caption=Running Kipper in the browser, label=lst:demo:kipperbrowser]
 <!DOCTYPE html>
@@ -61,10 +61,9 @@ Kipper can also be run in the browser using the \texttt{@kipper/web} package. Li
 		const logger = new Kipper.KipperLogger((level, msg) => {
 			console.log(`[${Kipper.getLogLevelString(level)}] ${msg}`);
 		});
-		
 		const compiler = new Kipper.KipperCompiler(logger, {});
-		
 		const code = ''; // Replace with prime.kip
+		
 		compiler.compile(
 			code, 
 			{ target: new KipperJS.TargetJS() }
@@ -91,7 +90,7 @@ Kipper can also be utilized and run within a \Gls{nodejs} JavaScript environment
 	\item Use a simple Node.js script to compile and execute the Kipper code.
 \end{enumerate}
 
-Executing a Kipper program within \Gls{nodejs} works similarly to the browser, but requires imports from the various Kipper packages. As demonstrated in listing~\ref{lst:demo:kippernode}, the compiler can be simply imported from \lstinline|@kipper/core| and then run with the read file.
+Executing a Kipper program within \Gls{nodejs} works similarly to the browser, but requires imports from the various Kipper packages. As demonstrated in Listing~\ref{lst:demo:kippernode}, the compiler can be simply imported from \lstinline|@kipper/core| and then run with the read file.
 
 \begin{lstlisting}[language=JavaScript,caption=Executing Kipper code in Node.js, label=lst:demo:kippernode]
 import { promises as fs } from "fs";

@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0" version="26.0.16">
+  <diagram name="Page-1" id="j5UDKV8THcLQKRbW8rZP">
+    <mxGraphModel dx="719" dy="404" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-1" value="" style="rounded=1;whiteSpace=wrap;html=1;imageHeight=24;" vertex="1" parent="1">
+          <mxGeometry x="130" y="160" width="490" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-2" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="180" width="340" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-5" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="280" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-6" value="Universe Scope" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="150" y="170" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-7" value="Global Scope" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="280" y="190" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-8" value="Local Scope" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="370" y="290" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-10" value="num" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="200" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-11" value="str" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="230" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-12" value="__name__: str" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="215" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-13" value="var x: str" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="245" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-14" value="def x() -&amp;gt; void" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="300" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-15" value="null" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="260" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-16" value="len()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="290" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-17" value="print()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="320" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-18" value="..." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="350" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-19" value="var local1: bool" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="382.5" y="320" width="87.5" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-20" value="&lt;div&gt;var y: num&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="215" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-21" value="const z: bool" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="245" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="JoTnrouUSWUMMaFGCsrw-22" value="&lt;div&gt;const local2: str&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="320" width="90" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

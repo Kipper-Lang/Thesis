@@ -10,7 +10,7 @@ The Kipper Compiler is the core component of the Kipper project, serving as the 
 
 An interesting aspect of the Kipper compiler is its largely modular design, which allows various components to be replaced or extended as needed. This modularity primarily serves to enable the compiler's structure to adapt to future changes in the language and its target output environment. Given the rapid evolution of web technologies and the frequent addition of new functionality, it is essential to ensure that the compiler remains current. Additionally, this design allows users to create plugins or extensions for the compiler to support custom functionality that may not be natively available.
 
-Furthermore, as discussed in greater detail in section~\ref{sec:output-generation}, the compiler is capable of targeting more than one output format. Specifically, it supports both standard JavaScript, adhering to the ES6/ES2015 specification, and standard TypeScript as defined by Microsoft. Similar to other compiler systems, users can configure the compiler according to their preferences and specify the desired target language.
+Furthermore, as discussed in greater detail in Section~\ref{sec:output-generation}, the compiler is capable of targeting more than one output format. Specifically, it supports both standard JavaScript, adhering to the ES6/ES2015 specification, and standard TypeScript as defined by Microsoft. Similar to other compiler systems, users can configure the compiler according to their preferences and specify the desired target language.
 
 \subsection{Stages of compilation}
 \setauthor{Luna Klatzer}
@@ -19,55 +19,55 @@ The Kipper compiler processes the program through multiple phases, each building
 
 \subsubsection{Lexical Analysis}
 \begin{itemize}
-	\item Detailed explanation in section~\ref{sec:lexing-parsing}
-	\item Performed by: Antlr4 Kipper Lexer
+	\item Detailed explanation in Section~\ref{sec:lexing-parsing}
+	\item Performed by: \textbf{Antlr4 Kipper Lexer}
 	\item This phase tokenizes the source code into a stream of lexemes, identifying the basic units of syntax.
 \end{itemize}
 
 \subsubsection{Syntax Analysis - Parsing}
 \begin{itemize}
-	\item Detailed explanation in section~\ref{sec:lexing-parsing}
-	\item Performed by: Antlr4 Kipper Parser
+	\item Detailed explanation in Section~\ref{sec:lexing-parsing}
+	\item Performed by: \textbf{Antlr4 Kipper Parser}
 	\item In this phase, the lexed tokens are organized into a parse tree based on the grammar rules of the Kipper language.
 \end{itemize}
 
 \subsubsection{Parse Tree Translation to AST}
 \begin{itemize}
-	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
-	\item Performed by: Kipper Core Compiler
+	\item Detailed explanation in Section~\ref{sec:translation-to-the-ast}
+	\item Performed by: \textbf{Kipper Core Compiler}
 	\item Converts the parse tree into an Abstract Syntax Tree (AST), a more abstract and language-independent representation of the code.
 \end{itemize}
 
 \subsubsection{Semantic Analysis}
 \begin{itemize}
-	\item Detailed explanation in section~\ref{sec:semantic-analysis}
-	\item Performed by: Kipper Core Compiler
+	\item Detailed explanation in Section~\ref{sec:semantic-analysis}
+	\item Performed by: \textbf{Kipper Core Compiler}
 	\item This phase is split into three separate steps:
 	\begin{enumerate}
-		\item Primary Semantic Analysis: Validates language semantics such as variable declarations and scope resolution.
-		\item Preliminary Type Analysis: This phase performs initial type validations and checks. It includes tasks such as loading type definitions that might be referenced elsewhere in the program. These types need to be pre-loaded to ensure they are available and correctly resolved during subsequent stages of compilation.
-		\item Primary Type Analysis: Conducts in-depth type validation and resolves type-related issues for the given statements and expressions.
+		\item Primary Semantic Analysis (see Section~\ref{sec:primary-semantic-analysis}): Validates language semantics such as variable declarations and scope resolution.
+		\item Preliminary Type Analysis (see Section~\ref{sec:preliminary-type-analysis}): This phase performs initial type validations and checks. It includes tasks such as loading type definitions that might be referenced elsewhere in the program. These types need to be pre-loaded to ensure they are available and correctly resolved during subsequent stages of compilation.
+		\item Primary Type Analysis (see Section~\ref{sec:primary-type-analysis}): Conducts in-depth type validation and resolves type-related issues for the given statements and expressions.
 	\end{enumerate}
 \end{itemize}
 
 \subsubsection{Target-Specific Requirement Checking}
 \begin{itemize}
-	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
-	\item Performed by: Target Semantic Analyser
-	\item Ensures compliance with the specific requirements of the target platform (JavaScript or TypeScript).
+	\item Addressed shortly in Section~\ref{sec:target-requirements-and-reserved-keywords}
+	\item Performed by: \textbf{Target Semantic Analyser}
+	\item Ensures compliance with the specific requirements of the target platform (JavaScript or TypeScript). This step is relatively minor and primarily ensures that no code is translated in a way that would cause incompatibilities with the target.
 \end{itemize}
 
-\subsubsection{Optimization}
+\subsubsection{Code Optimization}
 \begin{itemize}
-	\item Detailed explanation in section~\ref{sec:translation-to-the-ast}
-	\item Performed by: Kipper Core Compiler
-	\item Performs code optimizations, currently focused on treeshaking to eliminate unused code.
+	\item Addressed shortly in in Section~\ref{sec:requirements-generation-and-optimizations}
+	\item Performed by: \textbf{Kipper Core Compiler}
+	\item Performs code optimizations, currently focused on tree-shaking to eliminate unused code.
 \end{itemize}
 
 \subsubsection{Target-Specific Translation}
 \begin{itemize}
-\item Detailed explanation in section~\ref{sec:output-generation}
-\item Performed by: Target Translator
+\item Detailed explanation in Section~\ref{sec:output-generation}
+\item Performed by: \textbf{Target Translator}
 \item Translates the optimized AST into the desired target language (JavaScript or TypeScript).
 \end{itemize}
 
@@ -77,7 +77,7 @@ Each phase of the compiler is executed sequentially, with each step requiring th
 \label{sec:lexing-parsing}
 \setauthor{Luna Klatzer}
 
-The first step in the compilation process is the lexing and parsing of the input program. This involves the tokenization of the program source code, where individual strings are classified into predefined categories, followed by syntactical analysis that organizes these tokens into statements, expressions, and declarations.
+The first step in the compilation process is the lexing and parsing of the input program. This involves the tokenisation of the program source code, where individual strings are classified into predefined categories, followed by syntactical analysis that organizes these tokens into statements, expressions, and declarations.
 
 In the Kipper compiler, these two steps are carried out by the Kipper Lexer and Parser generated by \Gls{antlr4}, rather than being directly implemented within the compiler itself. These \Gls{antlr4}-generated components are constructed based on the predefined token and syntax rules specific to the Kipper language.
 
@@ -90,44 +90,44 @@ These definitions are created in a manner similar to other syntactical specifica
 \subsubsection{Lexer Grammar Definition}
 \label{sec:lexer-grammar-definition}
 
-In the case of the Kipper Lexer, it uses its own token definition file, which defines how characters are grouped into tokens. This file specifies the rules for identifying individual tokens while ignoring special characters that are not required for syntax analysis. Additionally, the lexer separates the matched tokens into various channels, allowing for more efficient handling and categorization during subsequent parsing steps. (see~\ref{sec:token-channels} for more detail)
+In the case of the Kipper Lexer, it uses its own token definition file, which defines how characters are grouped into tokens. This file specifies the rules for identifying individual tokens while ignoring special characters that are not required for syntax analysis. Additionally, the lexer separates the matched tokens into various channels, allowing for more efficient handling and categorization during subsequent parsing steps (see Section~\ref{sec:token-channels} for more info).
 
-For example, in Kipper, the lexer grammar includes constructs for identifying both comments and language-specific keywords. These definitions can be seen showcased below in listing~\ref{lst:kipper-lexer}.
+For example, the lexer grammar includes constructs for identifying both comments and language-specific keywords.
 
-\begin{lstlisting}[language=antlr4, caption={Sample snippet from Kipper Lexer grammar}, label={lst:kipper-lexer}]
-	BlockComment : '/' .? '*/' -> channel(COMMENT) ;
-	
-	LineComment : '//' CommentContent -> channel(COMMENT) ;
-	
-	Pragma : '#pragma' CommentContent -> channel(PRAGMA) ;
-	
-	InstanceOf : 'instanceof';
-	
-	Const : 'const';
-	
-	Var : 'var';
+In the grammar as demonstrated in Listing~\ref{lst:kipper-lexer}, comments are directed to a separate channel using the \lstinline|-> channel| annotation. This helps isolate them from the main parsing flow while still retaining them for potential processing or documentation purposes. Pragmas, which are typically compiler directives, are handled similarly but redirected to a \lstinline|PRAGMA| channel.
+
+\begin{lstlisting}[language=antlr4, caption={Sample snippet from the Kipper Lexer grammar}, label={lst:kipper-lexer}]
+BlockComment : '/' .? '*/' -> channel(COMMENT) ;
+
+LineComment : '//' CommentContent -> channel(COMMENT) ;
+
+Pragma : '#pragma' CommentContent -> channel(PRAGMA) ;
+
+InstanceOf : 'instanceof';
+
+Const : 'const';
+
+Var : 'var';
 \end{lstlisting}
 
-In the grammar above, comments are directed to a separate channel using the \lstinline|-> channel| annotation. This helps isolate them from the main parsing flow while still retaining them for potential processing or documentation purposes. Pragmas, which are typically compiler directives, are handled similarly but redirected to a \lstinline|PRAGMA| channel.
-
-\Gls{antlr4} grammars also include support for defining keywords, operators, and contextual language constructs. For instance, \lstinline|Const| and \lstinline|Var| are tokenized as reserved keywords, ensuring they are recognized unambiguously during lexical analysis. This explicit tokenization is critical for constructing a clear and predictable syntax tree, which serves as the foundation for the subsequent phases of interpretation and compilation.
+\Gls{antlr4} grammars also include support for defining keywords, operators, and contextual language constructs. For instance, \lstinline|Const| and \lstinline|Var| are tokenized as reserved keywords, ensuring they are recognized unambiguously during lexical analysis. This explicit tokenisation is critical for constructing a clear and predictable syntax tree, which serves as the foundation for the subsequent phases of interpretation and compilation.
 
 \subsubsection{Syntactical Grammar Definition}
 \label{sec:parser-grammar-definition}
 
 Like the Kipper Lexer, the Kipper Parser is defined by its own syntax definition file. In this file, various rules are grouped into syntax rules that collectively form a hierarchical structure. The parser traverses this structure to determine which syntactical construct is represented by the individual tokens. These syntax rules are organized in a way that allows the parser to construct a parse tree by following specific paths, with each path representing a distinct syntactical structure in the Kipper language.
 
-For example, a grammar rule defining a function declaration in Kipper could be expressed as seen in listing~\ref{lst:function-declaration}:
+For example, a grammar rule defining a function declaration in Kipper could be expressed as seen in Listing~\ref{lst:function-declaration}:
 
-\begin{lstlisting}[language=antlr4, caption={Function Declaration Grammar}, label={lst:function-declaration}]
-	functionDeclaration : 'def' declarator '(' parameterList? ')' '->' typeSpecifierExpression compoundStatement? ;
-	
-	parameterList : parameterDeclaration (',' parameterDeclaration)* ;
-	
-	parameterDeclaration : declarator ':' typeSpecifierExpression ;
+\begin{lstlisting}[float,language=antlr4, caption={Function Declaration Grammar}, label={lst:function-declaration}]
+functionDeclaration : 'def' declarator '(' parameterList? ')' '->' typeSpecifierExpression compoundStatement? ;
+
+parameterList : parameterDeclaration (',' parameterDeclaration)* ;
+
+parameterDeclaration : declarator ':' typeSpecifierExpression ;
 \end{lstlisting}
 
-In this grammar, the rule for \lstinline|functionDeclaration| begins with the keyword \lstinline|'def'|, followed by a \lstinline|declarator| (which represents the function name or identifier), and then an optional \lstinline|parameterList|. The rule includes a \lstinline|typeSpecifierExpression|, indicating the return type of the function, and optionally a \lstinline|compoundStatement|, which represents the function's body.
+In this grammar, the rule for \lstinline|functionDeclaration| begins with the keyword \lstinline|'def'|, followed by a \lstinline|declarator| (which represents the function name or identifier) and then an optional \lstinline|parameterList|. The rule includes a \lstinline|typeSpecifierExpression|, indicating the return type of the function, and optionally a \lstinline|compoundStatement|, which represents the function's body.
 
 The \lstinline|parameterList| rule handles the optional inclusion of one or more parameters, each defined by \lstinline|parameterDeclaration|. Each \lstinline|parameterDeclaration| consists of a \lstinline|declarator| (the parameter's name) followed by a type specification. This structure clearly defines the expected syntax for a function declaration in Kipper, ensuring that the parser can accurately identify and process this construct.
 
@@ -139,7 +139,7 @@ Using these syntax rules, the Kipper parser can build a detailed parse tree, wit
 
 The primary task of the lexical analysis is the tokenisation of the individual characters into grouped tokens which represent syntactical elements, such as identifiers, keywords, constant values, etc. Tokens serve as the building blocks for higher-level constructs in the parsing process, providing a simplified and structured representation of the raw source code.
 
-The step of tokenisation is fairly straightforward as it simply follows the definitions provided in the grammar file (see~\ref{sec:lexer-grammar-definition}) and throws errors in case no associated token definition is found. Each token is assigned a specific type based on the grammar rules, ensuring that the source code adheres to the language's syntactical structure. If a character sequence does not match any defined rule, an error is raised, indicating the presence of invalid syntax.
+The step of tokenisation is fairly straightforward as it simply follows the definitions provided in the grammar file (see Section~\ref{sec:lexer-grammar-definition}) and throws errors in case no associated token definition is found. Each token is assigned a specific type based on the grammar rules, ensuring that the source code adheres to the language's syntactical structure. If a character sequence does not match any defined rule, an error is raised, indicating the presence of invalid syntax.
 
 The lexer operates as a state machine, scanning through the input character stream and categorizing sequences based on patterns defined in the grammar. These patterns may include regular expressions to match identifiers, numerical constants, or specific language keywords. Once tokens are identified they are put into the associated channels as explained in~\ref{sec:token-channels}.
 
@@ -204,7 +204,7 @@ The construction of a parse tree begins with a designated root node representing
 
 This hierarchical structure enables easy traversal and analysis of the program during later stages of compilation or interpretation. For instance, an arithmetic expression in a program, such as \lstinline|a + b * c|, would form a sub-tree where the root node corresponds to an expression rule, with child nodes representing the individual terms and operations in the correct precedence order.
 
-A simplified representation of this tree structure is shown in figure~\ref{fig:implementation:parse-tree}.
+A simplified representation of this tree structure is shown in Figure~\ref{fig:implementation:parse-tree}.
 
 \begin{figure}[h!]
 	\centering
@@ -228,14 +228,14 @@ The \acrshort{ast} represents a tree which groups together the most logically es
 
 To transform the parse tree generated by the Kipper Parser, the compiler uses a tree-walking algorithm that systematically traverses the tree by entering and exiting grammar rules. During this process, the algorithm invokes specific handlers when they are defined for particular parse nodes. These handlers are designed to process only the most significant parse nodes, which typically correspond to essential syntactic constructs of the source code.
 
-When a handler is called, it constructs a new \acrshort{ast} node and attaches it to the growing \acrshort{ast}. This selective processing approach ensures that irrelevant parse tree details, such as redundant intermediate nodes or syntactic artifacts, are automatically excluded from the \acrshort{ast}. The resulting \acrshort{ast} is a simplified and more abstract representation of the program's structure, capturing only the semantically relevant elements needed for subsequent stages of the compilation process.
+When a handler is called, it constructs a new \acrshort{ast} node and attaches it to the growing \acrshort{ast}. This selective processing approach ensures that irrelevant parse tree details, such as redundant intermediate nodes or syntactic artefacts, are automatically excluded from the \acrshort{ast}. The resulting \acrshort{ast} is a simplified and more abstract representation of the program's structure, capturing only the semantically relevant elements needed for subsequent stages of the compilation process.
 
-The \acrshort{ast} generation result of such a tree walk process can be seen in figure~\ref{fig:implementation:ast}.
+The \acrshort{ast} generation result of such a tree walk process can be seen in Figure~\ref{fig:implementation:ast}.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=1]{./pics/AST.drawio}
-	\caption{An AST produced by the statement \lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (see~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
+	\caption{An AST produced by the statement \lstinline|var x: num = 4;|. The data in the brackets is in reality only defined and error checked during semantic analysis (see Section~\ref{sec:semantic-analysis}), but for the sake of clarity it is already provided here as to not cause confusion due to the missing metadata.}
 	\label{fig:implementation:ast}
 \end{figure}
 
@@ -243,35 +243,122 @@ The \acrshort{ast} generation result of such a tree walk process can be seen in 
 
 In addition to providing a simplified abstraction of the original parse tree, individual \acrshort{ast} nodes also handle processing for several subsequent stages. Encapsulating these steps within a single class allows semantic analysis and type analysis to be efficiently layered and properly structured. This design is a core aspect of the compiler, as it centralizes data storage and ensures that the results of one processing stage directly influence subsequent stages.
 
-For instance, if a node fails to successfully complete semantic analysis, the subsequent stages are automatically skipped. The node and any related parent structures are marked as faulty, allowing the compiler to handle errors gracefully without immediately crashing (see~\ref{sec:error-recovery} for a detailed explanation). Furthermore, the standardized and detailed structure of the \acrshort{ast} enables easy integration with other processing steps, as it stores or references all necessary information for specific parts of a program. This is particularly important during output generation (see~\ref{sec:output-generation}), where all existing information is required to accurately generate output code which logically adheres to the original program.
+For instance, if a node fails to successfully complete semantic analysis, the subsequent stages are automatically skipped. The node and any related parent structures are marked as faulty, allowing the compiler to handle errors gracefully without immediately crashing (see Section~\ref{sec:error-recovery} for a detailed explanation). Furthermore, the standardized and detailed structure of the \acrshort{ast} enables easy integration with other processing steps, as it stores or references all necessary information for specific parts of a program. This is particularly important during output generation (see Section~\ref{sec:output-generation}), where all existing information is required to accurately generate output code which logically adheres to the original program.
 
 \section{Semantic Analysis}
 \label{sec:semantic-analysis}
 \setauthor{Luna Klatzer}
 
-\section{Type Analysis}
-\label{sec:type-analysis}
+Semantic analysis is the most complex and critical stage of the compiler, as it extracts essential logical information from the input program and populates the \Gls{ast} built in the previous step with the essential information related to each individual node, ensuring that subsequent processing steps have the necessary data to operate correctly.
+
+Semantic analysis can be broadly divided into two key tasks:
+
+\begin{itemize}
+	\item \textbf{Evaluating Semantic Data}
+	\item \textbf{Validating Integrity and Raising Errors}
+\end{itemize}
+
+These tasks are inherently interdependent, as the compiler typically operates on an assertion-based principle—expecting specific conditions to be met and raising an error when the required input is absent or invalid.
+
+Processing can differ largely in size depending on the node in question, as certain nodes can take advantage of the fact that certain truths are implicitly implied by the parser and therefore don't require verification. Other more ambiguous expressions or statements may require more checks to verify that the input code is valid.
+
+\subsection{Separation of Concerns}
+\label{sec:separation-of-concerns}
+
+The Kipper compiler utilises the \acrshort{ast} as the foundation for semantic analysis, traversing the tree and analysing individual nodes. This approach follows the principle that each node is responsible for processing itself and its children, allowing nodes to be evaluated independently of their broader context while focusing on their essential aspects. This methodology is particularly significant, as Kipper aims to preserve the abstract program structure and ensure that each node possesses the necessary information for translation. This differs from other compilers, which may employ a flat translation approach, generating symbol tables and instructions as needed without maintaining abstraction.
+
+This design also establishes a trust-based system in which parent nodes can rely on their children to provide the required information for later translation. Each \acrshort{ast} node implementation consists of the class itself, an interface defining the semantic data to be populated, and an interface defining the type-related semantic data to be populated. This separation of concerns is a distinctive feature of the Kipper compiler, as semantic and type analysis are often performed concurrently or combined in other compilers. However, in Kipper, the entire \acrshort{ast} is traversed separately for each semantic analysis stage.
+
+This staged approach is essential for maintaining program integrity, ensuring logical processing order and guaranteeing that all required data is available when needed. For example, references can bypass the regular processing sequence and may require specific data to be available from another node. To enforce this logic and prevent any logical processing issue or circular reference issue, the Kipper compiler follows a strict rule: each stage must be internally complete and may only reference data generated by earlier nodes in the program or by any node in a preceding stage.
+
+\subsection{Algorithm}
+
+The Kipper compiler performs a total of five distinct steps during semantic analysis, though two of these play a relatively minor role, as they currently apply only to specific use cases. One of these is the warnings check, which is only supported for certain nodes and simply invokes the warning check function if a node has implemented it. The other is more closely related to target generation, as it executes additional semantic checks defined by the specified target (see Section~\ref{sec:target-requirements-and-reserved-keywords} for more info)
+
+The remaining three stages are the most significant, as they each contribute to a specific aspect of semantic analysis, node integrity verification and data definition. These stages are as follows:
+
+\begin{itemize}
+	\item \textbf{Primary Semantic Analysis}
+	\item \textbf{Preliminary Type Analysis}
+	\item \textbf{Primary Type Analysis}
+\end{itemize}
+
+Each stage follows the same traversal algorithm, where the compiler begins at the root \acrshort{ast} node and recursively invokes checks on its child nodes as demonstrated in Figure~\ref{fig:implementation:semantic-analysis-tree-walking}. These child nodes, in turn, call their own children, continuing the process throughout the tree. This traversal can be described as a bottom-to-top, left-to-right approach in terms of the \acrshort{ast} or as a top-down, left-to-right order from the smallest child to the greatest parent when considering a regular file with individual lines.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=1]{./pics/Semantic-Analysis-Tree-Walking.drawio}
+	\caption{A simplified representation of the semantic analysis tree-walking algorithm. The red dotted line illustrates the path the compiler follows to locate the outermost left leaves, which are processed first, before backtracking to process their parent node. Each node has a ordinal number assigned indicating the order in which it is processed.}
+	\label{fig:implementation:semantic-analysis-tree-walking}
+\end{figure}
+
+Once a node has completed processing, it will have defined its own semantic data object, storing the necessary information for that specific node. If no data is present, this indicates that the node has failed processing, and an error has already been generated either within that node or in a related child node.
+
+\subsection{Primary Semantic Analysis}
+\label{sec:primary-semantic-analysis}
+
+Primary semantic analysis is the initial stage of semantic analysis and is responsible for handling fundamental aspects of a program, such as verifying the availability of names for declarations and definitions, evaluating references, and processing other essential elements. This stage does not involve type checking but instead focuses solely on extracting and validating general semantic data from the core elements of the language. Every node in the \acrshort{ast} must undergo this step, as without it, the node would lack all functionality.
+
+This step also is largely responsible for verifying references by building up the symbol tables for the various scopes created by functions, compound statements, classes or other related elements. (see Section~\ref{sec:reference-handling-and-scopes} for further info). 
+
+\subsection{Preliminary Type Analysis}
+\label{sec:preliminary-type-analysis}
+
+Preliminary type analysis serves as a precursor to standard type analysis, focusing on processing type definitions before other elements reference or modify them. This step is essential, as types do not always follow a strict hierarchical structure. For instance, a class definition contains elements that reference the class type itself, despite being its children.
+
+This scenario conflicts with the principle outlined in Section~\ref{sec:separation-of-concerns}, which states that a node may only reference elements from previous stages of semantic analysis or nodes already processed before it. Since child nodes must be analysed before their parent nodes, reversing this order would be problematic. To address this, preliminary type analysis ensures that types are loaded first, allowing them to be referenced later without the risk of missing or undefined types. This approach maintains the integrity of the algorithm and preserves the intended order of each semantic analysis stage.
+
+As in the previous stages, this step populates the essential symbol tables with the types defined and processed during this step, and verifies their validity.
+
+\subsection{Primary Type Analysis}
+\label{sec:primary-type-analysis}
 \setauthor{Luna Klatzer}
+
+Primary type analysis is the final major stage of semantic analysis, responsible for performing type checks, handling type operations, and resolving type references. Given its role in managing the complexity of objects, interfaces, classes, and unions, it serves as a fundamental component of the compiler. Similar to primary semantic analysis, it ensures the correctness of references and verifies that all type references are valid.
+
+During this phase, all nodes have their type data defined, specifying what type information they store and how they function within a given context. In the case of expressions, this means determining the type to which they evaluate, enabling parent nodes to compare child nodes and validate operations, such as arithmetic operations between numerical values. This is crucial for expressions, as they are composed hierarchically, requiring validation of child nodes within their specific context.
+
+In contrast, statements and declarations do not evaluate to a type. While they may perform operations or define types, they cannot be used within another node as part of an expression, except as standalone instructions within a program.
+
+\subsection{Reference Handling and Scopes}
+\label{sec:reference-handling-and-scopes}
+
+Reference handling in Kipper operates similarly to most other languages, relying on individual scopes with their own symbol tables that store variables, functions, types, and other relevant entries. These scopes are structured in a hierarchical manner, allowing each scope to access information from the ones below it.
+
+This mechanism is crucial throughout semantic analysis, as each stage is responsible for managing symbol table entries, ensuring that references are valid, and preventing improper overwriting or modification of existing entries.
+
+Kipper currently implements three types of scopes as also visualised in Listing~\ref{fig:implementation:kipper-scopes}:
+
+\begin{itemize}
+	\item \textbf{Universe Scope}: This scope defines all built-in types and functions that are always available in Kipper.
+	\item \textbf{Global Scope}: This scope contains all global definitions for a specific Kipper program, including file-specific built-ins such as \lstinline|name|, which returns the filename.
+	\item \textbf{Local Scope}: Any scope nested within the Global Scope is considered a Local Scope. Entries defined within a Local Scope are accessible only within that scope and its child scopes.
+\end{itemize}
+
+Within a Kipper program, only the \textbf{Local Scope} can be defined by the user, while all other scopes are either compiler-bound or file-bound.
+
+ \begin{figure}[h!]
+ 	\centering
+ 	\includegraphics[scale=1]{./pics/Kipper-Scopes.drawio}
+ 	\caption{A simplified representation of the various scopes within Kipper that each act as a layer on top of a stack.}
+ 	\label{fig:implementation:kipper-scopes}
+ \end{figure}
 
 \section{Error recovery}
 \label{sec:error-recovery}
 \setauthor{Luna Klatzer}
 
-The functionality of error recovery is integral to most modern compilers, as it allows the compiler to report multiple errors in a single compilation pass. Basic compilers often operate on an immediate fail-safe principle: upon encountering an error, the compilation process halts immediately to prevent the compiler from making incorrect assumptions about the program. While this approach ensures the integrity of the compilation process, it introduces a significant drawback. For large and complex programs, developers may need to repeatedly correct errors and recompile to uncover additional issues, leading to unnecessary delays and inefficiencies during the development process.
+The concept of error recovery is fundamental to most modern compilers, as it enables the detection and reporting of multiple errors within a single compilation run. Basic compilers often employ an immediate fail-safe approach, terminating the compilation process upon encountering an error to prevent incorrect assumptions about the program. While this approach preserves the integrity of the compilation process, it presents a significant drawback: in large and complex programs, developers must repeatedly correct errors and recompile to identify additional issues, resulting in inefficient error handling and unnecessary delays during development.
 
-sGiven these issues, Kipper has implements its own error recovery algorithm into the semantic analysis which is able to recover from errors in given contexts and continue operation in following expressions or statements, which are not associated with the original error.
+To address these challenges, Kipper implements its own error recovery algorithm, which allows the compiler to recover from errors and continue processing by advancing to subsequent expressions or statements that are not directly associated with the original error node.
 
-\subsection{Error recovery algorithm}
-
-\subsection{Special case: Syntax errors}
+However, Kipper's error recovery is limited to the semantic and type analysis phases. The parser, as described in Section~\ref{sec:lexing-parsing}, does not support error recovery and terminates processing upon encountering a syntax error. This behaviour is atypical for a lexer and parser, as they usually allow parsing to continue despite syntactically faulty code blocks. However, due to specific limitations in the version of \Gls{antlr4} used, this functionality is not currently supported.
 
 \section{Output Generation}
 \label{sec:output-generation}
 \setauthor{Lorenz Holzbauer}
 
-\subsection{Introduction}
-
-The Kipper compiler utilizes a modular architecture, allowing for the definition of custom targets and providing flexibility to accommodate various use cases. This modularity extends beyond basic configuration, enabling developers to specify target-specific features or behaviours. The modular design is achieved by dividing the compiler into two primary components: a frontend and a backend.
+The Kipper compiler is built on a modular architecture, allowing for the definition of custom output targets and providing flexibility to accommodate various use cases. This modularity extends beyond basic configuration, enabling developers to specify target-specific features and behaviours. The modular design is structured around two primary components: the frontend and the backend.
 
 For comparison, the \acrshort{gcc} compiler achieves modularity by dividing its architecture into three components, as illustrated in Figure~\ref{fig:implementation:gcccompiler}. The frontend is responsible for verifying syntax and semantics, scanning the input, and performing type checking. It subsequently generates an intermediate representation (IR) of the code.
 
@@ -305,7 +392,7 @@ There is a plethora of algorithms available to generate code in the target langu
 
 Linear algorithms are commonly employed when compiling high-level languages to machine code or bytecode. These algorithms treat the input as a flat, ordered sequence and process it sequentially. Intermediate representations (IR) are typically in the form of three-address code or static-single-assignment (SSA) form. Linear algorithms process the code one instruction at a time in sequence. Upon completion of an instruction, it is added to a list, which is eventually concatenated and written to the output file.
 
-Three-address code consists of three operands and typically represents an assignment with a binary operator~\cite{wiki:threeaddress}. An instruction may have up to three operands, although fewer can also be used. In listing~\ref{lst:implementation:threeaddresscode}, the problem is divided into multiple instructions. This structure allows the compiler to easily translate the instructions into assembly language or bytecode, which share a similar format. Additionally, the compiler can identify unused code by determining whether a variable is referenced later in the code.
+Three-address code consists of three operands and typically represents an assignment with a binary operator~\cite{wiki:threeaddress}. An instruction may have up to three operands, although fewer can also be used. In Listing~\ref{lst:implementation:threeaddresscode}, the problem is divided into multiple instructions. This structure allows the compiler to easily translate the instructions into assembly language or bytecode, which share a similar format. Additionally, the compiler can identify unused code by determining whether a variable is referenced later in the code.
 
 \begin{lstlisting}[language=TypeScript,caption=Three-address code,label=lst:implementation:threeaddresscode]
 // Problem
@@ -326,7 +413,7 @@ x := t9
 
 The Static Single-Assignment (SSA) form is an alternative intermediate representation in which each variable is assigned exactly once~\cite{wiki:singlestatic}. It is widely used in compilers such as \acrshort{gcc}. The primary advantage of SSA is that it simplifies the code and enhances the effectiveness of compiler optimizations.
 
-In listing~\ref{lst:implementation:staticsingleassignmentform}, a variable \lstinline|y| is assigned twice. The first assignment is redundant. In SSA form, the compiler can identify that the assignment to \lstinline|y1| is unnecessary, as it is not used in the subsequent code. Optimizations improved by the use of SSA include dead-code elimination, constant propagation, and register allocation.
+In Listing~\ref{lst:implementation:staticsingleassignmentform}, a variable \lstinline|y| is assigned twice. The first assignment is redundant. In SSA form, the compiler can identify that the assignment to \lstinline|y1| is unnecessary, as it is not used in the subsequent code. Optimizations improved by the use of SSA include dead-code elimination, constant propagation, and register allocation.
 
 \begin{lstlisting}[language=TypeScript,caption=Static single-assignment form,label=lst:implementation:staticsingleassignmentform]
 // Problem
@@ -350,13 +437,13 @@ Although tree-based code generation can produce bytecode, which is subsequently 
 
 \subsection{Generation Algorithm}
 
-The output generation process in Kipper starts by initializing the target environment and setting up any necessary dependencies, as outlined in section~\ref{sec:requirements-generation}. Once this setup is complete, the compiler iterates through the previously generated \acrshort{ast} nodes, invoking the \lstinline|translateCtxAndChildren| function for each node. This function performs a recursive traversal of the syntax tree, generating code for each child node. Each node returns a string containing its corresponding output code, which is then processed by its parent node. The process continues until the root node collects and merges all generated strings, passing the final output to a function responsible for writing the translated code to a file.
+The output generation process in Kipper starts by initializing the target environment and setting up any necessary dependencies, as outlined in Section~\ref{sec:requirements-generation-and-optimizations}. Once this setup is complete, the compiler iterates through the previously generated \acrshort{ast} nodes, invoking the \lstinline|translateCtxAndChildren| function for each node. This function performs a recursive traversal of the syntax tree, generating code for each child node. Each node returns a string containing its corresponding output code, which is then processed by its parent node. The process continues until the root node collects and merges all generated strings, passing the final output to a function responsible for writing the translated code to a file.
 
 This bottom-up processing approach ensures that child nodes are translated before their parent nodes, allowing parent nodes to retrieve and incorporate necessary information from their children. This methodology is particularly crucial for handling complex structures, as these often rely on the embedded code produced by their child nodes. The generated code is passed up the tree as an array of tokens representing the textual form of the output.
 
 The output generation process ensures reliability by leveraging the fact that the \acrshort{ast} has already been validated for syntactic and semantic correctness during earlier compilation phases.
 
-The implementation of this translation algorithm is illustrated in figure~\ref{fig:implementation:translationalgorithm}.
+The implementation of this translation algorithm is illustrated in Figure~\ref{fig:implementation:translationalgorithm}.
 
 \begin{figure}[h!]
 	\centering
@@ -376,88 +463,11 @@ instanceOfExpression = async (node: InstanceOfExpression): ... => {
 	const operand = await semanticData.operand.translateCtxAndChildren();
 	const classType = TargetJS.getRuntimeType(typeData.classType);
 
-    return [...operand, " ", "instanceof", " ", classType];
-  };
+	return [...operand, " ", "instanceof", " ", classType];
+};
 \end{lstlisting}
 
 The code generator functions for the individual nodes are implemented in the code generator class \lstinline|JavaScriptTargetCodeGenerator|. Due to the similarity between TypeScript and JavaScript, the TypeScript code generator extends the JavaScript code generator and overrides the functions that are unique to TypeScript. This eliminates duplicate code fragments.
-
-\subsection{Target Requirements Generation}
-\label{sec:requirements-generation}
-
-Kipper is designed to maintain a minimal runtime while ensuring all necessary functionality is included. This requires the compiler to incorporate only the functions and objects essential to the user's program. This approach aligns with the objective of keeping the compiler both modular and lightweight. By eliminating unused components through a process known as "tree-shaking," the resulting output code remains compact and efficient.
-
-Kipper provides a range of built-in functions and features to support its runtime environment. These built-ins are structured using a scoped approach. The global scope includes core runtime features that are always required, such as fundamental type handling and error reporting. Beyond the global scope, additional features—such as helper functions specific to certain syntax, including \lstinline|slice| and \lstinline|match|—are selectively incorporated based on the specific requirements of the compiled program.
-
-\subsubsection{Conditional features}
-\label{sec:conditional-features}
-
-Conditional features are runtime components that are included only when explicitly required by the program being compiled. These features range from commonly used operations, such as \lstinline|match| and \lstinline|slice|, to more specialised or program-specific utilities.
-
-Unlike essential runtime components contained within the global scope, conditional features are selectively incorporated based on an analysis of the program's structure and functionality. The inclusion of these features is determined during the requirements generation phase.
-
-As the compiler traverses the \acrshort{ast}, it analyses each node to determine whether a specific built-in function or runtime operation is invoked. If a feature such as \lstinline|slice| is detected in the source code, it is marked as necessary and added to the consolidated requirements list. This approach ensures that only the relevant components are integrated into the final runtime environment.
-
-An example of a conditional feature is the \lstinline|slice| function, as demonstrated in Listing~\ref{lst:implementation:slicefunction}.
-
-\begin{lstlisting}[language=TypeScript,caption=The Slice Operation,label=lst:implementation:slicefunction]
-var valid: str = "321";
-print(valid[1:2]); // 2
-\end{lstlisting}
-
-This function takes an array as input and extracts a section starting from the index specified by the first argument and ending at the index specified by the second argument.
-
-When the compiler encounters the slice operator, it registers the function as necessary within the context of the program being compiled. The code generator called after the semantic analysis then includes it in the output code. This code generator for the example \lstinline|slice| is demonstrated in listing~\ref{lst:implementation:sliceinternal}.
-
-The compiler calls the slice function in the \lstinline|BuiltInGenerator|. The abstract \lstinline|BuiltInGenerator| class is a collection of functions responsible for generating the code for the built-in functions in a specific target language. This means that each target language must have an individual implementation for each built-in function of Kipper within its output generator, which subsequently adds the corresponding code into the resulting program.
-
-The generator as demonstrated in listing~\ref{lst:implementation:sliceinternal} generates the required JavaScript code for the function by utilizing the built-in \lstinline|slice| function provided by standard JavaScript.
-
-\begin{lstlisting}[language=TypeScript,caption=Slice in the JavaScript BuiltInGenerator,label=lst:implementation:sliceinternal]
-async slice(funcSpec: InternalFunction): Promise<Array<TranslatedCodeLine>> {
-	const signature = getJSFunctionSignature(funcSpec);
-	const objLikeIdentifier = signature.params[0];
-	const startIdentifier = signature.params[1];
-	const endIdentifier = signature.params[2];
-
-	return genJSFunction(
-		signature,
-		`{ return ${objLikeIdentifier} ? ${objLikeIdentifier}.slice(${startIdentifier}, ${endIdentifier}) : ${objLikeIdentifier}; }`,
-	);
-  }
-\end{lstlisting}
-
-The \lstinline|slice| function generated by the code generator as shown in listing~\ref{lst:implementation:sliceinternal} is represented in listing~\ref{lst:implementation:slicegenerated}. This function will be executed at runtime and perform the required operation, in this case slicing the given argument.
-
-\begin{lstlisting}[language=TypeScript,caption=Slice in the target language TypeScript,label=lst:implementation:slicegenerated]
-slice: function slice<T>(objLike: T, start: number | undefined, end: number | undefined): T {
-	return objLike ? objLike.slice(start, end) : objLike;
-},
-\end{lstlisting}
-
-\subsubsection{The global scope}
-
-The global scope in programming represents the top-level execution context where variables, functions, and objects are accessible throughout the entire runtime environment unless explicitly restricted. In JavaScript, the global scope is particularly significant, as it varies across different runtime environments, such as browsers, Node.js, and Web Workers. This variability necessitates robust mechanisms for identifying and managing the global context to ensure compatibility across environments.
-
-For example, JavaScript defines several global objects, such as \lstinline|window| in browsers, \lstinline|global| in Node.js, and \lstinline|self| in Web Workers. Modern JavaScript unifies these under \lstinline|__globalScope|, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support \lstinline|__globalScope|, which is why fallback mechanisms are often employed.
-
-The Kipper global scope encompasses all the required runtime features. It is crucial that the global scope exists only once, which is why the program checks at runtime whether the scope has already been defined. This logic is demonstrated in listing~\ref{lst:implementation:globalscopelogic}. The program first checks if \lstinline|__globalScope| is defined and uses it if available. If not, it attempts to use \lstinline|globalThis|, the modern standard JavaScript global object. If \lstinline|globalThis| is not defined, it checks for \lstinline|window| in browser environments, \lstinline|global| in Node.js, or \lstinline|self| in Web Workers. If none of these are defined, it falls back to an empty object. This approach ensures that the \lstinline|__globalScope| variable is always initialised, regardless of the environment, thereby enabling consistent and safe access to the global scope.
-
-\begin{lstlisting}[language=TypeScript,caption=Global Scope Logic,label=lst:implementation:globalscopelogic]
-var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
-    typeof globalThis !== "undefined" ? globalThis :
-    typeof window !== "undefined" ? window :
-    typeof global !== "undefined" ? global :
-    typeof self !== "undefined" ? self : {};
-\end{lstlisting}
-
-\subsubsection{Internal functions}
-
-Internal functions in Kipper serve as a crucial part of the runtime, but are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes, but are not directly accessible or callable within the user's program. This approach ensures that the runtime environment remains clean and minimal while still delivering the necessary functionality.
-
-An example of an internal function is the \lstinline|assignTypeMeta| function, which adds metadata to a runtime type. This function is essential for runtime type comparison, as discussed in detail in section~\ref{sec:builtintypes}. Although this function is never exposed to the user, it is invoked internally when for example an interface or array is declared.
-
-A key characteristic of internal functions is their dynamic inclusion in the runtime environment, as also previously discussed in section~\ref{sec:conditional-features}. During the requirements generation phase, the compiler determines whether any internal mechanisms are required based on the program's functionality. If so, the corresponding internal functions are incorporated into the runtime.
 
 \subsection{Differences between the Target Languages}
 
@@ -465,20 +475,21 @@ The implementation of a compiler or \gls{transpiler} targeting multiple programm
 
 One of the primary challenges in supporting both JavaScript and TypeScript as target languages lies in their differing treatment of identifiers, reserved keywords, and type declarations. While JavaScript is dynamically typed and relatively permissive regarding variable naming and usage, TypeScript enforces a stricter set of rules due to its static type-checking capabilities.
 
-\subsubsection{Reserved Keywords}
+\subsubsection{Target Requirements \& Reserved Keywords}
+\label{sec:target-requirements-and-reserved-keywords}
 
 Both JavaScript and TypeScript have a set of reserved keywords that cannot be used as identifiers. However, TypeScript introduces additional constraints by reserving type-related keywords, which are not present in JavaScript. For example, \lstinline|class| is a reserved keyword in both languages and cannot be used as a variable name. In contrast, TypeScript also reserves names such as \lstinline|let|, \lstinline|number|, and other type names, making them invalid as variable or function names.
 
-Kipper addresses these reserved keywords by checking for them at compile time. The compiler compares the identifiers against a hard-coded list of keywords, and if a match is found, it throws a \lstinline|ReservedIdentifierOverwriteError|. This list includes both the reserved words of JavaScript and TypeScript, which helps minimise redundancy and complexity. Furthermore, this approach encourages the use of sensible variable names, as JavaScript is relatively lenient regarding reserved keywords, as can be seen illustrated in listing~\ref{lst:implementation:reservedkeywords}.
+Kipper addresses these reserved keywords by checking for them at compile time. The compiler compares the identifiers against a hard-coded list of keywords, and if a match is found, it throws a \lstinline|ReservedIdentifierOverwriteError|. This list includes both the reserved words of JavaScript and TypeScript, which helps minimise redundancy and complexity. Furthermore, this approach encourages the use of sensible variable names, as JavaScript is relatively lenient regarding reserved keywords, as can be seen illustrated in Listing~\ref{lst:implementation:reservedkeywords}.
 
-\begin{lstlisting}[language=TypeScript,caption=Reserved Keywords in TS and JS,label=lst:implementation:reservedkeywords]
-// Invalid in TypeScript
-let let = 5;  // Error: Cannot use 'let' as an identifier
-let number = 10;  // Error: Cannot use 'number' as an identifier
-
-// Valid in JavaScript
-var let = 5;  // No error
-var number = 10;  // No error
+\begin{lstlisting}[float,language=TypeScript,caption=Reserved Keywords in TS and JS,label=lst:implementation:reservedkeywords]
+	// Invalid in TypeScript
+	let let = 5;  // Error: Cannot use 'let' as an identifier
+	let number = 10;  // Error: Cannot use 'number' as an identifier
+	
+	// Valid in JavaScript
+	var let = 5;  // No error
+	var number = 10;  // No error
 \end{lstlisting}
 
 \subsubsection{Type Annotations}
@@ -502,6 +513,83 @@ Figures~\ref{fig:implementation:kipper-to-javascript-translation-example} and~\r
 \end{figure}
 
 Other code generators such as the ones for function declarations and lambdas behave similarly when taking type annotations into account.
+
+\subsection{Target Requirements Generation \& Optimizations}
+\label{sec:requirements-generation-and-optimizations}
+
+Kipper is designed to maintain a minimal runtime while ensuring all necessary functionality is included. This requires the compiler to incorporate only the functions and objects essential to the user's program. This approach aligns with the objective of keeping the compiler both modular and lightweight. By eliminating unused components through a process known as "tree-shaking," the resulting output code remains compact and efficient.
+
+Kipper provides a range of built-in functions and features to support its runtime environment. These built-ins are structured using a scoped approach. The global scope includes core runtime features that are always required, such as fundamental type handling and error reporting. Beyond the global scope, additional features—such as helper functions specific to certain syntax, including \lstinline|slice| and \lstinline|match|—are selectively incorporated based on the specific requirements of the compiled program.
+
+\subsubsection{Conditional features}
+\label{sec:conditional-features}
+
+Conditional features are runtime components that are included only when explicitly required by the program being compiled. These features range from commonly used operations, such as \lstinline|match| and \lstinline|slice|, to more specialised or program-specific utilities.
+
+Unlike essential runtime components contained within the global scope, conditional features are selectively incorporated based on an analysis of the program's structure and functionality. The inclusion of these features is determined during the requirements generation phase.
+
+As the compiler traverses the \acrshort{ast}, it analyses each node to determine whether a specific built-in function or runtime operation is invoked. If a feature such as \lstinline|slice| is detected in the source code, it is marked as necessary and added to the consolidated requirements list. This approach ensures that only the relevant components are integrated into the final runtime environment.
+
+An example of a conditional feature is the \lstinline|slice| function, as demonstrated in Listing~\ref{lst:implementation:slicefunction}.
+
+\begin{lstlisting}[language=TypeScript,caption=The Slice operator being used on a string,label=lst:implementation:slicefunction]
+var valid: str = "321";
+print(valid[1:2]); // 2
+\end{lstlisting}
+
+This function takes an array as input and extracts a section starting from the index specified by the first argument and ending at the index specified by the second argument.
+
+When the compiler encounters the slice operator, it registers the function as necessary within the context of the program being compiled. The code generator called after the semantic analysis then includes it in the output code. This code generator for the example \lstinline|slice| is demonstrated in Listing~\ref{lst:implementation:sliceinternal}.
+
+The compiler calls the slice function in the \lstinline|BuiltInGenerator|. The abstract \lstinline|BuiltInGenerator| class is a collection of functions responsible for generating the code for the built-in functions in a specific target language. This means that each target language must have an individual implementation for each built-in function of Kipper within its output generator, which subsequently adds the corresponding code into the resulting program.
+
+The generator as demonstrated in Listing~\ref{lst:implementation:sliceinternal} generates the required JavaScript code for the function by utilizing the built-in \lstinline|slice| function provided by standard JavaScript.
+
+\begin{lstlisting}[language=TypeScript,caption=Slice in the JavaScript BuiltInGenerator,label=lst:implementation:sliceinternal]
+async slice(funcSpec: InternalFunction): Promise<Array<TranslatedCodeLine>> {
+	const signature = getJSFunctionSignature(funcSpec);
+	const objLikeIdentifier = signature.params[0];
+	const startIdentifier = signature.params[1];
+	const endIdentifier = signature.params[2];
+
+	return genJSFunction(
+		signature,
+		`{ return ${objLikeIdentifier} ? ${objLikeIdentifier}.slice(${startIdentifier}, ${endIdentifier}) : ${objLikeIdentifier}; }`,
+	);
+  }
+\end{lstlisting}
+
+The \lstinline|slice| function generated by the code generator as shown in Listing~\ref{lst:implementation:sliceinternal} is represented in Listing~\ref{lst:implementation:slicegenerated}. This function will be executed at runtime and perform the required operation, in this case slicing the given argument.
+
+\begin{lstlisting}[language=TypeScript,caption=Slice in the target language TypeScript,label=lst:implementation:slicegenerated]
+slice: function slice<T>(objLike: T, start: number | undefined, end: number | undefined): T {
+	return objLike ? objLike.slice(start, end) : objLike;
+},
+\end{lstlisting}
+
+\subsubsection{The global scope}
+
+The global scope in programming represents the top-level execution context where variables, functions, and objects are accessible throughout the entire runtime environment unless explicitly restricted. In JavaScript, the global scope is particularly significant, as it varies across different runtime environments, such as browsers, Node.js, and Web Workers. This variability necessitates robust mechanisms for identifying and managing the global context to ensure compatibility across environments.
+
+For example, JavaScript defines several global objects, such as \lstinline|window| in browsers, \lstinline|global| in Node.js, and \lstinline|self| in Web Workers. Modern JavaScript unifies these under \lstinline|__globalScope|, a standardized global object that provides a consistent way to access the global scope regardless of the environment. However, not all environments support \lstinline|__globalScope|, which is why fallback mechanisms are often employed.
+
+The Kipper global scope encompasses all the required runtime features. It is crucial that the global scope exists only once, which is why the program checks at runtime whether the scope has already been defined. This logic is demonstrated in Listing~\ref{lst:implementation:globalscopelogic}. The program first checks if \lstinline|__globalScope| is defined and uses it if available. If not, it attempts to use \lstinline|globalThis|, the modern standard JavaScript global object. If \lstinline|globalThis| is not defined, it checks for \lstinline|window| in browser environments, \lstinline|global| in Node.js, or \lstinline|self| in Web Workers. If none of these are defined, it falls back to an empty object. This approach ensures that the \lstinline|__globalScope| variable is always initialised, regardless of the environment, thereby enabling consistent and safe access to the global scope.
+
+\begin{lstlisting}[language=TypeScript,caption=Global Scope Logic,label=lst:implementation:globalscopelogic]
+var __globalScope = typeof __globalScope !== "undefined" ? __globalScope :
+    typeof globalThis !== "undefined" ? globalThis :
+    typeof window !== "undefined" ? window :
+    typeof global !== "undefined" ? global :
+    typeof self !== "undefined" ? self : {};
+\end{lstlisting}
+
+\subsubsection{Internal functions}
+
+Internal functions in Kipper serve as a crucial part of the runtime, but are designed to remain hidden from the user-facing API. These functions provide support for various runtime operations and compiler processes, but are not directly accessible or callable within the user's program. This approach ensures that the runtime environment remains clean and minimal while still delivering the necessary functionality.
+
+An example of an internal function is the \lstinline|assignTypeMeta| function, which adds metadata to a runtime type. This function is essential for runtime type comparison, as discussed in detail in Section~\ref{sec:builtintypes}. Although this function is never exposed to the user, it is invoked internally when for example an interface or array is declared.
+
+A key characteristic of internal functions is their dynamic inclusion in the runtime environment, as also previously discussed in Section~\ref{sec:conditional-features}. During the requirements generation phase, the compiler determines whether any internal mechanisms are required based on the program's functionality. If so, the corresponding internal functions are incorporated into the runtime.
 
 \subsection{Stylistic Choices}
 
@@ -542,7 +630,7 @@ Babel, one of the most widely used JavaScript-to-JavaScript \gls{transpiler}s, p
 
 \subsubsection{Nominal Type Systems}
 
-Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in listing~\ref{lst:implementation:javanominaltyping}. Here a  \lstinline|Programmer| is an \lstinline|Employee|, but not the other way around. This means \lstinline|Programmer| instances have all the properties and methods an \lstinline|Employee| has while also having additional ones specific to \lstinline|Programmer|. The relationships are as such inherited, so \lstinline|SeniorDeveloper| is still an \lstinline|Employee| and a \lstinline|Programmer| at the same time. Even though the \lstinline|SeniorDeveloper| adds no new functionality to the \lstinline|Programmer|, it is not treated the same. 
+Nominal type systems are used in most modern object-orientated programming languages like Java and C\#. In these systems, types are identified by their unique names and can only be assigned to themselves. Additionally, two types are considered compatible, if one type is a subtype of the other one, as can bee seen in Listing~\ref{lst:implementation:javanominaltyping}. Here a  \lstinline|Programmer| is an \lstinline|Employee|, but not the other way around. This means \lstinline|Programmer| instances have all the properties and methods an \lstinline|Employee| has while also having additional ones specific to \lstinline|Programmer|. The relationships are as such inherited, so \lstinline|SeniorDeveloper| is still an \lstinline|Employee| and a \lstinline|Programmer| at the same time. Even though the \lstinline|SeniorDeveloper| adds no new functionality to the \lstinline|Programmer|, it is not treated the same.
 
 \begin{lstlisting}[language=Java,caption=Example of nominal typing in Java,label=lst:implementation:javanominaltyping]
 class Employee {
@@ -564,7 +652,7 @@ Structural type systems compare types based on their structure. This means that 
 
 Listing~\ref{lst:implementation:ocamlstructuraltyping} demonstrates a function that requires a \lstinline|speak| method returning a \lstinline|string|. Both the \lstinline|dog| and \lstinline|cat| objects satisfy this requirement, and as a result, they are treated as the same type. Most importantly, these compatibility checks occur at compile time, as OCaml is a statically typed language.
 
-\begin{lstlisting}[language=caml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
+\begin{lstlisting}[language=OCaml,caption=Example of structural typing in Ocaml,label=lst:implementation:ocamlstructuraltyping]
 let make_speak (obj : < speak : string >) =
 obj#speak
 
@@ -585,7 +673,7 @@ Structural typing enhances flexibility by promoting code reuse and eliminating t
 
 \subsubsection{Duck Typed Systems - Duck Typing}
 
-Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in listing~\ref{lst:implementation:javascriptducktyping}, the \lstinline|duck| and the \lstinline|person| have the same methods and properties, henceforth they are of the same type. The \lstinline|dog| object on the other hand does not implement the \lstinline|quack|function, which equates to not being a \lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
+Duck Typing is the usage of a structural type system in dynamic languages. It is the practical application of the "Duck Test", therefore if it quacks like a duck and walks like a duck, then it must be a duck. In programming languages this means that if an object has all methods and properties required by a type, then it is of that type. The most prominent language utilizing Duck Typing is TypeScript. As can be seen in Listing~\ref{lst:implementation:javascriptducktyping}, the \lstinline|duck| and the \lstinline|person| have the same methods and properties, henceforth they are of the same type. The \lstinline|dog| object on the other hand does not implement the \lstinline|quack|function, which equates to not being a \lstinline|duck|. Duck typing simplifies the code by removing type constraints, while still encouraging polymorphism without complex inheritance.
 
 \begin{lstlisting}[language=Typescript,caption=Example of duck typing in TypeScript,label=lst:implementation:javascriptducktyping]
 interface Duck {
@@ -615,7 +703,7 @@ Given that duck typing allows dynamic data to be easily checked and assigned to 
 
 \subsection{Runtime Type Concept in Kipper}
 
-As previously discussed (see section~\ref{sec:type-system}), the Kipper programming language employs a type system similar to TypeScript, featuring static typing and a duck-typing approach for complex data structures and \acrshort{oop} constructs. However, unlike TypeScript, Kipper enforces full type safety at runtime, requiring developers to explicitly specify types and handle edge cases such as type casts and inference.
+As previously discussed (see Section~\ref{sec:type-system}), the Kipper programming language employs a type system similar to TypeScript, featuring static typing and a duck-typing approach for complex data structures and \acrshort{oop} constructs. However, unlike TypeScript, Kipper enforces full type safety at runtime, requiring developers to explicitly specify types and handle edge cases such as type casts and inference.
 
 This approach allows Kipper to support untyped values, similar to TypeScript’s \lstinline|any| type, which is often encountered in web requests or dynamically generated content. However, Kipper ensures that such values can be compared against well-defined types—such as primitives, arrays, functions, classes, and interfaces—eliminating ambiguities that could lead to runtime errors.
 
@@ -632,7 +720,7 @@ For user-defined classes, the compiler relies on the prototype as a discriminato
 \subsection{Base Type for the Kipper Runtime}
 \label{sec:basetype}
 
-In practice, all user-defined and built-in types inherit from a basic \lstinline|KipperType| class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in listing~\ref{lst:implementation:runtimetypestructure}.
+In practice, all user-defined and built-in types inherit from a basic \lstinline|KipperType| class in the runtime environment. This class is a simple blueprint of what a type could do and what forms a type may take on. A simple version of such a class can be seen in Listing~\ref{lst:implementation:runtimetypestructure}.
 
 \begin{lstlisting}[language=TypeScript,caption=The structure of a runtime type,label=lst:implementation:runtimetypestructure]
 class KipperType {
@@ -662,7 +750,7 @@ Furthermore, classes are also exempt from this comparator behaviour, as classes 
 
 Built-in runtime types form the core of Kipper’s type system and serve as building blocks for more complex constructs like interfaces. These types are uniquely defined at the beginning of the output code and are accessible globally, ensuring consistent type comparisons through reference equality.
 
-As demonstrated in listing~\ref{lst:implementation:builtinruntimetypes}, the fundamental built-in types such as \lstinline|any|, \lstinline|undefined|, and \lstinline|str| are implemented during runtime. These types are instantiated as instances of the \lstinline|KipperType| class, which provides essential metadata and comparison logic.
+As demonstrated in Listing~\ref{lst:implementation:builtinruntimetypes}, the fundamental built-in types such as \lstinline|any|, \lstinline|undefined|, and \lstinline|str| are implemented during runtime. These types are instantiated as instances of the \lstinline|KipperType| class, which provides essential metadata and comparison logic.
 
 \begin{lstlisting}[language=TypeScript,caption=Examples for the built-in runtime types,label=lst:implementation:builtinruntimetypes]
 const __type_any =
@@ -675,14 +763,14 @@ const __type_str =
 new KipperType("str", undefined, undefined, undefined, (a, b) => a.name === b.name);
 \end{lstlisting}
 
-In addition to the core primitive types—such as \lstinline|bool|, \lstinline|str|, \lstinline|num|, Kipper also includes built-in implementations for generic types such as \lstinline|Array<T>| and \lstinline|Func<T..., R>|. These generic types define their parameters, which typically default to \lstinline|any|, as demonstrated in listing~\ref{lst:implementation:genericbuiltintypes}.
+In addition to the core primitive types—such as \lstinline|bool|, \lstinline|str|, \lstinline|num|, Kipper also includes built-in implementations for generic types such as \lstinline|Array<T>| and \lstinline|Func<T..., R>|. These generic types define their parameters, which typically default to \lstinline|any|, as demonstrated in Listing~\ref{lst:implementation:genericbuiltintypes}.
 
 \begin{lstlisting}[language=Typescript,caption=Generic built-in types,label=lst:implementation:genericbuiltintypes]
 const __type_Array = new KipperGenericType("Array", undefined, undefined, {T: __type_any});
 const __type_Func = new KipperGenericType("Func", undefined, undefined, {T: [], R: __type_any});
 \end{lstlisting}
 
-As demonstrated in listing~\ref{lst:implementation:genericbuiltintypes}, generic types in Kipper are implemented using a specialized class called \lstinline|KipperGenericType|. This class, detailed in listing~\ref{lst:implementation:generickippertype}, extends \lstinline|KipperType| and introduces an additional field for storing generic arguments.
+As demonstrated in Listing~\ref{lst:implementation:genericbuiltintypes}, generic types in Kipper are implemented using a specialized class called \lstinline|KipperGenericType|. This class, detailed in Listing~\ref{lst:implementation:generickippertype}, extends \lstinline|KipperType| and introduces an additional field for storing generic arguments.
 
 A crucial feature of \lstinline|KipperGenericType| is the \lstinline|changeGenericTypeArguments| method, which allows for the dynamic modification of a type's generic arguments at runtime. This functionality is essential for handling lambda functions and arrays, where a built-in generic type serves as the base and is then adjusted to match the specific type parameters provided by the user.
 
@@ -713,9 +801,11 @@ class KipperGenericType extends KipperType {
 
 \subsection{Runtime Errors}
 
-Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base \lstinline|KipperError| type has a name property and extends the target language's error type as can be seen in listing~\ref{lst:implementation:kippererrortypes}. Additional error types inherit this base type and extend it with additional error information. For instance, the  \lstinline|KipperIndexError| is used whenever an index was out of bounds.
+Other built-ins include error classes, which are used in the error handling system to represent runtime errors caused by invalid user operations. The base \lstinline|KipperError| type has a name property and extends the target language's error type as can be seen in Listing~\ref{lst:implementation:kippererrortypes}. 
 
-\begin{lstlisting}[language=Typescript,caption=Kipper error types,label=lst:implementation:kippererrortypes]
+Additional error types inherit this base type and extend it with additional error information. For example, the \lstinline|KipperIndexError| is used when an index is out of bounds, while the \lstinline|KipperTypeError| is thrown when a \lstinline|force as| cast fails (see Section~\ref{sec:runtime-force-cast} for more details on force casts).
+
+\begin{lstlisting}[float,language=Typescript,caption=Kipper error types,label=lst:implementation:kippererrortypes]
 class KipperError extends Error {
 	constructor(msg) {
 		super(msg);
@@ -736,7 +826,7 @@ class KipperIndexError extends KipperError {
 
 Unlike TypeScript, in Kipper all interfaces possess a runtime counterpart, which stores all the required information to verify type compatibility during runtime. This process is managed by the Kipper code generator, which adds custom type instances to the compiled code that represent the structures of the user-defined interfaces with all its methods and properties including their respective types.
 
-Now take for example the given interfaces presented in listing~\ref{lst:implementation:inputinterface-car} and~\ref{lst:implementation:inputinterface-person}.
+Now take for example the given interfaces presented in Listing~\ref{lst:implementation:inputinterface-car} and~\ref{lst:implementation:inputinterface-person}.
 
 \begin{lstlisting}[language=Typescript,caption=Example interface \lstinline|Car| in the Kipper language,label=lst:implementation:inputinterface-car]
 interface Car {
@@ -760,7 +850,7 @@ If it detects a property, the type and semantic data of the given property is ex
 
 In case a method is detected, the generator function fetches the return type and the method's name. If the method has any arguments, the name and type of each argument also gets evaluated and then included in the definition of the \lstinline|__kipper.Method|. After that, it gets added to the interface as well and is stored in its own separate method list.
 
-Translating the interface \lstinline|Car| shown in listing~\ref{lst:implementation:inputinterface-car} would result in an output runtime code identical to that in listing~\ref{lst:implementation:runtimeinterface-car} and translating \lstinline|Person| would result in the code as presented in listing~\ref{lst:implementation:runtimeinterface-person}.
+Translating the interface \lstinline|Car| shown in Listing~\ref{lst:implementation:inputinterface-car} would result in an output runtime code identical to that in Listing~\ref{lst:implementation:runtimeinterface-car} and translating \lstinline|Person| would result in the code as presented in Listing~\ref{lst:implementation:runtimeinterface-person}.
 
 \begin{lstlisting}[language=Typescript,caption=The runtime representation of the example interface \lstinline|Car|,label=lst:implementation:runtimeinterface-car]
 const __intf_Car = new __kipper.Type(
@@ -791,9 +881,9 @@ const __intf_Person = new __kipper.Type(
 );
 \end{lstlisting}
 
-As shown in listing~\ref{lst:implementation:runtimeinterface-car} and listing~\ref{lst:implementation:runtimeinterface-person}, the properties and methods of an interface are encapsulated within a \lstinline|KipperType| instance, identified by the  \lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
+As shown in Listing~\ref{lst:implementation:runtimeinterface-car} and Listing~\ref{lst:implementation:runtimeinterface-person}, the properties and methods of an interface are encapsulated within a \lstinline|KipperType| instance, identified by the  \lstinline|__intf_| prefix. The code for this runtime interface is included directly in the output file, where it can be accessed by any functionality that requires it. To reference the generated interface, the compiler maintains a symbol table that tracks all defined interfaces. The code generator then inserts runtime references to these interfaces wherever necessary.
 
-Notable usages for runtime type-checking include the \lstinline|matches| operator (see section \ref{sec:matches-operator}) and the \lstinline|typeof| operator (see section \ref{sec:typeof}).
+Notable usages for runtime type-checking include the \lstinline|matches| operator (see Section~\ref{sec:matches-operator}) and the \lstinline|typeof| operator (see Section~\ref{sec:typeof}).
 
 \subsection{Matches Operator for Interfaces}
 \label{sec:matches-operator}
@@ -802,7 +892,7 @@ There are multiple approaches for comparing objects at runtime. One method is co
 
 Another approach is comparison by structure, where two objects are considered equal if they share the same structure, meaning they have the same properties and methods. Kipper supports both methods of comparison. Reference-based comparison is implemented via the \lstinline|instanceof| operator and is exclusively used for class comparisons. Structural comparison, referred to as "matching", is applied to primitives and interfaces. 
 
-Structural comparisons are implemented using the \lstinline|matches| operator as given in listing~\ref{lst:implementation:matchesoperator}.
+Structural comparisons are implemented using the \lstinline|matches| operator as given in Listing~\ref{lst:implementation:matchesoperator}.
 
 \begin{lstlisting}[language=Kipper,caption=The Kipper matches operator,label=lst:implementation:matchesoperator]
 interface Y {
@@ -824,11 +914,11 @@ var x: X = {
 var res: bool = x matches X; // -> true
 \end{lstlisting}
 
-As demonstrated in listing~\ref{lst:implementation:matchesoperator}, the matches operator enables interface comparison based on properties and methods. It accepts two arguments: an object and a target type to match against. Properties are compared recursively, while methods are compared by name, arguments, and return type.
+As demonstrated in Listing~\ref{lst:implementation:matchesoperator}, the matches operator enables interface comparison based on properties and methods. It accepts two arguments: an object and a target type to match against. Properties are compared recursively, while methods are compared by name, arguments, and return type.
 
 The comparison process involves iterating over both methods and properties. When examining properties, the algorithm verifies the presence of each property name within the target type, disregarding the order of properties. Once a matching name is found, type equality is checked using the previously discussed runtime types and nominal type comparison. If a property is of a non-primitive type, the matches function is recursively applied to ensure structural compatibility.
 
-This property matching algorithm is implemented as illustrated in figure~\ref{fig:implementation:matchesproperty}.
+This property matching algorithm is implemented as illustrated in Figure~\ref{fig:implementation:matchesproperty}.
 
 \begin{figure}[tb]
 	\centering
@@ -846,14 +936,14 @@ This property matching algorithm is implemented as illustrated in figure~\ref{fi
 	\label{fig:implementation:matchesmethod}
 \end{figure}
 
-After verifying the properties, the matches expression iterates over the methods, as illustrated in figure~\ref{fig:implementation:matchesmethod}. The process begins by searching for the method name within the target type. If a match is found, the return type is compared. Subsequently, each argument is examined by name, ensuring that the method signatures are identical. Additionally, the number of parameters is compared to enforce exact correspondence.
+After verifying the properties, the matches expression iterates over the methods, as illustrated in Figure~\ref{fig:implementation:matchesmethod}. The process begins by searching for the method name within the target type. If a match is found, the return type is compared. Subsequently, each argument is examined by name, ensuring that the method signatures are identical. Additionally, the number of parameters is compared to enforce exact correspondence.
 
 If none of these conditions evaluate to false, the input object is deemed compatible with the input type.
 
 \subsection{Typeof Operator}
 \label{sec:typeof}
 
-In the Kipper programming language, the \lstinline|typeof| operator is used to obtain the type of an object at runtime. This operator can be used to check whether a variable or expression is of a particular type, such as a string, number, boolean, etc. It is most commonly used to check for \lstinline|null| and \lstinline|undefined| objects, in order to avoid type errors when the type of an object is unknown. The returned type object can be compared by reference to check for type equality. As shown in listing~\ref{lst:implementation:typeofoperator}, the parentheses are optional. Both syntax styles are supported to align with Kipper's design goal of being similar to TypeScript and JavaScript, which implement it in the same way.
+In the Kipper programming language, the \lstinline|typeof| operator is used to obtain the type of an object at runtime. This operator can be used to check whether a variable or expression is of a particular type, such as a string, number, boolean, etc. It is most commonly used to check for \lstinline|null| and \lstinline|undefined| objects, in order to avoid type errors when the type of an object is unknown. The returned type object can be compared by reference to check for type equality. As shown in Listing~\ref{lst:implementation:typeofoperator}, the parentheses are optional. Both syntax styles are supported to align with Kipper's design goal of being similar to TypeScript and JavaScript, which implement it in the same way.
 
 \begin{lstlisting}[language=Kipper,caption=Typeof operator used to determine the type of an input expression,label=lst:implementation:typeofoperator]
 typeof 49; // "__kipper.builtIn.num"
@@ -862,7 +952,7 @@ typeof("Hello, World!"); // "__kipper.builtIn.str"
 
 The \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies \lstinline|null| as \lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for its type using the target language's type features. A part of this process can be seen in figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can in JavaScript either be \lstinline|null|, an array, a class, or an object, such as one that implements an interface.
+At runtime, the provided object is checked for its type using the target language's type features. A part of this process can be seen in Figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can in JavaScript either be \lstinline|null|, an array, a class, or an object, such as one that implements an interface.
 
 \begin{figure}[tb]
 	\centering
@@ -872,7 +962,7 @@ At runtime, the provided object is checked for its type using the target languag
 	\label{fig:implementation:typeofimplementation}
 \end{figure}
 
-Although syntactically similar, the \lstinline|typeof| operator in the type declaration of a variable operates fundamentally differently, as demonstrated in listing~\ref{lst:implementation:typeoftypespecifier}. This operator is referred to as \lstinline|TypeOfTypeSpecifier| and evaluates the type of a variable at compile time.
+Although syntactically similar, the \lstinline|typeof| operator in the type declaration of a variable operates fundamentally differently, as demonstrated in Listing~\ref{lst:implementation:typeoftypespecifier}. This operator is referred to as \lstinline|TypeOfTypeSpecifier| and evaluates the type of a variable at compile time.
 
 \begin{lstlisting}[language=Kipper,caption=Specifying the type based on a reference variable, label=lst:implementation:typeoftypespecifier]
 var t: num = 3;
