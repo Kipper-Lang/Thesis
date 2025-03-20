@@ -952,7 +952,7 @@ typeof("Hello, World!"); // "__kipper.builtIn.str"
 
 The \lstinline|typeof| operator in Kipper mirrors the functionality of TypeScript and JavaScript, but with enhancements tailored to Kipper's type system. Unlike JavaScript, where \lstinline|typeof null| returns \lstinline|object| due to historical reasons, Kipper correctly identifies \lstinline|null| as \lstinline|__kipper.builtIn.null|.
 
-At runtime, the provided object is checked for its type using the target language's type features. A part of this process can be seen in Figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can in JavaScript either be \lstinline|null|, an array, a class, or an object, such as one that implements an interface.
+At runtime, the provided object is checked for its type using the target language's type features. A part of this process can be seen in Figure~\ref{fig:implementation:typeofimplementation}. The primitive types return their respective \lstinline|KipperRuntimeType|. Objects are a special case, as they can in JavaScript either be \lstinline|null|, an array, a class, or an object, such as one that implements an interface. The Figure is only a simplification of the algorithm and types like \lstinline|num| are hidden in order to display it in a compact way.
 
 \begin{figure}[tb]
 	\centering
