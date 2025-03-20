@@ -8,7 +8,7 @@ This chapter will discuss the technologies selected and utilized in the Kipper p
 
 Before introducing the technologies and tools used in the Kipper project, it is important to note that the project existed on a smaller scale prior to the initiation of this diploma thesis. As such, the following sections will discuss technologies—TypeScript and \Gls{antlr4}—that were chosen before the start of this thesis project. 
 
-Consequently, when the project was re-envisioned and expanded into its current form as part of this diploma thesis, the development technologies had already been determined and were simply continued to build upon the existing foundation (see \nameref{chapter:appendix_a} for further details on the project's foundation prior to this thesis).
+Consequently, when the project was re-envisioned and expanded into its current form as part of this diploma thesis, the development technologies had already been determined and were simply continued to build upon the existing foundation.
 
 Nevertheless, to highlight the various alternatives and the reasons behind the original decisions for the parser, lexer, and core compiler, the following sections will still examine each option, assess their viability within the context of this project, and elaborate on the choices made when the initial project was conceived.
 
@@ -49,7 +49,7 @@ To accurately represent the various benefits and downsides of each individual op
 \subsection{Option - C++}
 \label{sec:programming-language-option-c++}
 
-C++ is widely recognized as one of the most prominent languages for low-level development and system programming, including compiler development. In addition to offering fast execution speeds, it provides flexible mechanisms like pointers for structuring essential constructs such as trees. The language utilizes \acrshort{oop} to manage complex structures efficiently and supports templating, often also called generic type parameters, enabling versatile structures with unified behaviour and compatibility.
+C++ is widely recognized as one of the most prominent languages for low-level development and system programming, including compiler development. In addition to offering fast execution speeds, it provides flexible mechanisms like pointers for structuring essential constructs such as trees. The language utilizes OOP (\Gls{object-oriented-programming}) to manage complex structures efficiently and supports templating, often also called generic type parameters, enabling versatile structures with unified behaviour and compatibility.
 
 \subsubsection{Speed}
 
@@ -74,19 +74,19 @@ While C++ aims to be more modern compared to its predecessor C, it still is larg
 \subsection{Option - Java}
 \label{sec:programming-language-option-java}
 
-Java is another commonly used \acrshort{oop} language for building compilers and compiler components. As a matter of fact, \Gls{antlr4}, the lexer and parser generation technology, is developed solely in Java and for extended support simply provides output targets for its lexers and parsers used within other languages.
+Java is another commonly used OOP language for building compilers and compiler components. As a matter of fact, \Gls{antlr4}, the lexer and parser generation technology, is developed solely in Java and for extended support simply provides output targets for its lexers and parsers used within other languages.
 
 \subsubsection{Speed}
 
-Speed is not a major concern when working with Java. The language and its VM are largely optimised and the \acrshort{jit} compiler performs additional optimisations at runtime by analysing the code and the memory of the program. It may in some cases be slower, especially due to the large amount of boilerplate present in a lot of systems, but it can overall be considered fast.
+Speed is not a major concern when working with Java. The language and its VM are largely optimised and the JIT (\Gls{just-in-time-compilation}) compiler performs additional optimisations at runtime by analysing the code and the memory of the program. It may in some cases be slower, especially due to the large amount of boilerplate present in a lot of systems, but it can overall be considered fast.
 
 \subsubsection{Maintainability}
 
-Java can be considered a pure \acrshort{oop} programming language, as all executable code is written in class methods, which can be called up and run from other parts of the program. Due to this all functionality adheres to some structure and is usually encapsulated in various classes and methods. While these features alone do not guarantee code that is easy to work with, they simplify that process and provide structures that can be easily changed or altered using inheritance or other functionality. However it often also leads to boilerplate-heavy code that is hard to read especially when programs become complex.
+Java can be considered a pure OOP programming language, as all executable code is written in class methods, which can be called up and run from other parts of the program. Due to this all functionality adheres to some structure and is usually encapsulated in various classes and methods. While these features alone do not guarantee code that is easy to work with, they simplify that process and provide structures that can be easily changed or altered using inheritance or other functionality. However it often also leads to boilerplate-heavy code that is hard to read especially when programs become complex.
 
 \subsubsection{Platform Support}
 
-Java utilizes a VM in combination with a \acrshort{jit} compiler for executing its intermediate code. This intermediate code is largely system-independent and can be run on any system that has a working Java runtime installed. As such, the responsibility of handling the individual characteristics of each operating system and architecture is left up the Java runtime, which makes compiling fairly simple and allows for a broad support of various systems.
+Java utilizes a VM in combination with a JIT compiler for executing its intermediate code. This intermediate code is largely system-independent and can be run on any system that has a working Java runtime installed. As such, the responsibility of handling the individual characteristics of each operating system and architecture is left up the Java runtime, which makes compiling fairly simple and allows for a broad support of various systems.
 
 \subsubsection{Extensibility}
 
@@ -94,7 +94,7 @@ Besides providing support for multiple platforms, the architecture of Java allow
 
 \subsubsection{Similarity to Kipper}
 
-Java is fairly similar to Kipper in its \acrshort{oop} design paradigm, but is still generally very different. Kipper runs as JavaScript or TypeScript in an interpreted environment, where code is ran line per line. While this is similar to the \acrshort{jit} compiler utilised by Java, Kipper can run high-level code and execute on-demand changes without compiling its code or having to generate intermediate code. Given though that structurally the two languages are very similar, migrating from a compiler written in Java to one written in Kipper would be mostly straightforward.
+Java is fairly similar to Kipper in its OOP design paradigm, but is still generally very different. Kipper runs as JavaScript or TypeScript in an interpreted environment, where code is ran line per line. While this is similar to the JIT compiler utilised by Java, Kipper can run high-level code and execute on-demand changes without compiling its code or having to generate intermediate code. Given though that structurally the two languages are very similar, migrating from a compiler written in Java to one written in Kipper would be mostly straightforward.
 
 \subsection{Option - TypeScript}
 \label{sec:programming-language-option-typescript}
@@ -103,7 +103,7 @@ TypeScript is a super-set of JavaScript, which works on the same dynamically-typ
 
 \subsubsection{Speed}
 
-In terms of speed, TypeScript can be very fast, almost as fast as \acrshort{wasm} in some cases. Although it still generally has the same limitations as any other web language. Given that the language needs interpretation and does not utilise JIT compilation or a compiled format, it often can not compete with languages such as Java, C++ or C\#. Still, with its heavily optimised interpreter regular algorithms and programs can be fast, but as complexity grows it is not as efficient as comparable languages.
+In terms of speed, TypeScript can be very fast, almost as fast as WASM (\Gls{webassembly}) in some cases. Although it still generally has the same limitations as any other web language. Given that the language needs interpretation and does not utilise JIT compilation or a compiled format, it often can not compete with languages such as Java, C++ or C\#. Still, with its heavily optimised interpreter regular algorithms and programs can be fast, but as complexity grows it is not as efficient as comparable languages.
 
 \subsubsection{Maintainability}
 
@@ -178,7 +178,7 @@ To accurately represent the various benefits and downsides of each individual op
 \subsection{Option - Antlr4}
 \label{sec:parser-technology-option-antlr4}
 
-\Gls{antlr4} is one of the most widely used lexer and parser generators employing a top-down LL(*) parsing process, offering a comprehensive set of tools and multiple output targets, including a target for native TypeScript. It processes Antlr-specific grammar files and, based on the defined tokens and syntax rules, generates both a lexer and a parser, which are individually executable. Using either a listener or a visitor approach, the resulting parse tree can be traversed and transformed into an \acrshort{ast} for subsequent compilation~\cite{antlr}.
+\Gls{antlr4} is one of the most widely used lexer and parser generators employing a top-down LL(*) parsing process, offering a comprehensive set of tools and multiple output targets, including a target for native TypeScript. It processes Antlr-specific grammar files and, based on the defined tokens and syntax rules, generates both a lexer and a parser, which are individually executable. Using either a listener or a visitor approach, the resulting parse tree can be traversed and transformed into an AST (\Gls{abstract-syntax-tree}) for subsequent compilation~\cite{antlr}.
 
 Although \Gls{antlr4} provides extensive tooling and allows for the extraction of detailed metadata from source code, its generated lexer and parser are generally not considered highly performant compared to the alternatives. Parsing can take a significant amount of time, particularly for large programs. While \Gls{antlr4} employs various optimisation techniques—such as improving performance over time as the parser "warms up" and refines its internal connections—the generic design and modularity introduce overhead that hinders performance optimisations commonly found in other parsing technologies.
 
@@ -189,16 +189,16 @@ Additionally, \Gls{antlr4} generates detailed objects and multiple context objec
 
 Coco/R is a compiler generator that, based on a grammar file, produces a scanner (lexer) and parser employing top-down LL(*) parsing capable of validating the syntactic integrity of a file while also performing semantic and type analysis. Unlike a pure lexer and parser generator, Coco/R integrates aspects of semantic analysis into its processing, thereby optimising performance by preemptively conducting checks that do not require complex context-based analysis~\cite{coco}~\cite{coco-manual}.
 
-By instantiating the scanner and parser within a compiler class, Coco/R-generated classes can be used in a manner similar to \Gls{antlr4}. However, for generating an \acrshort{ast}, Coco/R grammars can be directly configured to construct a tree and build individual custom nodes, similar to the process of generating a parse tree. Using the generated \acrshort{ast}, subsequent processing and translation can be performed in a manner nearly identical to \Gls{antlr4}~\cite{coco-ast}.
+By instantiating the scanner and parser within a compiler class, Coco/R-generated classes can be used in a manner similar to \Gls{antlr4}. However, for generating an AST, Coco/R grammars can be directly configured to construct a tree and build individual custom nodes, similar to the process of generating a parse tree. Using the generated AST, subsequent processing and translation can be performed in a manner nearly identical to \Gls{antlr4}~\cite{coco-ast}.
 
-Unlike \Gls{antlr4}, however, Coco/R does not provide an explicit target for TypeScript. Supporting TypeScript would require either implementing a custom target or translating the generated C\# or Java code into \acrshort{wasm}, which could then be executed within a TypeScript context. Both approaches would require significant development effort but could likely surpass \Gls{antlr4} in performance.
+Unlike \Gls{antlr4}, however, Coco/R does not provide an explicit target for TypeScript. Supporting TypeScript would require either implementing a custom target or translating the generated C\# or Java code into WASM, which could then be executed within a TypeScript context. Both approaches would require significant development effort but could likely surpass \Gls{antlr4} in performance.
 
 \subsection{Option - GNU Bison}
 \label{sec:parser-technology-option-bison}
 
 GNU Bison is a parser generator that employs a bottom-up LR parsing algorithm to validate the syntactic structure of an input token stream~\cite{bison}. Unlike \Gls{antlr4} or Coco/R, Bison primarily generates parsers for C and C++, with an experimental Java target also available. This focus on lower-level languages provides performance advantages, as Bison is highly efficient~\cite{bison-manual}.
 
-Bison processes a grammar definition file and generates a parser that integrates with a lexer, typically implemented using Flex~\cite{flex}. While it offers strong performance, it lacks a native TypeScript target. Integrating Bison with a TypeScript-based project would require running the generated C/C++ code via \acrshort{wasm} like in the case of Coco/R, adding complexity and overhead due to the additional process layer. Important to also mention is that its tooling and extensibility are less modern compared to \Gls{antlr4} and the tool is heavily based on traditional compilers.
+Bison processes a grammar definition file and generates a parser that integrates with a lexer, typically implemented using Flex~\cite{flex}. While it offers strong performance, it lacks a native TypeScript target. Integrating Bison with a TypeScript-based project would require running the generated C/C++ code via WASM like in the case of Coco/R, adding complexity and overhead due to the additional process layer. Important to also mention is that its tooling and extensibility are less modern compared to \Gls{antlr4} and the tool is heavily based on traditional compilers.
 
 Despite these challenges, Bison is a good choice for performance-critical applications where an LR parser is preferred and cross-language execution is acceptable.
 

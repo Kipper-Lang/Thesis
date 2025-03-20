@@ -1,15 +1,18 @@
 \setacronymstyle{long-short}
 
 \newglossaryentry{transpilation}{
-	name={transpilation},
+	name={Transpilation},
+	text={transpilation},
 	description={Act of compiling high-level language code to high-level code of another language. This term is mostly used in context of JavaScript and its subsidary languages building on top of the language.}
 }
 \newglossaryentry{transpile}{
-	name={transpile},
+	name={Transpile},
+	text={transpile},
 	description={To perform \gls{transpilation} on code.}
 }
 \newglossaryentry{transpiler}{
-	name={transpiler},
+	name={Transpiler},
+	text={transpiler},
 	description={A type of compiler performing \gls{transpilation}.}
 }
 \newglossaryentry{antlr4}{
@@ -20,41 +23,34 @@
 	name={Abstract Syntax Tree},
 	description={A hierarchical, tree-like representation of the abstract syntactic structure of source code. Each node corresponds to a construct in the code, such as expressions or statements, providing a simplified view of the code's logical structure. Essential in compilers for tasks such as semantic analysis and output generation.}
 }
-\newacronym{ast}{AST}{\Gls{abstract-syntax-tree}}
 \newglossaryentry{gnu-compiler-collection}{
 	name={GNU Compiler Collection},
 	description={GCC is an open-source compiler system that supports languages like C, C++, and Fortran. It converts source code into machine code or \gls{intermediate-representation}, enabling program execution across different platforms. It is widely used in software development for its efficiency and portability.}
 }
-\newacronym{gcc}{GCC}{\Gls{gnu-compiler-collection}}
 \newglossaryentry{intermediate-representation}{
 	name={Intermediate Representation},
 	description={In compiler design, the Intermediate Representation (IR) is an abstract, machine-independent code form used between the source and target code. It simplifies compilation, supports optimizations, and enables portability across architectures. IR can be linear (e.g., SSA) or tree-like (e.g., AST) and is central to modern compiler pipelines.}
 }
-\newacronym{ir}{IR}{\Gls{intermediate-representation}}
 \newglossaryentry{backus–naur-form}{
 	name={Backus–Naur Form},
 	description={A formal notation used to define the syntax of programming languages, data formats, and other structured information. It represents rules through production expressions, where symbols define how components are composed. BNF uses non-terminal symbols, terminal symbols, and recursive definitions to describe complex language structures concisely and precisely. Most programming languages have their own syntax grammar also publically available in BNF.}
 }
-\newacronym{bnf}{BNF}{\Gls{backus–naur-form}}
 \newglossaryentry{polymorphism}{
-	name={polymorphism},
+	name={Polymorphism},
 	description={A core concept in Object Oriented Programming that allows the same function, method, or operation to behave differently depending on context. It can occur through inheritance (where subclasses override parent methods), function overloading (methods with the same name but different parameters), or generic typing (writing flexible code that works with multiple data types).}
 }
 \newglossaryentry{object-oriented-programming}{
 	name={Object Oriented Programming},
 	description={A programming design philosophy based on objects, which encapsulate data in fields and behaviors in methods. OOP promotes concepts like inheritance, \gls{polymorphism}, encapsulation, and abstraction to model real-world entities, improve code modularity, and encourage reusability.}
 }
-\newacronym{oop}{OOP}{\Gls{object-oriented-programming}}
 \newglossaryentry{just-in-time-compilation}{
 	name={Just-in-Time compilation},
 	description={Just-in-Time compilation is a technique in which source code or bytecode is translated into machine code during program execution and immediately executed. By performing compilation at runtime, JIT compilers can apply optimisations based on information gathered during execution, such as identifying and removing redundant code.}
 }
-\newacronym{jit}{JIT}{\Gls{just-in-time-compilation}}
 \newglossaryentry{webassembly}{
 	name={WebAssembly},
 	description={WebAssembly is a binary instruction format designed for efficient code execution on web browsers. WebAssembly can be generated from C, C++, and Rust, running at near-native speed. It allows building applications with performance-intensive tasks while maintaining portability and security across platforms.}
 }
-\newacronym{wasm}{WASM}{\Gls{webassembly}}
 \newglossaryentry{nodejs}{
 	name={Node.js},
 	description={Node.js is a cross-platform JavaScript runtime that is based on the V8 JavaScript engine and allows the local execution of code on a desktop or server without the need of a browser. It provides various system APIs and libraries to interact with the system underneith unlike standard browser-based JavaScript engines which are locked-in in their browser environment~\cite{nodejs}.}
