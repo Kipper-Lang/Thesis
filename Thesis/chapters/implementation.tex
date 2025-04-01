@@ -541,7 +541,7 @@ This function takes an array as input and extracts a section starting from the i
 
 When the compiler encounters the slice operator, it registers the function as necessary within the context of the program being compiled. The code generator called after the semantic analysis then includes it in the output code. This code generator for the example \lstinline|slice| is demonstrated in Listing~\ref{lst:implementation:sliceinternal}.
 
-The compiler calls the slice function in the \lstinline|BuiltInGenerator|. The abstract \lstinline|BuiltInGenerator| class is a collection of functions responsible for generating the code for the built-in functions in a specific target language. This means that each target language must have an individual implementation for each built-in function of Kipper within its output generator, which subsequently adds the corresponding code into the resulting program.
+The compiler calls the slice function in the \lstinline|BuiltInGenerator|. The abstract \newline \lstinline|BuiltInGenerator| class is a collection of functions responsible for generating the code for the built-in functions in a specific target language. This means that each target language must have an individual implementation for each built-in function of Kipper within its output generator, which subsequently adds the corresponding code into the resulting program.
 
 The generator as demonstrated in Listing~\ref{lst:implementation:sliceinternal} generates the required JavaScript code for the function by utilizing the built-in \lstinline|slice| function provided by standard JavaScript.
 
