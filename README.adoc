@@ -1,3 +1,12 @@
-= Diplomarbeits Repository
+= Kipper Thesis Repository
 
-The repository intended to host all files regarding the HTL thesis project such as project application and the thesis paper itself.
+---
+
+Final and released version of the paper is available https://github.com/Kipper-Lang/Thesis/blob/main/Kipper-Thesis-2025-04-08.pdf[here]! The paper can be freely read and accessed by anyone.
+
+---
+
+The repository intended to host all files regarding the thesis paper "Kipper - Programming Language for Improved Runtime Type-Safety" written at the Higher Technical College of Leonding by Luna Klatzer, Lorenz Holzbauer and Fabian Baitura.
+
+ALL RIGHTS RESERVED © 2024-25 Luna Klatzer, Lorenz Holzbauer & Fabian Baitura (Higher Technical College of Leonding, 
+Johannes Kepler University)
